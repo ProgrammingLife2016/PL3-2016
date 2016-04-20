@@ -15,6 +15,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.geometry.*;
 
 //Window is called the "Stage"
 //Content inside window is called "Scene"
@@ -35,21 +36,33 @@ public class GUITest extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("DNAnalyzer");
 		
-		loadbutton = new Button();
-		loadbutton.setText("Load DNA"); //Name of button
-		loadbutton.setOnAction(loadcontrol); //If clicked, run "handle" located in "this" class
-		
-		exitbutton = new Button();
-		exitbutton.setText("Exit");
-		exitbutton.setOnAction(exitcontrol);
-		
 		StackPane layout = new StackPane();
-		layout.getChildren().add(loadbutton);
-		layout.getChildren().add(exitbutton);
+		VBox buttonpanel = createButtonPanel();
+		layout.getChildren().add(buttonpanel);
 		
 		Scene scene = new Scene(layout, 700, 400); //layout, sizeh, sizev
 		
 		primaryStage.setScene(scene); 
 		primaryStage.show(); //shows stage to user
 	}	
+	
+	public VBox createButtonPanel() {
+	    VBox vbox = new VBox();
+	    vbox.setPadding(new Insets(15, 12, 15, 12));
+	    vbox.setSpacing(10);
+	    vbox.setStyle("-fx-background-color: #336699;");
+
+		loadbutton = new Button();
+		loadbutton.setText("Load DNA"); //Name of button
+		loadbutton.setOnAction(loadcontrol); //If clicked, run "handle" located in "this" class
+		loadbutton.setPrefSize(100, 50);
+		
+		exitbutton = new Button();
+		exitbutton.setText("Exit");
+		exitbutton.setOnAction(exitcontrol);
+		exitbutton.setPrefSize(100, 50);
+
+	    vbox.getChildren().addAll(loadbutton, exitbutton);
+	    return vbox;
+	}
 }
