@@ -1,7 +1,5 @@
 package GUI;
 
-import javafx.application.*;
-import javafx.stage.Stage;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,16 +14,20 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
+import javafx.stage.Stage;
 
 //Window is called the "Stage"
 //Content inside window is called "Scene"
 
+@SuppressWarnings("restriction")
 public class GUITest extends Application {
 	
-	Button button;
+	Button loadbutton;
+	Button exitbutton;
+	private LoadControl loadcontrol = new LoadControl();
+	private ExitControl exitcontrol = new ExitControl();
 	
-	public static void main (String[] args) {
+	public static void main(String[] args) {
 		launch(args);
 	}
 
@@ -33,17 +35,21 @@ public class GUITest extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("DNAnalyzer");
 		
-		button = new Button();
-		button.setText("Load DNA");
+		loadbutton = new Button();
+		loadbutton.setText("Load DNA"); //Name of button
+		loadbutton.setOnAction(loadcontrol); //If clicked, run "handle" located in "this" class
+		
+		exitbutton = new Button();
+		exitbutton.setText("Exit");
+		exitbutton.setOnAction(exitcontrol);
 		
 		StackPane layout = new StackPane();
-		layout.getChildren().add(button);
+		layout.getChildren().add(loadbutton);
+		layout.getChildren().add(exitbutton);
 		
-		Scene scene = new Scene(layout, 400, 300); //layout, sizeh, sizev
+		Scene scene = new Scene(layout, 700, 400); //layout, sizeh, sizev
 		
 		primaryStage.setScene(scene); 
 		primaryStage.show(); //shows stage to user
-		
-	}
-	
+	}	
 }
