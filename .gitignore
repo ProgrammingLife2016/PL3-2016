@@ -20,3 +20,4 @@ target/
 .project
 .classpath
 .eclipse-pmd
+.DS_Store

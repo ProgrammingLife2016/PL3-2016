@@ -2,13 +2,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>Groep-20</groupId>
-	<artifactId>Bejeweled</artifactId>
+	<groupId>PL3</groupId>
+	<artifactId>ProgrammingLife</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Bejeweled</name>
-	<url>https://github.com/edekruif/Groep-20-Bejeweled</url>
+	<name>Programming Life</name>
+	<url>https://github.com/ProgrammingLife2016/PL3-2016</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
