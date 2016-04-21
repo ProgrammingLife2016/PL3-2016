@@ -6,7 +6,7 @@
     <property name="checkstyle.header.file" value="C:\Users\pickl_000\Documents\GitHub\PL3-2016\target\checkstyle-header-checkstyle.txt"/>
   </local-check-config>
   <fileset name="java-sources-checkstyle" enabled="true" check-config-name="maven-checkstyle-plugin checkstyle" local="true">
-    <file-match-pattern match-pattern="src/main/java/.*\.java" include-pattern="true"/>
+    <file-match-pattern match-pattern="src/main/java.*\.java" include-pattern="true"/>
     <file-match-pattern match-pattern="src/main/resources.*\.properties" include-pattern="true"/>
     <file-match-pattern match-pattern="src/test/resources.*\.properties" include-pattern="true"/>
   </fileset>
