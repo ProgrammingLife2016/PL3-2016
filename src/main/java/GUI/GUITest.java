@@ -1,5 +1,7 @@
 package GUI;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -38,14 +40,18 @@ public class GUITest extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("DNAnalyzer");  //Stage = window
+		String stylepath = "Styles/menubar.css";
 		
 		BorderPane layout = new BorderPane();
 		MenuBar mainMenuBar = createMainMenuBar();
+		mainMenuBar.getStylesheets().add(stylepath);
+		//mainMenuBar.setStyle("-fx-text-fill: #6DDB07; -fx-background-color: black;");
 		
 		layout.setTop(mainMenuBar);
-		layout.setStyle("-fx-background-color: #228899;");
+		//layout.setStyle("-fx-background-color: #6DDB07;");
 		
 		Scene scene = new Scene(layout, 1000, 400); //layout, sizeh, sizev
+		scene.getStylesheets().add(stylepath);
 		
 		primaryStage.setScene(scene); //Scene = inside window
 		primaryStage.show(); //shows stage to user
@@ -53,9 +59,14 @@ public class GUITest extends Application {
 	
 	public MenuBar createMainMenuBar() {
 		Menu mainmenu = new Menu("File");
+		mainmenu.getStyleClass().add("menubar");
+		//mainmenu.setStyle("-fx-background-colour: #6DDB07; -fx-text-fill: #6DDB07;");
 		
 		MenuItem menuload = new MenuItem("Load...");
+		//menuload.setStyle("-fx-text-fill: #6DDB07; -fx-background-color: black");
 		MenuItem menuexit = new MenuItem("Exit");
+		menuexit.getStyleClass().add("button");
+		//menuexit.setStyle("-fx-text-fill: #6DDB07; -fx-background-color: black");
 		menuload.setOnAction(loadcontrol);
 		menuexit.setOnAction(exitcontrol);
 		
