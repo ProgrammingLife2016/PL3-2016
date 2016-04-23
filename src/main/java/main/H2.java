@@ -1,18 +1,14 @@
 package main;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 public class H2 {
 	private Statement db;
@@ -26,47 +22,32 @@ public class H2 {
 		    Statement db = dbConnection.createStatement();
 		    this.db = db;
 		    this.dbConnection = dbConnection;
-		    //stmt.executeUpdate( "DROP TABLE table1" );
-//		    stmt.executeUpdate( "CREATE TABLE table1 ( user varchar(50) )" );
-//		    stmt.executeUpdate( "INSERT INTO table1 ( user ) VALUES ( 'Claudio' )" );
-//		    stmt.executeUpdate( "INSERT INTO table1 ( user ) VALUES ( 'Bernasconi' )" );
-		    ArrayList<String> test = new ArrayList();
-		    test.add("something");
-		    
-		  //  this.dropTable("table1");
-		   // this.createTable("table1", test);
-//		    this.inserTable("table1", "test");
-//		    ResultSet rs = db.executeQuery("SELECT * FROM table1");
-//		    while( rs.next() )
-//		    {
-//		        String name = rs.getString("user");
-//		        System.out.println( name );
-//		    }
-		    
+   
 		    //this.dropTable("Article");
 
 		    this.createTable("Article");
-		    this.inserTable("test");
+		    Reader bodyIn = new FileReader("TB10.gfa");
+		    this.insertIntoTable(bodyIn, "Article", 1);
 //		    
+		    
+		    
+		   // this.printWholeTable("Article");
+		    
 //		    
-		    String subject = "Test of setCharacterStream() methods";
-		    
-		      ResultSet res = db.executeQuery("SELECT * FROM Article" 
-		        +" WHERE Subject = '"+subject+"'");
-		      res.next();
-		      System.out.println("The inserted record: "); 
-		      System.out.println("   Subject = "+res.getString("Subject"));
-		      System.out.println("   Body = "
-		        +res.getString("Body").substring(5000,5050)); 
-		      res.close();
+
 		    
 		    
-		    this.db.executeUpdate("DROP ALL OBJECTS DELETE FILES");
+		  //  this.db.executeUpdate("DROP ALL OBJECTS DELETE FILES");
 		    
 		    
+		   //this.printSegment("Article", 1);
+		   this.printTable("Article");
+		   
+		   
+		   this.cleanAll();
 		    db.close();
 		    dbConnection.close();
-		    
+		    //this.printWholeSegment("Article", 1);
 
 		}
 		catch( Exception e )
@@ -78,36 +59,45 @@ public class H2 {
 	private void dropTable(String tableName) throws SQLException {
 		this.db.executeUpdate("DROP TABLE " + tableName);
 	}
-
 	
+	private void cleanAll() throws SQLException {
+		this.db.executeUpdate("DROP ALL OBJECTS DELETE FILES");
+	}
+
 	private void createTable(String tableName) throws SQLException {
-//		String dataType = "varchar(255)";
-//		String primaryKey = "PRIMARY KEY (ID)";
-//		String inputString = "ID int NOT NULL AUTO_INCREMENT" + ", ";
-//		for(String x : columnNames) {
-//			inputString+= x + " " + dataType + ",";
-//		}
-		//inputString += primaryKey;
-		//this.db.executeUpdate("CREATE TABLE " + tableName + "(" + inputString + ")");
-		this.db.executeUpdate("CREATE TABLE " + tableName + "(" + "Subject CLOB, " + "Body CLOB)");
+		this.db.executeUpdate("CREATE TABLE " + tableName + " (" + "segmentID INT, " + "DNA CLOB)");
 	}
 	
-	private void inserTable(String tableName) throws SQLException, IOException {
-		//String something = new File(".").getAbsolutePath();
-		//System.out.println(something);
+	private void insertIntoTable(Reader something, String tableName, int segmentID) throws SQLException, IOException {
 		PreparedStatement ps = this.dbConnection.prepareStatement(
-		        "INSERT INTO Article (Subject, Body) VALUES (?,?)");
-	      ps.setString(1, "Test of setCharacterStream() methods");
+		        "INSERT INTO " + tableName + " (segmentID, DNA) VALUES (?,?)");
+	      ps.setInt(1, segmentID);
 	      Reader bodyIn = new FileReader("TB10.gfa");
 	      ps.setCharacterStream(2, bodyIn);
-	      int count = ps.executeUpdate();
+	      ps.executeUpdate();
 	      bodyIn.close();
-	      ps.close();
-		
-//		Clob something = this.dbConnection.createClob();
-//		long bla = "aaaaaaa";
-//		something.setAsciiStream(pos)
-//		this.db.executeUpdate("INSERT INTO " + tableName + " VALUES ( " + value + ")");
+	      ps.close();	
+	}
+	
+	private void printTable(String tableName) throws SQLException {
+		ResultSet rs = this.db.executeQuery("SELECT * FROM " + tableName);
+		while(rs.next() )
+		    {
+		        int segmentID = rs.getInt("segmentID");
+		        String DNA = rs.getString("DNA");
+		        System.out.println("segmentID = " + segmentID);
+		        System.out.println("DNA = " + DNA);
+		    }
+	}
+	
+	private void printSegment(String tableName, int segmentID) throws SQLException {
+	      ResultSet res = this.db.executeQuery("SELECT * FROM " + tableName 
+	        +" WHERE segmentID = '"+segmentID+"'");
+	      //initially positioned BEFORE the first row
+	      res.next();
+	      System.out.println("segmentID = "+res.getString("segmentID"));
+	      System.out.println("DNA = "+res.getString("DNA")); 
+	      res.close();
 	}
 	
 }
