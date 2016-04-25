@@ -5,7 +5,7 @@ import javafx.scene.input.ScrollEvent;
 
 
 @SuppressWarnings("restriction")
-public class SceneGestures {
+public class SceneGesturesSeperate {
 
     private static final double MAX_SCALE = 10.0d;
     private static final double MIN_SCALE = .1d;
@@ -14,7 +14,7 @@ public class SceneGestures {
 
     PannableCanvas canvas;
 
-    public SceneGestures(PannableCanvas canvas) {
+    public SceneGesturesSeperate(PannableCanvas canvas) {
         this.canvas = canvas;
     }
 
