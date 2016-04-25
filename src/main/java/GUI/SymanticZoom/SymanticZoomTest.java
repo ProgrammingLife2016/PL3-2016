@@ -14,7 +14,7 @@ import javafx.stage.Stage;
  * An application with a zoomable and pannable canvas.
  */
 @SuppressWarnings("restriction")
-public class ZoomAndScrollApplication extends Application {
+public class SymanticZoomTest extends Application {
     public static void main(String[] args) {
         launch(args);
     }
