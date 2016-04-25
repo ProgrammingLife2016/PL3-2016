@@ -1,7 +1,8 @@
-package GUI;
+package gui;
 
 import java.io.File;
 
+import main.Main;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,19 +21,10 @@ import javafx.stage.Stage;
 import javafx.geometry.*;
 
 @SuppressWarnings("restriction")
-public class GUITest extends Application {
+public class Gui extends Application {
 	
 	private LoadControl loadcontrol = new LoadControl();
 	private ExitControl exitcontrol = new ExitControl();
-	
-	/**
-	 * Launch application.
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		launch(args);
-	}
 	
 	/**
 	 * GUI setup.
@@ -82,6 +74,10 @@ public class GUITest extends Application {
 		mainmenubar.getMenus().add(mainmenu);
 		
 		return mainmenubar;
+	}
+
+	public void handle(ActionEvent event) {
+		// TODO Auto-generated method stub
 	}
 	
 //	public VBox createButtonPanel() {
