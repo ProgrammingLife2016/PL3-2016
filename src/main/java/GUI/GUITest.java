@@ -45,10 +45,12 @@ public class GUITest extends Application {
 		BorderPane layout = new BorderPane();
 		MenuBar mainMenuBar = createMainMenuBar();
 		mainMenuBar.getStylesheets().add(stylepath);
+		mainMenuBar.getStyleClass().add("menubar");
 		//mainMenuBar.setStyle("-fx-text-fill: #6DDB07; -fx-background-color: black;");
 		
 		layout.setTop(mainMenuBar);
 		//layout.setStyle("-fx-background-color: #6DDB07;");
+		layout.getStyleClass().add("scene");
 		
 		Scene scene = new Scene(layout, 1000, 400); //layout, sizeh, sizev
 		scene.getStylesheets().add(stylepath);
@@ -59,14 +61,14 @@ public class GUITest extends Application {
 	
 	public MenuBar createMainMenuBar() {
 		Menu mainmenu = new Menu("File");
-		mainmenu.getStyleClass().add("menubar");
+		mainmenu.getStyleClass().add("menutext");
 		//mainmenu.setStyle("-fx-background-colour: #6DDB07; -fx-text-fill: #6DDB07;");
 		
 		MenuItem menuload = new MenuItem("Load...");
-		//menuload.setStyle("-fx-text-fill: #6DDB07; -fx-background-color: black");
 		MenuItem menuexit = new MenuItem("Exit");
+		menuload.getStyleClass().add("button");
 		menuexit.getStyleClass().add("button");
-		//menuexit.setStyle("-fx-text-fill: #6DDB07; -fx-background-color: black");
+		
 		menuload.setOnAction(loadcontrol);
 		menuexit.setOnAction(exitcontrol);
 		
