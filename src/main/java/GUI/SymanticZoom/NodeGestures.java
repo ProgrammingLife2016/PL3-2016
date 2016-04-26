@@ -1,4 +1,4 @@
-package GUI.SymanticZoom;
+package gui.SymanticZoom;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
