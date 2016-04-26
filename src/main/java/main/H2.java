@@ -3,12 +3,15 @@ package main;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class H2 {
 	private Statement db;
@@ -23,14 +26,23 @@ public class H2 {
 		    this.db = db;
 		    this.dbConnection = dbConnection;
    
-		    //this.dropTable("Article");
+		   //this.dropTable("LINKS");
 
-		    this.createTable("Article");
-		    Reader bodyIn = new FileReader("TB10.gfa");
-		    this.insertIntoTable(bodyIn, "Article", 1);
+		    
+		    
+//		    this.createTable("Article");
+//		    Reader bodyIn = new FileReader("TB10.gfa");
+//		    this.insertIntoTable(bodyIn, "Article", 1);
 //		    
+		    this.createTableTest("LINKS");
+		    this.insertIntoTableTest("LINKS", 1, 2);
+		    this.insertIntoTableTest("LINKS", 1, 3);
+		    //this.printTable("LINKS");
 		    
-		    
+		    ArrayList<Integer> testing = this.getlinksFromId();
+		    for(int x : testing) {
+		    	System.out.println(x);
+		    }
 		   // this.printWholeTable("Article");
 		    
 //		    
@@ -41,7 +53,7 @@ public class H2 {
 		    
 		    
 		   //this.printSegment("Article", 1);
-		   this.printTable("Article");
+		  // this.printTable("Article");
 		   
 		   
 		   this.cleanAll();
@@ -68,6 +80,10 @@ public class H2 {
 		this.db.executeUpdate("CREATE TABLE " + tableName + " (" + "segmentID INT, " + "DNA CLOB)");
 	}
 	
+	private void createTableTest(String tableName) throws SQLException {
+		this.db.executeUpdate("CREATE TABLE " + tableName + " (" + "FROMID INT, " + "TOID INT)");
+	}
+	
 	private void insertIntoTable(Reader something, String tableName, int segmentID) throws SQLException, IOException {
 		PreparedStatement ps = this.dbConnection.prepareStatement(
 		        "INSERT INTO " + tableName + " (segmentID, DNA) VALUES (?,?)");
@@ -78,17 +94,32 @@ public class H2 {
 	      bodyIn.close();
 	      ps.close();	
 	}
+	private void insertIntoTableTest(String tableName, int fromID, int toID) throws SQLException {
+		this.db.executeUpdate("INSERT INTO " + tableName + " VALUES(" + fromID + "," + toID + ")");
+	}
+	
+//	private void printTable(String tableName) throws SQLException {
+//		ResultSet rs = this.db.executeQuery("SELECT * FROM " + tableName);
+//		while(rs.next() )
+//		    {
+//		        int segmentID = rs.getInt("segmentID");
+//		        String DNA = rs.getString("DNA");
+//		        System.out.println("segmentID = " + segmentID);
+//		        System.out.println("DNA = " + DNA);
+//		    }
+//	}
 	
 	private void printTable(String tableName) throws SQLException {
 		ResultSet rs = this.db.executeQuery("SELECT * FROM " + tableName);
-		while(rs.next() )
+		ArrayList<Integer> fromIDList = new ArrayList();
+		while(rs.next())
 		    {
-		        int segmentID = rs.getInt("segmentID");
-		        String DNA = rs.getString("DNA");
-		        System.out.println("segmentID = " + segmentID);
-		        System.out.println("DNA = " + DNA);
+				fromIDList.add(rs.getInt(1));
+		        System.out.println(rs.getString(1));
 		    }
 	}
+	
+	
 	
 	private void printSegment(String tableName, int segmentID) throws SQLException {
 	      ResultSet res = this.db.executeQuery("SELECT * FROM " + tableName 
@@ -98,6 +129,21 @@ public class H2 {
 	      System.out.println("segmentID = "+res.getString("segmentID"));
 	      System.out.println("DNA = "+res.getString("DNA")); 
 	      res.close();
+	}
+	
+//	private Array getGenomeID(int segmentID) throws SQLException {
+//		ResultSet rs = this.db.executeQuery(
+//				"SELECT NAME FROM GENOMES INNER JOIN GENOMESEGMENTLINK ON SEGMENTID = ID WHERE  SEGMENTID = " + segmentID);
+//		return rs.getArray(1);	
+//	}
+	
+	private ArrayList<Integer> getlinksFromId() throws SQLException {
+		ResultSet rs = this.db.executeQuery("SELECT * FROM LINKS");
+		ArrayList<Integer> fromIDList = new ArrayList<Integer>();
+		while(rs.next()) {
+			fromIDList.add(rs.getInt(1));
+		 }
+		return fromIDList;
 	}
 	
 }
