@@ -3,7 +3,6 @@ package main;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class H2 {
 	private Statement db;
@@ -34,12 +32,12 @@ public class H2 {
 //		    Reader bodyIn = new FileReader("TB10.gfa");
 //		    this.insertIntoTable(bodyIn, "Article", 1);
 //		    
-		    this.createTableTest("LINKS");
-		    this.insertIntoTableTest("LINKS", 1, 2);
-		    this.insertIntoTableTest("LINKS", 1, 3);
+//		    this.createTableTest("LINKS");
+//		    this.insertIntoTableTest("LINKS", 1, 2);
+//		    this.insertIntoTableTest("LINKS", 1, 3);
 		    //this.printTable("LINKS");
 		    
-		    ArrayList<Integer> testing = this.getlinksFromId();
+		    ArrayList<Integer> testing = this.getlinksToId();
 		    for(int x : testing) {
 		    	System.out.println(x);
 		    }
@@ -56,7 +54,7 @@ public class H2 {
 		  // this.printTable("Article");
 		   
 		   
-		   this.cleanAll();
+		  // this.cleanAll();
 		    db.close();
 		    dbConnection.close();
 		    //this.printWholeSegment("Article", 1);
@@ -144,6 +142,15 @@ public class H2 {
 			fromIDList.add(rs.getInt(1));
 		 }
 		return fromIDList;
+	}
+	
+	private ArrayList<Integer> getlinksToId() throws SQLException {
+		ResultSet rs = this.db.executeQuery("SELECT * FROM LINKS");
+		ArrayList<Integer> toIDList = new ArrayList<Integer>();
+		while(rs.next()) {
+			toIDList.add(rs.getInt(2));
+		 }
+		return toIDList;
 	}
 	
 }
