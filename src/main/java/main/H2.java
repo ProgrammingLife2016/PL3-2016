@@ -2,7 +2,10 @@ package main;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -37,10 +40,12 @@ public class H2 {
 //		    this.insertIntoTableTest("LINKS", 1, 3);
 		    //this.printTable("LINKS");
 		    
-		    ArrayList<Integer> testing = this.getlinksToId();
-		    for(int x : testing) {
-		    	System.out.println(x);
-		    }
+//		    ArrayList<Integer> testing = this.getAllFromId();
+//		    for(int x : testing) {
+//		    	System.out.println(x);
+//		    }
+		    
+		    
 		   // this.printWholeTable("Article");
 		    
 //		    
@@ -135,7 +140,7 @@ public class H2 {
 //		return rs.getArray(1);	
 //	}
 	
-	private ArrayList<Integer> getlinksFromId() throws SQLException {
+	private ArrayList<Integer> getAllFromID() throws SQLException {
 		ResultSet rs = this.db.executeQuery("SELECT * FROM LINKS");
 		ArrayList<Integer> fromIDList = new ArrayList<Integer>();
 		while(rs.next()) {
@@ -144,13 +149,37 @@ public class H2 {
 		return fromIDList;
 	}
 	
-	private ArrayList<Integer> getlinksToId() throws SQLException {
+	private ArrayList<Integer> getAllToID() throws SQLException {
 		ResultSet rs = this.db.executeQuery("SELECT * FROM LINKS");
 		ArrayList<Integer> toIDList = new ArrayList<Integer>();
 		while(rs.next()) {
 			toIDList.add(rs.getInt(2));
 		 }
 		return toIDList;
+	}
+	
+	private ArrayList<Integer> getFromIDs(int toID) throws SQLException {
+		ResultSet rs = this.db.executeQuery("SELECT FROMID FROM LINKS WHERE TOID = " + toID);
+		ArrayList<Integer> fromIDList = new ArrayList<Integer>();
+		while(rs.next()) {
+			fromIDList.add(rs.getInt(1));
+		 }
+		return fromIDList;
+	}
+	
+	private ArrayList<Integer> getToIDs(int fromID) throws SQLException {
+		ResultSet rs = this.db.executeQuery("SELECT TOID FROM LINKS WHERE FROMID = " + fromID);
+		ArrayList<Integer> toIDList = new ArrayList<Integer>();
+		while(rs.next()) {
+			toIDList.add(rs.getInt(1));
+		 }
+		return toIDList;
+	}
+	
+	private String getContent(int segmentID) throws SQLException, IOException {
+		ResultSet rs = this.db.executeQuery("SELECT CONTENT FROM SEGMENTS WHERE ID = " + segmentID);
+		rs.next();
+		return rs.getString(1);
 	}
 	
 }
