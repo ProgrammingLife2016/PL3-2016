@@ -1,4 +1,4 @@
-package GUI.SymanticZoom;
+package gui.SymanticZoom;
 import java.util.ArrayList;
 
 import javafx.application.Application;
