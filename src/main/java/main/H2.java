@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,6 +15,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.stream.Stream;
 
 public class H2 {
 	private Statement db;
@@ -49,7 +53,8 @@ public class H2 {
 		   // this.printWholeTable("Article");
 		    
 //		    
-
+		    
+		    this.insertIntoTable(null, "test", 1);
 		    
 		    
 		  //  this.db.executeUpdate("DROP ALL OBJECTS DELETE FILES");
@@ -88,14 +93,31 @@ public class H2 {
 	}
 	
 	private void insertIntoTable(Reader something, String tableName, int segmentID) throws SQLException, IOException {
-		PreparedStatement ps = this.dbConnection.prepareStatement(
-		        "INSERT INTO " + tableName + " (segmentID, DNA) VALUES (?,?)");
-	      ps.setInt(1, segmentID);
+//		PreparedStatement ps = this.dbConnection.prepareStatement(
+//		        "INSERT INTO " + tableName + " (segmentID, DNA) VALUES (?,?)");
+//	      ps.setInt(1, segmentID);
 	      Reader bodyIn = new FileReader("TB10.gfa");
-	      ps.setCharacterStream(2, bodyIn);
-	      ps.executeUpdate();
+	      
+	      try (Stream<String> lines = Files.lines(Paths.get("TB10.gfa"))) {
+	    	  	Iterator<String> it = lines.iterator();
+	    	  	//while(it.hasNext()) {
+	    	  		System.out.println(it.next());
+	    	  		System.out.println(it.next());
+	    	  		System.out.println(it.next());
+	    	  		System.out.println(it.next());
+	    	  	//}
+	    	  	//System.out.println(lines.iterator().next());
+
+	    	  	//System.out.println(lines.findFirst().get());
+	    	    //String line32 = lines.skip(31).findFirst().get();
+	    	    //System.out.println(line32);
+	    	}
+	     
+	      
+//	      ps.setCharacterStream(2, bodyIn);
+//	      ps.executeUpdate();
 	      bodyIn.close();
-	      ps.close();	
+	      //ps.close();	
 	}
 	private void insertIntoTableTest(String tableName, int fromID, int toID) throws SQLException {
 		this.db.executeUpdate("INSERT INTO " + tableName + " VALUES(" + fromID + "," + toID + ")");
