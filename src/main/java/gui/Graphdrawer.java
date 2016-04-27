@@ -49,9 +49,6 @@ public class Graphdrawer extends Application {
         
         GraphNode root = drawRootGraphNode(canvas);
         
-        //ADD ROOT NODE TO CANVAS
-        //canvas.getChildren().addAll(rect1);
-        
         //CALL FUNCTION TO DRAW NODES RELATIVE TO ROOT NODE
         
         canvas.getChildren().add(root.getAnchorPane());
@@ -81,6 +78,12 @@ public class Graphdrawer extends Application {
         root.getAnchorPane().setBottomAnchor(segment, 0.25 * root.getAnchorPane().getPrefHeight());
         root.getAnchorPane().getChildren().add(segment);
 		return root;
+    }
+    
+    public GraphNode drawChildGraphNode(GraphNode root, GraphNode[] list, Pane canvas) {
+    	
+    	
+		return null;
     }
     
     public class SceneGestures {
