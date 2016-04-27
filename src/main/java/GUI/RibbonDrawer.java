@@ -23,13 +23,15 @@ public class RibbonDrawer {
 		Coordinate[] coords = CoordinateDetermination.calcCoords();
 		ArrayList<Integer> from = dummyFromIDData();
 		ArrayList<Integer> to = dummyToIDData();
+		int maxX = getMaxX(coords);
+		int maxY = getMaxY(coords);
 		
 		Group group = new Group();
 		
 		for(int i = 0; i < from.size(); i++) {
 			int fromID = from.get(i);
 			int toID = to.get(i);
-			Path path = drawPath(coords[fromID-1], coords[toID-1]);
+			Path path = drawPath(coords[fromID-1], coords[toID-1], maxX, maxY);
 	        path.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
 	        path.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
 	        path.setStrokeWidth(countGenomesInLink(fromID, toID));
@@ -39,10 +41,30 @@ public class RibbonDrawer {
 		
 	}
 	
+	private static int getMaxX(Coordinate[] coordinates) {
+		int x = 0;
+		for(int i = 0; i < coordinates.length; i++) {
+			if(coordinates[i].getX() > x) {
+				x = coordinates[i].getX();
+			}
+		}
+		return x;
+	}
+	
+	private static int getMaxY(Coordinate[] coordinates) {
+		int y = 0;
+		for(int i = 0; i < coordinates.length; i++) {
+			if(coordinates[i].getY() > y) {
+				y = coordinates[i].getY();
+			}
+		}
+		return y;
+	}
+	
 	@SuppressWarnings("restriction")
-	private static Path drawPath(Coordinate from, Coordinate to) {
-		MoveTo moveto = new MoveTo(600/7 * from.getX() + 600/7, 600/8 * from.getY());
-		LineTo lineto = new LineTo(600/7 * to.getX()+ 600/7, 600/8 * to.getY());
+	private static Path drawPath(Coordinate from, Coordinate to, int maxX, int maxY) {
+		MoveTo moveto = new MoveTo(600/(maxX + 2) * from.getX() + 600/(maxX + 2), 600/(maxY + 2) * from.getY());
+		LineTo lineto = new LineTo(600/(maxX + 2) * to.getX()+ 600/(maxX + 2), 600/(maxY + 2) * to.getY());
 		Path path = new Path();
 		path.getElements().addAll(moveto, lineto);
 		return path;
