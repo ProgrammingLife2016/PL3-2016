@@ -41,6 +41,10 @@ public class SymanticZoomTest extends Application {
 
     	globStage = stage;
     	
+    	/**
+    	 * CREATING FIRST GROUP
+    	 */
+    	
         Group group = new Group();
 
         // create canvas
@@ -54,23 +58,11 @@ public class SymanticZoomTest extends Application {
         // create sample nodes which can be dragged
         NodeGestures nodeGestures = new NodeGestures( canvas);
 
-        Label label1 = new Label("Draggable node 1");
+        Label label1 = new Label("SCENE 1");
         label1.setTranslateX(10);
         label1.setTranslateY(10);
         label1.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
         label1.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-
-        Label label2 = new Label("Draggable node 2");
-        label2.setTranslateX(100);
-        label2.setTranslateY(100);
-        label2.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        label2.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-
-        Label label3 = new Label("Draggable node 3");
-        label3.setTranslateX(200);
-        label3.setTranslateY(200);
-        label3.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        label3.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
 
         Circle circle1 = new Circle( 300, 300, 50);
         circle1.setStroke(Color.ORANGE);
@@ -78,19 +70,13 @@ public class SymanticZoomTest extends Application {
         circle1.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
         circle1.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
 
-        Rectangle rect1 = new Rectangle(100,100);
-        rect1.setTranslateX(450);
-        rect1.setTranslateY(450);
-        rect1.setStroke(Color.BLUE);
-        rect1.setFill(Color.BLUE.deriveColor(1, 1, 1, 0.5));
-        rect1.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        rect1.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-
-        canvas.getChildren().addAll(label1, label2, label3, circle1, rect1);
+        canvas.getChildren().addAll(label1, circle1);
 
         group.getChildren().add(canvas);
-
-        Group group2 = new Group();
+        
+        /**
+         * CREATING SECOND CANVAS
+         */
 
         // create canvas
         PannableCanvas canvas2 = new PannableCanvas();
@@ -103,67 +89,80 @@ public class SymanticZoomTest extends Application {
         // create sample nodes which can be dragged
         NodeGestures nodeGestures2 = new NodeGestures( canvas);
 
-        Label label12 = new Label("Draggable node 1");
+        Label label12 = new Label("SCENE 2");
         label12.setTranslateX(10);
         label12.setTranslateY(10);
-        label12.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        label12.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-
-        Label label22 = new Label("Draggable node 2");
-        label22.setTranslateX(100);
-        label22.setTranslateY(100);
-        label22.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        label22.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-
-        Label label32 = new Label("Draggable node 3");
-        label32.setTranslateX(200);
-        label32.setTranslateY(200);
-        label32.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        label32.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-
-        Circle circle12 = new Circle( 300, 300, 50);
-        circle12.setStroke(Color.ORANGE);
-        circle12.setFill(Color.ORANGE.deriveColor(1, 1, 1, 0.5));
-        circle12.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        circle12.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
+        label12.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures2.getOnMousePressedEventHandler());
+        label12.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures2.getOnMouseDraggedEventHandler());
 
         Rectangle rect12 = new Rectangle(100,100);
         rect12.setTranslateX(450);
         rect12.setTranslateY(450);
         rect12.setStroke(Color.BLUE);
         rect12.setFill(Color.BLUE.deriveColor(1, 1, 1, 0.5));
-        rect12.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        rect12.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
+        rect12.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures2.getOnMousePressedEventHandler());
+        rect12.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures2.getOnMouseDraggedEventHandler());
 
-        canvas2.getChildren().addAll(label12, label22, label32, circle12, rect12);
-
-        group2.getChildren().add(canvas2);
+        canvas2.getChildren().addAll(label12, rect12);
         
+        /**
+         * CREATING THIRD CANVAS (FOR TESTING FUTURE IMPLEMENTATIONS WITH MORE LEVELS)
+         */
+        
+        // create canvas
+        PannableCanvas canvas3 = new PannableCanvas();
+
+        // we don't want the canvas on the top/left in this example => just
+        // translate it a bit
+        canvas3.setTranslateX(100);
+        canvas3.setTranslateY(100);
+
+        // create sample nodes which can be dragged
+        NodeGestures nodeGestures3 = new NodeGestures( canvas);
+
+        Label label3 = new Label("SCENE 3");
+        label3.setTranslateX(10);
+        label3.setTranslateY(10);
+        label3.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures3.getOnMousePressedEventHandler());
+        label3.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures3.getOnMouseDraggedEventHandler());
+
+        Circle circle3 = new Circle( 300, 300, 50);
+        circle3.setStroke(Color.ORANGE);
+        circle3.setFill(Color.ORANGE.deriveColor(1, 1, 1, 0.5));
+        circle3.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures3.getOnMousePressedEventHandler());
+        circle3.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures3.getOnMouseDraggedEventHandler());
+
+        canvas3.getChildren().addAll(label3, circle3);
+        
+        /**
+         * SETTING UP SCENE
+         */
         
         // create scene which can be dragged and zoomed
         scene = new Scene(group, 1024, 768);
-        scene2 = new Scene(group2, 1024, 768);
         
+        // Adding the sceneGesture listeners to the scenes
         SceneGestures sceneGestures = new SceneGestures(canvas);
         scene.addEventFilter( MouseEvent.MOUSE_PRESSED, sceneGestures.getOnMousePressedEventHandler());
         scene.addEventFilter( MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
         scene.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
-        
-        SceneGestures sceneGestures2 = new SceneGestures(canvas2);
-        scene2.addEventFilter( MouseEvent.MOUSE_PRESSED, sceneGestures.getOnMousePressedEventHandler());
-        scene2.addEventFilter( MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
-        scene2.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
 
+        // Add the scenes to the global scene array list for use in listeners.
         scenes.add(scene);
-        scenes.add(scene2);
 
+        // Use the global instance of the stage so scene can be changed inside the listeners.
         globStage.setScene(scene);
         globStage.show();
 
+        // Add grids to the canvases so that they look nicer.
         canvas.addGrid();
         canvas2.addGrid();
+        canvas3.addGrid();
+        
+        // Add the canvases to the global array list of canvas for use in the listeners.
         canvases.add(canvas);
         canvases.add(canvas2);
+        canvases.add(canvas3);
     }
     
     public class SceneGestures {
@@ -243,15 +242,18 @@ public class SymanticZoomTest extends Application {
                 }
 
                 scale = clamp( scale, MIN_SCALE, MAX_SCALE);
+                
                 double zoom = scale/MAX_SCALE;
                 System.out.println("Zoom percentage: " + zoom);
                 
-                if(zoom == 1.0 && position < scenes.size() && position >= 0) {
+                if(zoom == 1.0 && position < canvases.size() - 1) {
                 	position++;
+                	System.out.println("Zooming in");
                 	changed = true;
                 }
-                else if(zoom == .01 && position < scenes.size() && position > 0) {
+                else if(zoom == .01 && position > 0) {
                 	position--;
+                	System.out.println("Zooming out");
                 	changed = true;
                 }
                 
@@ -265,9 +267,21 @@ public class SymanticZoomTest extends Application {
                 
                 if(changed == true) {
                 	System.out.println("Switching to canvas #" + position);
+                	canvas.reset();
                 	canvas = canvases.get(position);
                 	System.out.println("Switching to scene #" + position);
-                	globStage.setScene(scenes.get(position));
+
+                	Group groupTemp = new Group();
+                	groupTemp.getChildren().add(canvases.get(position));
+                	
+                    Scene sceneTemp = new Scene(groupTemp, 1024, 768);
+                	
+                	SceneGestures sceneGestures = new SceneGestures(canvases.get(position));
+                    sceneTemp.addEventFilter( MouseEvent.MOUSE_PRESSED, sceneGestures.getOnMousePressedEventHandler());
+                    sceneTemp.addEventFilter( MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
+                    sceneTemp.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
+                    
+                	globStage.setScene(sceneTemp);
                 }
                 
                 event.consume();

@@ -69,6 +69,13 @@ public class PannableCanvas extends Pane {
         myScale.set(scale);
     }
 
+    public void reset(){ 
+    	PannableCanvas preset = new PannableCanvas();
+    	this.setScale(preset.getScale());
+    	this.setTranslateX(100);
+    	this.setTranslateY(100);
+    }
+    
     public void setPivot( double x, double y) {
         setTranslateX(getTranslateX()-x);
         setTranslateY(getTranslateY()-y);
