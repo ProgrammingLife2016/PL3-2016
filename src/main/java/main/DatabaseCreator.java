@@ -79,8 +79,9 @@ public class DatabaseCreator {
         if(split[0].equals("ORI")) {
         	String[] genomeNames = split[2].split(";");
         	for(int i = 0; i < genomeNames.length; i++) {
-        		genomes.put(genomeNames[i],i+1);
-        		insert(new GenomeTuple(i+1,genomeNames[i]));
+        		String genomeName = genomeNames[i];
+        		genomes.put(genomeName,i+1);
+        		insert(new GenomeTuple(i+1,genomeName.substring(0,genomeName.length()-6)));
         	}
         }
 	}
