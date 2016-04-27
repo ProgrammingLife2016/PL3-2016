@@ -53,12 +53,13 @@ public class H2 {
 		   // this.printWholeTable("Article");
 		    
 //		    
-		    
-		    this.insertIntoTable(null, "test", 1);
+
+		    //this.insertIntoTable(null, "test", 1);
 		    
 		    
 		  //  this.db.executeUpdate("DROP ALL OBJECTS DELETE FILES");
 		    
+		    System.out.println(this.countGenomesInLink(3, 8));
 		    
 		   //this.printSegment("Article", 1);
 		  // this.printTable("Article");
@@ -162,6 +163,33 @@ public class H2 {
 //		return rs.getArray(1);	
 //	}
 	
+	private int countGenomesInSeg(int segmentID) throws SQLException {
+		ResultSet rs = this.db.executeQuery("SELECT COUNT(GENOMEID) FROM GENOMESEGMENTLINK WHERE SEGMENTID = "  + segmentID);
+		rs.next();
+		return rs.getInt(1);
+	}
+	
+	private int countGenomesInLink(int fromID, int toID) throws SQLException {
+		String query = new StringBuilder()
+				.append("SELECT COUNT(G1) ")
+				.append("FROM (")
+				.append("SELECT * FROM (")
+				.append("SELECT FROMID, TOID ")
+				.append("FROM LINKS ")
+				.append("WHERE FROMID = " + fromID +" AND TOID = " + toID + " ")
+				.append(") AS T1 ")
+				.append("LEFT OUTER JOIN (SELECT SEGMENTID AS S1, GENOMEID AS G1 FROM GENOMESEGMENTLINK) AS GSL ")
+				.append("ON T1.FROMID = GSL.S1 ")
+				.append("LEFT OUTER JOIN (SELECT SEGMENTID AS S2, GENOMEID AS G2 FROM GENOMESEGMENTLINK) AS GSL2 ")
+				.append("ON T1.TOID = GSL2.S2")
+				.append(") ")
+				.append("WHERE G1 = G2")
+				.toString();
+		ResultSet rs = this.db.executeQuery(query);
+		rs.next();
+		return rs.getInt(1);
+	}
+	
 	private ArrayList<Integer> getAllFromID() throws SQLException {
 		ResultSet rs = this.db.executeQuery("SELECT * FROM LINKS");
 		ArrayList<Integer> fromIDList = new ArrayList<Integer>();
@@ -204,5 +232,20 @@ public class H2 {
 		return rs.getString(1);
 	}
 	
+//	SELECT COUNT(G1)
+//	FROM(
+//	SELECT * FROM (
+//	SELECT FROMID, TOID
+//	FROM LINKS
+//	WHERE FROMID = 1 AND TOID = 5
+//	) AS T1
+//
+//	LEFT OUTER JOIN (SELECT SEGMENTID AS S1, GENOMEID AS G1 FROM GENOMESEGMENTLINK) AS GSL
+//	ON T1.FROMID = GSL.S1
+//	LEFT OUTER JOIN (SELECT SEGMENTID AS S2, GENOMEID AS G2 FROM GENOMESEGMENTLINK) AS GSL2
+//	ON T1.TOID = GSL2.S2
+//	)
+//	WHERE G1 = G2
+
 }
 
