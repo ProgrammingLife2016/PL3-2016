@@ -1,4 +1,4 @@
-package GUI.SymanticZoom;
+package gui.SymanticZoom;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -32,13 +32,13 @@ public class NodeGestures {
             if( !event.isPrimaryButtonDown())
                 return;
 
-            nodeDragContext.mouseAnchorX = event.getSceneX();
-            nodeDragContext.mouseAnchorY = event.getSceneY();
+            nodeDragContext.setMouseAnchorX(event.getSceneX());
+            nodeDragContext.setMouseAnchorY(event.getSceneY());
 
             Node node = (Node) event.getSource();
 
-            nodeDragContext.translateAnchorX = node.getTranslateX();
-            nodeDragContext.translateAnchorY = node.getTranslateY();
+            nodeDragContext.setTranslateAnchorX(node.getTranslateX());
+            nodeDragContext.setTranslateAnchorY(node.getTranslateY());
 
         }
 
@@ -55,8 +55,8 @@ public class NodeGestures {
 
             Node node = (Node) event.getSource();
 
-            node.setTranslateX(nodeDragContext.translateAnchorX + (( event.getSceneX() - nodeDragContext.mouseAnchorX) / scale));
-            node.setTranslateY(nodeDragContext.translateAnchorY + (( event.getSceneY() - nodeDragContext.mouseAnchorY) / scale));
+            node.setTranslateX(nodeDragContext.getTranslateAnchorX() + (( event.getSceneX() - nodeDragContext.getMouseAnchorX()) / scale));
+            node.setTranslateY(nodeDragContext.getTranslateAnchorY() + (( event.getSceneY() - nodeDragContext.getMouseAnchorY()) / scale));
 
             event.consume();
 

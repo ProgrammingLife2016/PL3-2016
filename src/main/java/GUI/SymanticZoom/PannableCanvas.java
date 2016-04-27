@@ -1,4 +1,4 @@
-package GUI.SymanticZoom;
+package gui.SymanticZoom;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -19,6 +19,15 @@ public class PannableCanvas extends Pane {
         // add scale transform
         scaleXProperty().bind(myScale);
         scaleYProperty().bind(myScale);
+    }
+    
+    public PannableCanvas(int hsize, int vsize) {
+    	this.setPrefSize(hsize, vsize);
+    	this.setStyle("-fx-border-color: blue;");
+    	
+        // add scale transform
+        this.scaleXProperty().bind(myScale);
+        this.scaleYProperty().bind(myScale);
     }
 
     /**

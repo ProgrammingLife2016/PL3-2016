@@ -1,4 +1,4 @@
-package GUI.SymanticZoom;
+package gui.SymanticZoom;
 import java.util.ArrayList;
 
 import javafx.application.Application;
@@ -108,11 +108,11 @@ public class FadingZoomTest extends Application {
                 if( !event.isSecondaryButtonDown())
                     return;
 
-                sceneDragContext.mouseAnchorX = event.getSceneX();
-                sceneDragContext.mouseAnchorY = event.getSceneY();
+                sceneDragContext.setMouseAnchorX(event.getSceneX());
+                sceneDragContext.setMouseAnchorY(event.getSceneY());
 
-                sceneDragContext.translateAnchorX = canvas.getTranslateX();
-                sceneDragContext.translateAnchorY = canvas.getTranslateY();
+                sceneDragContext.setTranslateAnchorX(canvas.getTranslateX());
+                sceneDragContext.setTranslateAnchorY(canvas.getTranslateY());
 
             }
 
@@ -125,8 +125,8 @@ public class FadingZoomTest extends Application {
                 if( !event.isSecondaryButtonDown())
                     return;
 
-                canvas.setTranslateX(sceneDragContext.translateAnchorX + event.getSceneX() - sceneDragContext.mouseAnchorX);
-                canvas.setTranslateY(sceneDragContext.translateAnchorY + event.getSceneY() - sceneDragContext.mouseAnchorY);
+                canvas.setTranslateX(sceneDragContext.getTranslateAnchorX() + event.getSceneX() - sceneDragContext.getMouseAnchorX());
+                canvas.setTranslateY(sceneDragContext.getTranslateAnchorY() + event.getSceneY() - sceneDragContext.getMouseAnchorY());
 
                 event.consume();
             }
