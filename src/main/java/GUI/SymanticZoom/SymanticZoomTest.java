@@ -29,6 +29,7 @@ public class SymanticZoomTest extends Application {
     }
 
     ArrayList<Scene> scenes = new ArrayList<Scene>();
+    ArrayList<PannableCanvas> canvases = new ArrayList<PannableCanvas>();
     Scene scene;
     Scene scene2;
     Scene scene3;
@@ -96,8 +97,8 @@ public class SymanticZoomTest extends Application {
 
         // we don't want the canvas on the top/left in this example => just
         // translate it a bit
-        canvas.setTranslateX(100);
-        canvas.setTranslateY(100);
+        canvas2.setTranslateX(100);
+        canvas2.setTranslateY(100);
 
         // create sample nodes which can be dragged
         NodeGestures nodeGestures2 = new NodeGestures( canvas);
@@ -138,73 +139,31 @@ public class SymanticZoomTest extends Application {
 
         group2.getChildren().add(canvas2);
         
-        Group group22 = new Group();
-
-        // create canvas
-        PannableCanvas canvas22 = new PannableCanvas();
-
-        // we don't want the canvas on the top/left in this example => just
-        // translate it a bit
-        canvas.setTranslateX(100);
-        canvas.setTranslateY(100);
-
-        // create sample nodes which can be dragged
-        NodeGestures nodeGestures22 = new NodeGestures( canvas);
-
-        Label label122 = new Label("Draggable node 1");
-        label122.setTranslateX(10);
-        label122.setTranslateY(10);
-        label122.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        label122.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-
-        Label label222 = new Label("Draggable node 2");
-        label222.setTranslateX(100);
-        label222.setTranslateY(100);
-        label222.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        label222.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-
-        Label label322 = new Label("Draggable node 3");
-        label322.setTranslateX(200);
-        label322.setTranslateY(200);
-        label322.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        label322.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-
-        Circle circle122 = new Circle( 300, 300, 50);
-        circle122.setStroke(Color.ORANGE);
-        circle122.setFill(Color.ORANGE.deriveColor(1, 1, 1, 0.5));
-        circle122.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        circle122.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-
-        Rectangle rect122 = new Rectangle(100,100);
-        rect122.setTranslateX(450);
-        rect122.setTranslateY(450);
-        rect122.setStroke(Color.BLUE);
-        rect122.setFill(Color.BLUE.deriveColor(1, 1, 1, 0.5));
-        rect122.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        rect122.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-
-        canvas22.getChildren().addAll(label122, label222, label322, circle122, rect122);
-
-        group22.getChildren().add(canvas22);
         
         // create scene which can be dragged and zoomed
         scene = new Scene(group, 1024, 768);
         scene2 = new Scene(group2, 1024, 768);
-        scene3 = new Scene(group22, 1024, 768);
-
-        scenes.add(scene);
-        scenes.add(scene2);
-        scenes.add(scene3);
+        
         SceneGestures sceneGestures = new SceneGestures(canvas);
         scene.addEventFilter( MouseEvent.MOUSE_PRESSED, sceneGestures.getOnMousePressedEventHandler());
         scene.addEventFilter( MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
         scene.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
+        
+        SceneGestures sceneGestures2 = new SceneGestures(canvas2);
+        scene2.addEventFilter( MouseEvent.MOUSE_PRESSED, sceneGestures.getOnMousePressedEventHandler());
+        scene2.addEventFilter( MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
+        scene2.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
+
+        scenes.add(scene);
+        scenes.add(scene2);
 
         globStage.setScene(scene);
         globStage.show();
 
         canvas.addGrid();
-
+        canvas2.addGrid();
+        canvases.add(canvas);
+        canvases.add(canvas2);
     }
     
     public class SceneGestures {
@@ -271,7 +230,7 @@ public class SymanticZoomTest extends Application {
 
             @Override
             public void handle(ScrollEvent event) {
-
+            	boolean changed = false;
                 double delta = 1.2;
 
                 double scale = canvas.getScale(); // currently we only use Y, same value is used for X
@@ -289,14 +248,11 @@ public class SymanticZoomTest extends Application {
                 
                 if(zoom == 1.0 && position < scenes.size() && position >= 0) {
                 	position++;
-                	globStage.setScene(scenes.get(position));
+                	changed = true;
                 }
                 else if(zoom == .01 && position < scenes.size() && position > 0) {
                 	position--;
-                	globStage.setScene(scenes.get(position));
-                }
-                else {
-                	System.out.println("Fully zoomed in or zoomed out");
+                	changed = true;
                 }
                 
                 double f = (scale / oldScale)-1;
@@ -306,7 +262,14 @@ public class SymanticZoomTest extends Application {
 
                 canvas.setScale( scale);
                 canvas.setPivot(f*dx, f*dy);
-
+                
+                if(changed == true) {
+                	System.out.println("Switching to canvas #" + position);
+                	canvas = canvases.get(position);
+                	System.out.println("Switching to scene #" + position);
+                	globStage.setScene(scenes.get(position));
+                }
+                
                 event.consume();
 
             }
