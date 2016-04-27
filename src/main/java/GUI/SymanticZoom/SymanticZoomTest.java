@@ -1,4 +1,6 @@
 package gui.SymanticZoom;
+import gui.RibbonDrawer;
+
 import java.util.ArrayList;
 
 import javafx.application.Application;
@@ -39,7 +41,7 @@ public class SymanticZoomTest extends Application {
     	 * CREATING FIRST GROUP
     	 */
     	
-        Group group = new Group();
+        
 
         // create canvas
         PannableCanvas canvas = new PannableCanvas();
@@ -51,7 +53,9 @@ public class SymanticZoomTest extends Application {
 
         // create sample nodes which can be dragged
         NodeGestures nodeGestures = new NodeGestures( canvas);
-
+        
+        Group group = RibbonDrawer.draw(canvas, nodeGestures);
+        
         Label label1 = new Label("SCENE 1");
         label1.setTranslateX(10);
         label1.setTranslateY(10);
