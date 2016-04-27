@@ -5,11 +5,11 @@ package gui.SymanticZoom;
  */
 public class DragContext {
 
-    private double mouseAnchorX;
-    private double mouseAnchorY;
+    double mouseAnchorX;
+    double mouseAnchorY;
 
-    private double translateAnchorX;
-    private double translateAnchorY;
+    double translateAnchorX;
+    double translateAnchorY;
 	public double getMouseAnchorX() {
 		return mouseAnchorX;
 	}
