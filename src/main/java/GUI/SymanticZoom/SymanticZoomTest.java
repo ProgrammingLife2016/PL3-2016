@@ -62,13 +62,7 @@ public class SymanticZoomTest extends Application {
         label1.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
         label1.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
 
-        Circle circle1 = new Circle( 300, 300, 50);
-        circle1.setStroke(Color.ORANGE);
-        circle1.setFill(Color.ORANGE.deriveColor(1, 1, 1, 0.5));
-        circle1.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        circle1.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-
-        canvas.getChildren().addAll(label1, circle1);
+        canvas.getChildren().addAll(label1);
 
         group.getChildren().add(canvas);
         
@@ -153,7 +147,7 @@ public class SymanticZoomTest extends Application {
         globStage.show();
 
         // Add grids to the canvases so that they look nicer.
-        canvas.addGrid();
+        //canvas.addGrid();
         canvas2.addGrid();
         canvas3.addGrid();
         
