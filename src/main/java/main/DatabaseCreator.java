@@ -8,7 +8,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class DatabaseCreator {
 	
@@ -26,7 +28,17 @@ public class DatabaseCreator {
 	private Statement db;
 	private Connection dbConnection;
 	
+	private List<Table> tables = new ArrayList<Table>();
+	
+	public DatabaseCreator() {
+		tables.add(new SegmentTable());
+		tables.add(new GenomeTable());
+		tables.add(new LinkTable());
+		tables.add(new GenomeSegmentLinkTable());
+	}
+	
 	public void parse(String filename, String gfaDir, String dbDir) throws GfaException {
+		
 		String line;
 		
 		String fullDbPath = dbDir + filename;
@@ -63,57 +75,38 @@ public class DatabaseCreator {
 	}
 	
 	private void parseHeader(String line) throws SQLException {
-//        System.out.println(line);
         String[] split = line.split("\\s")[1].split(":");
         if(split[0].equals("ORI")) {
         	String[] genomeNames = split[2].split(";");
         	for(int i = 0; i < genomeNames.length; i++) {
         		genomes.put(genomeNames[i],i+1);
-        		insertGenome(i+1 + "",genomeNames[i].toString());
+        		insert(new GenomeTuple(i+1,genomeNames[i]));
         	}
         }
 	}
 	
 	private void parseSegment(String line) throws SQLException {
-//		System.out.println(line);
         String[] split = line.split("\\s");
-		insertSegment(split[SEGMENT_ID_IDX],split[SEGMENT_CONTENT_IDX]);
+        insert(new SegmentTuple(Integer.parseInt(split[SEGMENT_ID_IDX]),split[SEGMENT_CONTENT_IDX]));
 		String[] genomesInSegment = split[SEGMENT_GENOMES_IDX].split(":")[2].split(";");
 		for(String gen: genomesInSegment) {
-			insertGenomeSegmentLink(split[SEGMENT_ID_IDX],genomes.get(gen).toString());
+			insert(new GenomeSegmentLinkTuple(Integer.parseInt(split[SEGMENT_ID_IDX]),genomes.get(gen)));
 		}
 	}
 	
 	private void parseLink(String line) throws SQLException {
         String[] split = line.split("\\s");
-		insertLink(split[LINK_FROM_IDX],split[LINK_TO_IDX]);
-		System.out.println(split[LINK_FROM_IDX] + ", " + split[LINK_TO_IDX]);
-        
+        insert(new LinkTuple(Integer.parseInt(split[LINK_FROM_IDX]),Integer.parseInt(split[LINK_TO_IDX])));
 	}
 	
 	private void createTables() throws SQLException {
-		this.db.executeUpdate("CREATE TABLE SEGMENTS (ID INT PRIMARY KEY,CONTENT CLOB)");
-		this.db.executeUpdate("CREATE TABLE LINKS (FROMID INT,TOID INT)");
-		this.db.executeUpdate("CREATE TABLE GENOMES (ID INT PRIMARY KEY,NAME VARCHAR)");
-		this.db.executeUpdate("CREATE TABLE GENOMESEGMENTLINK (SEGMENTID INT,GENOMEID INT)");
+		for(Table table : tables) {
+			this.db.executeUpdate(table.getCreateQuery());
+		}
 	}
 	
-	private void insertSegment(String id, String content) throws SQLException {
-		this.db.executeUpdate("INSERT INTO SEGMENTS VALUES (" + id + ",\'" + content + "\')");
+	private void insert(Tuple tuple) throws SQLException {
+		this.db.executeUpdate(tuple.getInsertQuery());
 	}
-	
-	private void insertGenome(String id, String name) throws SQLException {
-		System.out.println(id + ", " + name);
-		this.db.executeUpdate("INSERT INTO GENOMES VALUES (" + id + ",\'" + name + "\')");
-	}
-	
-	private void insertLink(String fromId, String toId) throws SQLException {
-		this.db.executeUpdate("INSERT INTO LINKS VALUES (" + fromId + "," + toId + ")");
-	}
-	
-	private void insertGenomeSegmentLink(String segmentId, String genomeId) throws SQLException {
-		this.db.executeUpdate("INSERT INTO GENOMESEGMENTLINK VALUES (" + segmentId + "," + genomeId + ")");
-	}
-	
 	
 }
