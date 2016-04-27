@@ -54,7 +54,7 @@ public class DatabaseCreator {
 		    while ((line = bufferedReader.readLine()) != null) {
 		        char type = line.charAt(0);
 		        
-		        switch(type) {
+		        switch (type) {
 			        case 'H': parseHeader(line); break;
 			        case 'S': parseSegment(line); break;
 			        case 'L': parseLink(line); break;
@@ -76,32 +76,35 @@ public class DatabaseCreator {
 	
 	private void parseHeader(String line) throws SQLException {
         String[] split = line.split("\\s")[1].split(":");
-        if(split[0].equals("ORI")) {
+        if (split[0].equals("ORI")) {
         	String[] genomeNames = split[2].split(";");
-        	for(int i = 0; i < genomeNames.length; i++) {
+        	for (int i = 0; i < genomeNames.length; i++) {
         		String genomeName = genomeNames[i];
-        		genomes.put(genomeName,i+1);
-        		insert(new GenomeTuple(i+1,genomeName.substring(0,genomeName.length()-6)));
+        		genomes.put(genomeName, i + 1);
+        		insert(new GenomeTuple(i + 1, genomeName.substring(0,genomeName.length() - 6)));
         	}
         }
 	}
 	
 	private void parseSegment(String line) throws SQLException {
-        String[] split = line.split("\\s");
-        insert(new SegmentTuple(Integer.parseInt(split[SEGMENT_ID_IDX]),split[SEGMENT_CONTENT_IDX]));
+		String[] split = line.split("\\s");
+		insert(new SegmentTuple(Integer.parseInt(split[SEGMENT_ID_IDX]),
+				split[SEGMENT_CONTENT_IDX]));
 		String[] genomesInSegment = split[SEGMENT_GENOMES_IDX].split(":")[2].split(";");
-		for(String gen: genomesInSegment) {
-			insert(new GenomeSegmentLinkTuple(Integer.parseInt(split[SEGMENT_ID_IDX]),genomes.get(gen)));
+		for (String gen : genomesInSegment) {
+			insert(new GenomeSegmentLinkTuple(Integer.parseInt(split[SEGMENT_ID_IDX]),
+					genomes.get(gen)));
 		}
 	}
 	
 	private void parseLink(String line) throws SQLException {
-        String[] split = line.split("\\s");
-        insert(new LinkTuple(Integer.parseInt(split[LINK_FROM_IDX]),Integer.parseInt(split[LINK_TO_IDX])));
+		String[] split = line.split("\\s");
+		insert(new LinkTuple(Integer.parseInt(split[LINK_FROM_IDX]), 
+				Integer.parseInt(split[LINK_TO_IDX])));
 	}
 	
 	private void createTables() throws SQLException {
-		for(Table table : tables) {
+		for (Table table : tables) {
 			this.db.executeUpdate(table.getCreateQuery());
 		}
 	}

@@ -28,7 +28,7 @@ public abstract class Table {
 		for (int i = 0; i < names.length; i++) {
 			sb.append(names[i] + " " + types[i] + " " + this.checkPrimaryKey(i) + ",");
 		}
-		sb.delete(sb.length()-2, sb.length());
+		sb.delete(sb.length() - 2, sb.length());
 		sb.append(")");
 		return sb.toString();
 	}
@@ -41,7 +41,7 @@ public abstract class Table {
 	 *         empty String otherwise.
 	 */
 	private String checkPrimaryKey(int idx) {
-		if(idx == primaryKeyIdx) {
+		if (idx == primaryKeyIdx) {
 			return "PRIMARY KEY";
 		}
 		return "";
