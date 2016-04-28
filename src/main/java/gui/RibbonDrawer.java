@@ -42,7 +42,7 @@ public class RibbonDrawer {
 			Path path = drawPath(coords[fromID-1], coords[toID-1], maxX, maxY);
 	        path.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
 	        path.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-	        path.setStrokeWidth(dbm.getDBReader().countGenomesInLink(fromID, toID));
+	        path.setStrokeWidth(0.01 + 0.003 * dbm.getDBReader().countGenomesInLink(fromID, toID));
 	        canvas.getChildren().add(path);
 		}
 		return group;
@@ -69,8 +69,8 @@ public class RibbonDrawer {
 	}
 	
 	private Path drawPath(Coordinate from, Coordinate to, int maxX, int maxY) {
-		MoveTo moveto = new MoveTo(600/(maxX + 2) * from.getX() + 600/(maxX + 2), 600/(maxY + 2) * from.getY());
-		LineTo lineto = new LineTo(600/(maxX + 2) * to.getX()+ 600/(maxX + 2), 600/(maxY + 2) * to.getY());
+		MoveTo moveto = new MoveTo(0.1 * from.getX(), 0.5 * from.getY());
+		LineTo lineto = new LineTo(0.1 * to.getX() , 0.5 * to.getY());
 		Path path = new Path();
 		path.getElements().addAll(moveto, lineto);
 		return path;

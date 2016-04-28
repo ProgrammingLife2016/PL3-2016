@@ -28,8 +28,8 @@ public class CoordinateDetermination {
 		 */
 		coordinates = new Coordinate[noOfSegments];
 		cWeights = new int[noOfSegments];
-		coordinates[0] = new Coordinate(0,4);
-		cWeights[0] = 4;
+		coordinates[0] = new Coordinate(0,10);
+		cWeights[0] = 10;
 		
 		System.out.println(noOfSegments);
 		for(int i = 1; i <= noOfSegments; i++) {
@@ -40,7 +40,6 @@ public class CoordinateDetermination {
 			ArrayList<Integer> tos = getToIDs(i);
 			
 			for(int j = 0; j < tos.size(); j++) {
-				System.out.println("Count from 3 to 8 " + countGenomesInLink(3, 8));
 				leftToDraw = leftToDraw - countGenomesInLink(i, tos.get(j));
 				int x = c.getX() + 1;
 				int y = c.getY() - leftToDraw + alreadyDrawn;
