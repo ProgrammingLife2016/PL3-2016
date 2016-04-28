@@ -2,16 +2,24 @@ package coordinates;
 
 import java.util.ArrayList;
 
+import db.DatabaseManager;
+
 public class CoordinateDetermination {
 	
-	private static ArrayList<Integer> fromIDs;
-	private static ArrayList<Integer> toIDs;
+	private ArrayList<Integer> fromIDs;
+	private ArrayList<Integer> toIDs;
 	
-	private static int[] noOfGpS;
-	private static Coordinate[] coordinates;
-	private static int[] cWeights;
+	private int[] noOfGpS;
+	private Coordinate[] coordinates;
+	private int[] cWeights;
+	private DatabaseManager dbm;
 	
-	public static Coordinate[] calcCoords() {
+	public CoordinateDetermination(DatabaseManager dbm) {
+		this.dbm = dbm;
+		getData();
+	}
+	
+	public Coordinate[] calcCoords() {
 		getData();
 		int noOfSegments = toIDs.get(toIDs.size() - 1);
 		
@@ -46,7 +54,7 @@ public class CoordinateDetermination {
 		return coordinates;
 	}
 	
-	public static void storeCoord(Coordinate c, int segID, int weight) {
+	public void storeCoord(Coordinate c, int segID, int weight) {
 		if (coordinates[segID-1] == null) {
 			coordinates[segID-1] = c;
 			cWeights[segID-1] = weight;
@@ -61,95 +69,25 @@ public class CoordinateDetermination {
 	}
 	
 	
-	private static ArrayList<Integer> getTo(int fromID) {
-		//return getToIDs(fromID);
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		for(int i = 0; i < fromIDs.size(); i++) {
-			if (fromIDs.get(i) == fromID) {
-				list.add(toIDs.get(i));
-			}
-		}
-		return list;
+	private ArrayList<Integer> getTo(int fromID) {
+		return dbm.getDBReader().getToIDs(fromID);
 	}
-	
-	/***
-	 * TODO: Uncomment the 2 lines in the getData method and remove the rest
-	 */
-	
-	private static void getData() {
 
-		//fromIDs = getAllFromID();
-		//toIDs = getAllToID();
-		fromIDs = new ArrayList<Integer>();
-		toIDs = new ArrayList<Integer>();
-		
-		addDummyFromIDData();
-		addDummyToIDData();
-		addDummyGpSData();
+	private void getData() {
+		fromIDs = dbm.getDBReader().getAllFromID();
+		toIDs = dbm.getDBReader().getAllToID();
 	}
 	
-	/***
-	 * TODO: Remove the 3 dummy methods
-	 */
-	
-	private static void addDummyGpSData() {
-		noOfGpS = new int[9];
-		noOfGpS[0] = 4;
-		noOfGpS[1] = 2;
-		noOfGpS[2] = 2;
-		noOfGpS[3] = 1;
-		noOfGpS[4] = 1;
-		noOfGpS[5] = 1;
-		noOfGpS[6] = 2;
-		noOfGpS[7] = 2;
-		noOfGpS[8] = 4;
+	public int countGenomesInLink(int i, int j) {
+		return dbm.getDBReader().countGenomesInLink(i, j);
 	}
 	
-	private static void addDummyFromIDData() {
-		fromIDs.add(1);
-		fromIDs.add(1);
-		fromIDs.add(2);
-		fromIDs.add(2);
-		fromIDs.add(3);
-		fromIDs.add(3);
-		fromIDs.add(4);
-		fromIDs.add(5);
-		fromIDs.add(6);
-		fromIDs.add(7);
-		fromIDs.add(8);
+	public int countGenomesInSeg(int segmentID) {
+		return dbm.getDBReader().countGenomesInSeg(segmentID);
 	}
 	
-	private static void addDummyToIDData() {
-		toIDs.add(2);
-		toIDs.add(3);
-		toIDs.add(4);
-		toIDs.add(5);
-		toIDs.add(6);
-		toIDs.add(8);
-		toIDs.add(7);
-		toIDs.add(7);
-		toIDs.add(8);
-		toIDs.add(9);
-		toIDs.add(9);
+	public ArrayList<Integer> getToIDs(int fromID) {
+		return dbm.getDBReader().getToIDs(fromID);
 	}
-	
-	
-	/***
-	 * TODO: Add the right database method to the following methods
-	 */
-	
-	public static int countGenomesInLink(int i, int j) {
-		if(i == 1 || i == 7 || i == 8) {return 2;}
-		else return 1;	
-	}
-	
-	public static int countGenomesInSeg(int segmentID) {
-		return noOfGpS[segmentID-1];
-	}
-	
-	public static ArrayList<Integer> getToIDs(int fromID) {
-		return getTo(fromID);
-	}
-	
 	
 }

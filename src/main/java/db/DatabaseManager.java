@@ -15,9 +15,9 @@ import db.tuples.Tuple;
  *
  */
 public class DatabaseManager {
-	protected Statement db;
-	protected Connection dbConnection;
-	protected DatabaseReader dbReader;
+	private Statement db;
+	private Connection dbConnection;
+	private DatabaseReader dbReader;
 	
 	public DatabaseManager(String dbPath) {
 		try {
@@ -28,7 +28,7 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Closes the connection to the database.
 	 * 

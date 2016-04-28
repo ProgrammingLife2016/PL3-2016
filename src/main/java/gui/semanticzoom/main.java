@@ -3,6 +3,9 @@ import gui.RibbonDrawer;
 
 import java.util.ArrayList;
 
+import db.DatabaseManager;
+import db.GfaException;
+import db.GfaParser;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -34,7 +37,23 @@ public class main extends Application {
     public void start(Stage stage) {
 
     	globStage = stage;
+    	String filename = "TB10";
     	
+    	String gfaPath = System.getProperty("user.dir") + "/Data/" + filename + "/" + filename + ".gfa";
+		String dbPath = System.getProperty("user.dir") + "/db/" + filename;
+		
+		DatabaseManager dbm = new DatabaseManager(dbPath);
+//		GfaParser parser = new GfaParser(dbm);
+//		
+//		try {
+//			parser.parse(gfaPath);
+//		} catch (GfaException e) {
+//			e.printStackTrace();
+//		}
+    	
+
+		
+		
     	// CREATING THE INITIAL GROUP TO DISPLAY
 
         PannableCanvas canvas = new PannableCanvas();
@@ -43,8 +62,10 @@ public class main extends Application {
         canvas.setTranslateY(100);
 
         NodeGestures nodeGestures = new NodeGestures( canvas);
+        RibbonDrawer ribbonDrawer = new RibbonDrawer(dbm);
         
-        Group group = RibbonDrawer.draw(canvas, nodeGestures);
+        Group group = ribbonDrawer.draw(canvas, nodeGestures);
+
         
         Label label1 = new Label("ZOOM LEVEL 1");
         label1.setTranslateX(10);

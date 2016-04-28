@@ -24,7 +24,9 @@ public class RibbonDrawer {
 	}
 
 	public Group draw(PannableCanvas canvas, NodeGestures nodeGestures) {
-		Coordinate[] coords = CoordinateDetermination.calcCoords();
+		
+		CoordinateDetermination cdm = new CoordinateDetermination(dbm);
+		Coordinate[] coords = cdm.calcCoords();
 		ArrayList<Integer> from = dbm.getDBReader().getAllFromID();
 		ArrayList<Integer> to = dbm.getDBReader().getAllToID();
 		
@@ -36,6 +38,7 @@ public class RibbonDrawer {
 		for(int i = 0; i < from.size(); i++) {
 			int fromID = from.get(i);
 			int toID = to.get(i);
+			System.out.println(i);
 			Path path = drawPath(coords[fromID-1], coords[toID-1], maxX, maxY);
 	        path.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
 	        path.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
