@@ -20,4 +20,8 @@ target/
 .project
 .classpath
 .eclipse-pmd
+<<<<<<< HEAD
 .DS_STORE
+=======
+.DS_Store
+>>>>>>> SymanticZoom
