@@ -1,19 +1,33 @@
 package main;
 
-import db.DatabaseCreator;
+import java.util.ArrayList;
+import java.util.List;
+
+import db.DatabaseManager;
 import db.GfaException;
+import db.GfaParser;
+import db.tables.*;
+import db.tables.Table;
 
 public class Main {
 
 	public static void main(String[] args) {
 		
 		String filename = "TB10";
-		String gfaDir = System.getProperty("user.dir") + "/Data/";
-		String dbDir = System.getProperty("user.dir") + "/db/";
+		String gfaPath = System.getProperty("user.dir") + "/Data/" + filename + "/" + filename + ".gfa";
+		String dbPath = System.getProperty("user.dir") + "/db/" + filename;
 		
-		DatabaseCreator dbCreator = new DatabaseCreator();
+		List<Table> tables = new ArrayList<>();
+		tables.add(new SegmentTable());
+		tables.add(new GenomeTable());
+		tables.add(new LinkTable());
+		tables.add(new GenomeSegmentLinkTable());
+		
+		DatabaseManager dbManager = new DatabaseManager(dbPath, tables);
+		GfaParser parser = new GfaParser(dbManager);
+		
 		try {
-			dbCreator.parse(filename,gfaDir,dbDir);
+			parser.parse(gfaPath);
 		} catch (GfaException e) {
 			e.printStackTrace();
 		}
