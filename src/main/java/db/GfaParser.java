@@ -4,8 +4,15 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import db.tables.GenomeSegmentLinkTable;
+import db.tables.GenomeTable;
+import db.tables.LinkTable;
+import db.tables.SegmentTable;
+import db.tables.Table;
 import db.tuples.*;
 
 public class GfaParser {
@@ -16,6 +23,8 @@ public class GfaParser {
 	
 	private final int LINK_FROM_IDX = 1;
 	private final int LINK_TO_IDX = 3;
+	
+	private List<Table> tables = new ArrayList<>();
 	
 	private HashMap<String,Integer> genomes = new HashMap<>();
 	private DatabaseManager dbManager;
@@ -34,6 +43,12 @@ public class GfaParser {
 	 * @throws GfaException
 	 */
 	public void parse(String gfaPath) throws GfaException {
+		
+		tables.add(new SegmentTable());
+		tables.add(new GenomeTable());
+		tables.add(new LinkTable());
+		tables.add(new GenomeSegmentLinkTable());
+		dbManager.createTables(tables);
 		
 		String line;
 		try {

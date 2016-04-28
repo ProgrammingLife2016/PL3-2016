@@ -11,13 +11,12 @@ import java.util.List;
 import db.*;
 import db.tables.*;
 
-@SuppressWarnings("restriction")
-public abstract class Main extends Application {
+public abstract class Main {
 	
-	private static Class c0 = Gui.class;
-	private static Class c1 = TutorialSceneswitch.class;
-	private static Class c2 = Graphdrawer.class;
-	static Class Tutorials[] = {c0, c1, c2};
+//	private static Class c0 = Gui.class;
+//	private static Class c1 = TutorialSceneswitch.class;
+//	private static Class c2 = Graphdrawer.class;
+//	static Class Tutorials[] = {c0, c1, c2};
 	
 	/**
 	 * Launch application.
@@ -29,13 +28,7 @@ public abstract class Main extends Application {
 		String gfaPath = System.getProperty("user.dir") + "/Data/" + filename + "/" + filename + ".gfa";
 		String dbPath = System.getProperty("user.dir") + "/db/" + filename;
 		
-		List<Table> tables = new ArrayList<>();
-		tables.add(new SegmentTable());
-		tables.add(new GenomeTable());
-		tables.add(new LinkTable());
-		tables.add(new GenomeSegmentLinkTable());
-		
-		DatabaseManager dbManager = new DatabaseManager(dbPath, tables);
+		DatabaseManager dbManager = new DatabaseManager(dbPath);
 		GfaParser parser = new GfaParser(dbManager);
 		
 		try {

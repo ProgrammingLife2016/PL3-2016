@@ -20,11 +20,10 @@ public class DatabaseManager {
 	private Statement db;
 	private Connection dbConnection;
 	
-	public DatabaseManager(String dbPath, List<Table> tables) {
+	public DatabaseManager(String dbPath) {
 		try {
 		    dbConnection = DriverManager.getConnection("jdbc:h2:" + dbPath);
 			db = dbConnection.createStatement();
-			this.createTables(tables);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
