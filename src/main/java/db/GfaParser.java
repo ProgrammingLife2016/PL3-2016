@@ -6,18 +6,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
-import db.tuples.GenomeSegmentLinkTuple;
-import db.tuples.GenomeTuple;
-import db.tuples.LinkTuple;
-import db.tuples.SegmentTuple;
+import db.tuples.*;
 
 public class GfaParser {
 	
 	private final int SEGMENT_ID_IDX = 1;
 	private final int SEGMENT_CONTENT_IDX = 2;
 	private final int SEGMENT_GENOMES_IDX = 4;
-//	private final int SEGMENT_REF_GENOME_IDX = 5;
-//	private final int SEGMENT_REF_COORD_IDX = 6;
 	
 	private final int LINK_FROM_IDX = 1;
 	private final int LINK_TO_IDX = 3;

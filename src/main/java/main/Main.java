@@ -3,11 +3,8 @@ package main;
 import java.util.ArrayList;
 import java.util.List;
 
-import db.DatabaseManager;
-import db.GfaException;
-import db.GfaParser;
+import db.*;
 import db.tables.*;
-import db.tables.Table;
 
 public class Main {
 
