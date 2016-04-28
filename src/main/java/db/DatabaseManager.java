@@ -19,12 +19,11 @@ public class DatabaseManager {
 	protected Connection dbConnection;
 	protected DatabaseReader dbReader;
 	
-	public DatabaseManager(String dbPath, List<Table> tables) {
+	public DatabaseManager(String dbPath) {
 		try {
 		    dbConnection = DriverManager.getConnection("jdbc:h2:" + dbPath);
 			db = dbConnection.createStatement();
 			dbReader = new DatabaseReader(db);
-			this.createTables(tables);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
