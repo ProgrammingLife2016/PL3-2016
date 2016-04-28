@@ -31,19 +31,21 @@ public class CoordinateDetermination {
 		coordinates[0] = new Coordinate(0,4);
 		cWeights[0] = 4;
 		
-		
+		System.out.println(noOfSegments);
 		for(int i = 1; i <= noOfSegments; i++) {
+			System.out.println(i);
 			int alreadyDrawn = 0;
 			int leftToDraw = countGenomesInSeg(i);
 			Coordinate c = coordinates[i-1];
 			ArrayList<Integer> tos = getToIDs(i);
 			
 			for(int j = 0; j < tos.size(); j++) {
-				leftToDraw = leftToDraw - countGenomesInLink(i, j);
+				System.out.println("Count from 3 to 8 " + countGenomesInLink(3, 8));
+				leftToDraw = leftToDraw - countGenomesInLink(i, tos.get(j));
 				int x = c.getX() + 1;
 				int y = c.getY() - leftToDraw + alreadyDrawn;
-				storeCoord(new Coordinate(x,y), tos.get(j), countGenomesInLink(i, j));
-				alreadyDrawn += countGenomesInLink(i, j);
+				storeCoord(new Coordinate(x,y), tos.get(j), countGenomesInLink(i, tos.get(j)));
+				alreadyDrawn += countGenomesInLink(i, tos.get(j));
 			}
 		}
 		for (int i = 1; i <= 9; i++) {
