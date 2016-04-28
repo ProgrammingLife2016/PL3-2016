@@ -1,4 +1,6 @@
-package main;
+package db.tuples;
+
+import db.tables.LinkTable;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package main;
+package db;
 
 public class GfaException extends Exception {
 

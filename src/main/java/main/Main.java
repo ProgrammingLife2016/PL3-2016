@@ -1,5 +1,8 @@
 package main;
 
+import db.DatabaseCreator;
+import db.GfaException;
+
 public class Main {
 
 	public static void main(String[] args) {

@@ -1,4 +1,6 @@
-package main;
+package db.tuples;
+
+import db.tables.Table;
 
 /**
  * 
@@ -19,7 +21,7 @@ public abstract class Tuple {
 	 *         database.
 	 */
 	public String getInsertQuery() {
-		return "INSERT INTO " + table.name + this.getInsertValues();
+		return "INSERT INTO " + table.getName() + this.getInsertValues();
 	}
 	
 	/**

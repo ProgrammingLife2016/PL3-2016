@@ -1,4 +1,4 @@
-package main;
+package db.tables;
 
 /**
  * Helper class to aid the creation of tables in the database. Extending this

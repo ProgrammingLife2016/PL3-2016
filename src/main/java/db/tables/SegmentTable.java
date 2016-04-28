@@ -1,4 +1,4 @@
-package main;
+package db.tables;
 
 /**
  * 
@@ -7,7 +7,7 @@ package main;
  */
 public class SegmentTable extends Table {
 	
-	SegmentTable() {
+	public SegmentTable() {
 		this.name = "SEGMENTS";
 		this.names = new String[]{"ID","CONTENT"};
 		this.types = new String[]{"INT","CLOB"};

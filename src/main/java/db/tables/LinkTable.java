@@ -1,4 +1,4 @@
-package main;
+package db.tables;
 
 /**
  * 
@@ -7,7 +7,7 @@ package main;
  */
 public class LinkTable extends Table {
 	
-	LinkTable() {
+	public LinkTable() {
 		this.name = "LINKS";
 		this.names = new String[]{"FROMID","TOID"};
 		this.types = new String[]{"INT","INT"};

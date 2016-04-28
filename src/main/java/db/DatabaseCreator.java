@@ -1,4 +1,4 @@
-package main;
+package db;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -11,6 +11,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import db.tables.GenomeSegmentLinkTable;
+import db.tables.GenomeTable;
+import db.tables.LinkTable;
+import db.tables.SegmentTable;
+import db.tables.Table;
+import db.tuples.GenomeSegmentLinkTuple;
+import db.tuples.GenomeTuple;
+import db.tuples.LinkTuple;
+import db.tuples.SegmentTuple;
+import db.tuples.Tuple;
 
 public class DatabaseCreator {
 	

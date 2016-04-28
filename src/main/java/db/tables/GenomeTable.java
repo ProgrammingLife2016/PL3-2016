@@ -1,4 +1,4 @@
-package main;
+package db.tables;
 
 /**
  * 
@@ -7,7 +7,7 @@ package main;
  */
 public class GenomeTable extends Table {
 	
-	GenomeTable() {
+	public GenomeTable() {
 		this.name = "GENOMES";
 		this.names = new String[]{"ID","NAME"};
 		this.types = new String[]{"INT","VARCHAR"};
