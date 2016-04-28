@@ -1,7 +1,7 @@
 package gui;
 
-import gui.SymanticZoom.NodeGestures;
-import gui.SymanticZoom.PannableCanvas;
+import gui.semanticzoom.NodeGestures;
+import gui.semanticzoom.PannableCanvas;
 
 import java.util.ArrayList;
 

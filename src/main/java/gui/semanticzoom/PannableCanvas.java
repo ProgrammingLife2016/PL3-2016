@@ -1,4 +1,4 @@
-package gui.SymanticZoom;
+package gui.semanticzoom;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

@@ -1,4 +1,4 @@
-package gui.SymanticZoom;
+package gui.semanticzoom;
 import gui.RibbonDrawer;
 
 import java.util.ArrayList;

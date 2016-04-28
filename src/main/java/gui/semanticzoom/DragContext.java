@@ -1,4 +1,4 @@
-package gui.SymanticZoom;
+package gui.semanticzoom;
 
 /**
  * Mouse drag context used for scene and nodes.
