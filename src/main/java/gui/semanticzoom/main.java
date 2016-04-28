@@ -19,16 +19,14 @@ import javafx.stage.Stage;
  * An application with a zoomable and pannable canvas.
  */
 @SuppressWarnings("restriction")
-public class SemanticZoomTest extends Application {
+public class main extends Application {
+	
     public static void main(String[] args) {
         launch(args);
     }
 
-    ArrayList<Scene> scenes = new ArrayList<Scene>();
     ArrayList<PannableCanvas> canvases = new ArrayList<PannableCanvas>();
     Scene scene;
-    Scene scene2;
-    Scene scene3;
     Stage globStage;
     int position = 0;
     
@@ -37,121 +35,71 @@ public class SemanticZoomTest extends Application {
 
     	globStage = stage;
     	
-    	/**
-    	 * CREATING FIRST GROUP
-    	 */
-    	
-        
+    	// CREATING THE INITIAL GROUP TO DISPLAY
 
-        // create canvas
         PannableCanvas canvas = new PannableCanvas();
-
-        // we don't want the canvas on the top/left in this example => just
-        // translate it a bit
+        
         canvas.setTranslateX(100);
         canvas.setTranslateY(100);
 
-        // create sample nodes which can be dragged
         NodeGestures nodeGestures = new NodeGestures( canvas);
         
         Group group = RibbonDrawer.draw(canvas, nodeGestures);
         
-        Label label1 = new Label("SCENE 1");
+        Label label1 = new Label("ZOOM LEVEL 1");
         label1.setTranslateX(10);
         label1.setTranslateY(10);
-        label1.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-        label1.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
 
         canvas.getChildren().addAll(label1);
 
         group.getChildren().add(canvas);
         
-        /**
-         * CREATING SECOND CANVAS
-         */
-
-        // create canvas
+        // CREATE THE SECOND SCENE FOR TESTING PURPOSES
+        // WONT BE NEEDED ONCE WE HAVE THE ACTUAL SECOND LEVEL
+        
         PannableCanvas canvas2 = new PannableCanvas();
-
-        // we don't want the canvas on the top/left in this example => just
-        // translate it a bit
-        canvas2.setTranslateX(100);
-        canvas2.setTranslateY(100);
-
-        // create sample nodes which can be dragged
-        NodeGestures nodeGestures2 = new NodeGestures( canvas);
 
         Label label12 = new Label("SCENE 2");
         label12.setTranslateX(10);
         label12.setTranslateY(10);
-        label12.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures2.getOnMousePressedEventHandler());
-        label12.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures2.getOnMouseDraggedEventHandler());
 
-        Rectangle rect12 = new Rectangle(100,100);
-        rect12.setTranslateX(450);
-        rect12.setTranslateY(450);
-        rect12.setStroke(Color.BLUE);
-        rect12.setFill(Color.BLUE.deriveColor(1, 1, 1, 0.5));
-        rect12.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures2.getOnMousePressedEventHandler());
-        rect12.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures2.getOnMouseDraggedEventHandler());
+        Circle circle1 = new Circle(300, 300, 50);
+        circle1.setStroke(Color.ORANGE);
+        circle1.setFill(Color.ORANGE.deriveColor(1, 1, 1, 0.5));
 
-        canvas2.getChildren().addAll(label12, rect12);
+        canvas2.getChildren().addAll(label12, circle1);
         
-        /**
-         * CREATING THIRD CANVAS (FOR TESTING FUTURE IMPLEMENTATIONS WITH MORE LEVELS)
-         */
+        // CREATING THE THIRD CANVAS AGAIN FOR TESTING PURPOSES
+        // WILL BE DELETED ONCE ITS NO LONGER NEEDED
         
-        // create canvas
         PannableCanvas canvas3 = new PannableCanvas();
-
-        // we don't want the canvas on the top/left in this example => just
-        // translate it a bit
-        canvas3.setTranslateX(100);
-        canvas3.setTranslateY(100);
-
-        // create sample nodes which can be dragged
-        NodeGestures nodeGestures3 = new NodeGestures( canvas);
 
         Label label3 = new Label("SCENE 3");
         label3.setTranslateX(10);
         label3.setTranslateY(10);
-        label3.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures3.getOnMousePressedEventHandler());
-        label3.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures3.getOnMouseDraggedEventHandler());
 
-        Circle circle3 = new Circle( 300, 300, 50);
-        circle3.setStroke(Color.ORANGE);
-        circle3.setFill(Color.ORANGE.deriveColor(1, 1, 1, 0.5));
-        circle3.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures3.getOnMousePressedEventHandler());
-        circle3.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures3.getOnMouseDraggedEventHandler());
+        Circle circle2 = new Circle(300, 300, 50);
+        circle2.setStroke(Color.ORANGE);
+        circle2.setFill(Color.ORANGE.deriveColor(1, 1, 1, 0.5));
 
-        canvas3.getChildren().addAll(label3, circle3);
+        canvas3.getChildren().addAll(label3, circle2);
         
-        /**
-         * SETTING UP SCENE
-         */
-        
-        // create scene which can be dragged and zoomed
+        // SETTING UP THE INITIAL SCENE
+
         scene = new Scene(group, 1024, 768);
-        
-        // Adding the sceneGesture listeners to the scenes
+
         SceneGestures sceneGestures = new SceneGestures(canvas);
         scene.addEventFilter( MouseEvent.MOUSE_PRESSED, sceneGestures.getOnMousePressedEventHandler());
         scene.addEventFilter( MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
         scene.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
 
-        // Add the scenes to the global scene array list for use in listeners.
-        scenes.add(scene);
-
-        // Use the global instance of the stage so scene can be changed inside the listeners.
         globStage.setScene(scene);
         globStage.show();
 
-        // Add grids to the canvases so that they look nicer.
-        //canvas.addGrid();
+        canvas.addGrid();
         canvas2.addGrid();
         canvas3.addGrid();
-        
-        // Add the canvases to the global array list of canvas for use in the listeners.
+
         canvases.add(canvas);
         canvases.add(canvas2);
         canvases.add(canvas3);
@@ -186,7 +134,6 @@ public class SemanticZoomTest extends Application {
 
             public void handle(MouseEvent event) {
 
-                // right mouse button => panning
                 if( !event.isSecondaryButtonDown())
                     return;
 
@@ -203,7 +150,6 @@ public class SemanticZoomTest extends Application {
         private EventHandler<MouseEvent> onMouseDraggedEventHandler = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
 
-                // right mouse button => panning
                 if( !event.isSecondaryButtonDown())
                     return;
 
