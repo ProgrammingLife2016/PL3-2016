@@ -17,8 +17,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 
 /**
  * An application with a zoomable and pannable canvas.
@@ -37,12 +35,6 @@ public class main extends Application {
     
     @Override
     public void start(Stage stage) {
-
-    	Alert alert = new Alert(AlertType.INFORMATION);
-    	alert.setTitle("Startup");
-    	alert.setHeaderText("The program is loading up.");
-    	alert.setContentText("The program has started, please be patient as the program loads the data. It is currently slow, but as long as this message remains, it is still working. This generally takes a few minutes.");
-    	alert.show();
     	
     	globStage = stage;
     	String filename = "TB10";
