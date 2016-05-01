@@ -1,24 +1,19 @@
 package coordinates;
 
-/**
- * Simple coordinate object for positioning of segments.
- * 
- * @author Rob Kapel
- */
 public class Coordinate {
-	private int xc;
-	private int yc;
+	private int x;
+	private int y;
 	
-	public Coordinate(int xcoord, int ycoord) {
-		xc = xcoord;
-		yc = ycoord;
+	public Coordinate(int xCoord, int yCoord) {
+		x = xCoord;
+		y = yCoord;
 	}
 	
 	public int getX() {
-		return xc;
+		return x;
 	}
 	
 	public int getY() {
-		return yc;
+		return y;
 	}
 }

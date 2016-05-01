@@ -1,58 +1,24 @@
 package coordinates;
 
-import db.DatabaseManager;
-
 import java.util.ArrayList;
 
-@SuppressWarnings("unused")
+import db.DatabaseManager;
+
 public class CoordinateDetermination {
-	/**
-	 * List with starting points of each link.
-	 * The segment Id's correspond to those in the "toIDs" list (in order).
-	 */
-	private ArrayList<Integer> fromIDs;
 	
-	/**
-	 * List with ending points of each link.
-	 * The segment Id's correspond to those in the "fromIDs" list (in order).
-	 */
+	private ArrayList<Integer> fromIDs;
 	private ArrayList<Integer> toIDs;
 	
-	/**
-	 * ?
-	 */
 	private int[] noOfGpS;
-	
-	/**
-	 * List with coordinates of each segment.
-	 */
 	private Coordinate[] coordinates;
-	
-	/**
-	 * List with amount of genomes that travel throgh a certain link.
-	 */
-	private int[] cweights;
-	
-	/**
-	 * Database Object required to extract required data about segments and links.
-	 */
+	private int[] cWeights;
 	private DatabaseManager dbm;
 	
-	/**
-	 * Constructor. Gets required data from database.
-	 * @param dbm
-	 */
 	public CoordinateDetermination(DatabaseManager dbm) {
 		this.dbm = dbm;
 		getData();
 	}
 	
-	/**
-	 * Calculates coordinates involving all segments to determine a path to be used by ribbons.
-	 * 
-	 * @return coordinates
-	 * 				Array of coordinates of segments.
-	 */
 	public Coordinate[] calcCoords() {
 		getData();
 		int noOfSegments = toIDs.get(toIDs.size() - 1);
@@ -61,58 +27,51 @@ public class CoordinateDetermination {
 		 * TODO: Substitute "4" for number of genomes
 		 */
 		coordinates = new Coordinate[noOfSegments];
-		cweights = new int[noOfSegments];
+		cWeights = new int[noOfSegments];
 		coordinates[0] = new Coordinate(0,10);
-		cweights[0] = 10;
+		cWeights[0] = 10;
 		
 		System.out.println(noOfSegments);
-		for (int i = 1; i <= noOfSegments; i++) {
+		for(int i = 1; i <= noOfSegments; i++) {
 			System.out.println(i);
 			int alreadyDrawn = 0;
 			int leftToDraw = countGenomesInSeg(i);
-			Coordinate coords = coordinates[i - 1];
-			ArrayList<Integer> outgoingedges = getToIDs(i);
+			Coordinate c = coordinates[i-1];
+			ArrayList<Integer> tos = getToIDs(i);
 			
-			for (int j = 0; j < outgoingedges.size(); j++) {
-				leftToDraw = leftToDraw - countGenomesInLink(i, outgoingedges.get(j));
-				int xc = coords.getX() + 1;
-				int yc = coords.getY() - leftToDraw + alreadyDrawn;
-				storeCoord(new Coordinate(xc,yc), outgoingedges.get(j),
-						countGenomesInLink(i, outgoingedges.get(j)));
-				alreadyDrawn += countGenomesInLink(i, outgoingedges.get(j));
+			for(int j = 0; j < tos.size(); j++) {
+				leftToDraw = leftToDraw - countGenomesInLink(i, tos.get(j));
+				int x = c.getX() + 1;
+				int y = c.getY() - leftToDraw + alreadyDrawn;
+				storeCoord(new Coordinate(x,y), tos.get(j), countGenomesInLink(i, tos.get(j)));
+				alreadyDrawn += countGenomesInLink(i, tos.get(j));
 			}
 		}
 		for (int i = 1; i <= 9; i++) {
 			System.out.println("SegID: " + i);
-			System.out.println("X: " + coordinates[i - 1].getX());
-			System.out.println("Y: " + coordinates[i - 1].getY());
+			System.out.println("X: " + coordinates[i-1].getX());
+			System.out.println("Y: " + coordinates[i-1].getY());
 		}
 		return coordinates;
 	}
 	
-	/**
-	 * Stores a specific coordinate in the global coordinates list.
-	 * 
-	 * @param coord
-	 * @param segId
-	 * @param weight
-	 */
-	public void storeCoord(Coordinate coord, int segId, int weight) {
-		if (coordinates[segId - 1] == null) {
-			coordinates[segId - 1] = coord;
-			cweights[segId - 1] = weight;
-		} else {
-			Coordinate oldCoord = coordinates[segId - 1];
-			int newX = Math.max(coord.getX(), oldCoord.getX());
-			int newY = (coord.getY() * weight + oldCoord.getY() * cweights[segId - 1])
-					/ (weight + cweights[segId - 1]);
-			coordinates[segId - 1] = new Coordinate(newX, newY);
-			cweights[segId - 1] += weight;
+	public void storeCoord(Coordinate c, int segID, int weight) {
+		if (coordinates[segID-1] == null) {
+			coordinates[segID-1] = c;
+			cWeights[segID-1] = weight;
+		}
+		else {
+			Coordinate oldCoord = coordinates[segID-1];
+			int newX = Math.max(c.getX(), oldCoord.getX());
+			int newY = (c.getY() * weight + oldCoord.getY() * cWeights[segID-1]) / (weight + cWeights[segID-1]);
+			coordinates[segID-1] = new Coordinate(newX, newY);
+			cWeights[segID-1] += weight;
 		}
 	}
 	
-	private ArrayList<Integer> getTo(int fromId) {
-		return dbm.getDBReader().getToIDs(fromId);
+	
+	private ArrayList<Integer> getTo(int fromID) {
+		return dbm.getDBReader().getToIDs(fromID);
 	}
 
 	private void getData() {
@@ -120,15 +79,16 @@ public class CoordinateDetermination {
 		toIDs = dbm.getDBReader().getAllToID();
 	}
 	
-	public int countGenomesInLink(int start, int end) {
-		return dbm.getDBReader().countGenomesInLink(start, end);
+	public int countGenomesInLink(int i, int j) {
+		return dbm.getDBReader().countGenomesInLink(i, j);
 	}
 	
-	public int countGenomesInSeg(int segmentId) {
-		return dbm.getDBReader().countGenomesInSeg(segmentId);
+	public int countGenomesInSeg(int segmentID) {
+		return dbm.getDBReader().countGenomesInSeg(segmentID);
 	}
 	
-	public ArrayList<Integer> getToIDs(int fromId) {
-		return dbm.getDBReader().getToIDs(fromId);
+	public ArrayList<Integer> getToIDs(int fromID) {
+		return dbm.getDBReader().getToIDs(fromID);
 	}
+	
 }
