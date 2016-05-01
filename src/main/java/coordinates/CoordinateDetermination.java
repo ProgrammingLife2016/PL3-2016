@@ -47,6 +47,12 @@ public class CoordinateDetermination {
 		getData();
 	}
 	
+	/**
+	 * Calculates coordinates involving all segments to determine a path to be used by ribbons.
+	 * 
+	 * @return coordinates
+	 * 				Array of coordinates of segments.
+	 */
 	public Coordinate[] calcCoords() {
 		getData();
 		int noOfSegments = toIDs.get(toIDs.size() - 1);
@@ -84,6 +90,13 @@ public class CoordinateDetermination {
 		return coordinates;
 	}
 	
+	/**
+	 * Stores a specific coordinate in the global coordinates list.
+	 * 
+	 * @param coord
+	 * @param segId
+	 * @param weight
+	 */
 	public void storeCoord(Coordinate coord, int segId, int weight) {
 		if (coordinates[segId - 1] == null) {
 			coordinates[segId - 1] = coord;
@@ -118,5 +131,4 @@ public class CoordinateDetermination {
 	public ArrayList<Integer> getToIDs(int fromId) {
 		return dbm.getDBReader().getToIDs(fromId);
 	}
-	
 }
