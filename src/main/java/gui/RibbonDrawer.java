@@ -1,8 +1,5 @@
 package gui;
 
-import gui.semanticzoom.NodeGestures;
-import gui.semanticzoom.PannableCanvas;
-
 import java.sql.Statement;
 import java.util.ArrayList;
 

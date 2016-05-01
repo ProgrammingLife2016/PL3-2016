@@ -1,8 +1,6 @@
-package main;
+package customMain;
 
-import gui.Graphdrawer;
-import gui.Gui;
-import gui.TutorialSceneswitch;
+
 import javafx.application.Application;
 
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ public abstract class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String filename = "TB10";
+		String filename = "example";
 		String gfaPath = System.getProperty("user.dir") + "/Data/" + filename + "/" + filename + ".gfa";
 		String dbPath = System.getProperty("user.dir") + "/db/" + filename;
 		
