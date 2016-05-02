@@ -7,11 +7,11 @@ Current build status: [![Build Status](https://travis-ci.org/ProgrammingLife2016
 Name: Thunder Wolf Squadron
 
 Members:
-Daniël van den Berg
-Björn Ho
-Rob Kapel
-Hugo Kooijman
-Evan de Kruijf
+*Daniël van den Berg
+*Björn Ho
+*Rob Kapel
+*Hugo Kooijman
+*Evan de Kruijf
 
 ### Group Documents:
 
@@ -21,9 +21,9 @@ Evan de Kruijf
 
 **Requirements**
 ========
-Java Development Kit 8
-Git
-Maven
+*Java Development Kit 8
+*Git
+*Maven
 
 **Usage**
 ========
