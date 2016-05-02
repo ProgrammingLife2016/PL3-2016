@@ -1,5 +1,7 @@
 package gui;
 
+import java.util.ArrayList;
+
 import db.DatabaseManager;
 import db.GfaException;
 import db.GfaParser;
@@ -10,31 +12,31 @@ import javafx.scene.layout.StackPane;
 
 public class Launcher extends Application{
 	public static DatabaseManager dbm;
-	public static final String RibbonLevelFXML = "RibbonLevel.fxml";
-	public static Stage currentStage;
-	private ScreenManager scm;
+	public static ScreenManager scm;
+		
 	@Override
 	public void start(Stage stage) throws Exception {
-		String filename = "example";
+		String filename = "TB10";
     	String gfaPath = System.getProperty("user.dir") + "/Data/" + filename + "/" + filename + ".gfa";
 		String dbPath = System.getProperty("user.dir") + "/db/" + filename;
 		this.dbm = new DatabaseManager(dbPath);
-		currentStage = stage;
-//		GfaParser parser = new GfaParser(dbm);
-//		try {
-//			parser.parse(gfaPath);
-//		} catch (GfaException e) {
-//			e.printStackTrace();
-//		}
+		ScreenManager mainContainer = new ScreenManager();
+		
+		ScreenManager.currentStage = stage;
+		GfaParser parser = new GfaParser(dbm);
+		try {
+			parser.parse(gfaPath);
+		} catch (GfaException e) {
+			e.printStackTrace();
+		}
 		
 		stage.setMinHeight(480);
         stage.setMinWidth(640);
         
-		ScreenManager mainContainer = new ScreenManager();
-		 mainContainer.loadScreen("RibbonLevel", Launcher.RibbonLevelFXML);
+		
+		 mainContainer.loadScreen("RibbonLevel", ScreenManager.RibbonLevelFXML);
 	        this.scm = mainContainer;
 	        mainContainer.setScreen("RibbonLevel");
-	        
 //	        Scene scene = new Scene(mainContainer);   
 //	        stage.setScene(scene);
 //

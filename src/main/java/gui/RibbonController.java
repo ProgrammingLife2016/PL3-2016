@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
 import coordinates.Coordinate;
 import coordinates.CoordinateDetermination;
 import db.DatabaseManager;
-import gui.OldLauncher.SceneGestures;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -30,18 +30,13 @@ public class RibbonController implements Initializable, SetScreen {
 	private DatabaseManager dbm;
 	private GraphicsContext gc ;
 	private ScreenManager myScreenPane;
+
+
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-      
-        //group = ribbonDrawer.draw(canvas, nodeGestures);
-       // Pane something = new Pane();
-        
+     
 		this.dbm = Launcher.dbm;
-		
-//		gc = canvas.getGraphicsContext2D();
-//		
-//		 gc.setFill(Color.BLACK);
 		
 		PannableCanvas pc = new PannableCanvas();
 		Group group = new Group();
@@ -57,13 +52,13 @@ public class RibbonController implements Initializable, SetScreen {
         
         
         Scene scene = new Scene(group, 1024, 768);
-        //SceneGestures sceneGestures = new SceneGestures(pc);
-//        scene.addEventFilter( MouseEvent.MOUSE_PRESSED, sceneGestures.getOnMousePressedEventHandler());
-//        scene.addEventFilter( MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
-//        scene.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
+        SceneGestures sceneGestures = new SceneGestures(pc);
+        scene.addEventFilter( MouseEvent.MOUSE_PRESSED, sceneGestures.getOnMousePressedEventHandler());
+        scene.addEventFilter( MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
+        scene.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
 
-        Launcher.currentStage.setScene(scene);
-        Launcher.currentStage.show();
+        Launcher.scm.currentStage.setScene(scene);
+        Launcher.scm.currentStage.show();
         
         
         
@@ -125,6 +120,10 @@ public class RibbonController implements Initializable, SetScreen {
 		return y;
 	}
 	
+
+    
+
+	
 	private Path drawPath(Coordinate from, Coordinate to, int maxX, int maxY) {
 		MoveTo moveto = new MoveTo(0.1 * from.getX(), 0.5 * from.getY());
 		LineTo lineto = new LineTo(0.1 * to.getX() , 0.5 * to.getY());
@@ -139,6 +138,13 @@ public class RibbonController implements Initializable, SetScreen {
 		
 	}
 	
+	
+	
+
+    
+    
+	
+
 	
 	
 	

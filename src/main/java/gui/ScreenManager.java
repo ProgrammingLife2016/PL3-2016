@@ -1,5 +1,6 @@
 package gui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -11,10 +12,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class ScreenManager extends StackPane {
     private HashMap<String, Node> screens = new HashMap<>();
+    public static final String RibbonLevelFXML = "RibbonLevel.fxml";
+	public static Stage currentStage;
+	public static ArrayList<PannableCanvas> canvasList = new ArrayList<PannableCanvas>();
 
     public ScreenManager() {
         super();
