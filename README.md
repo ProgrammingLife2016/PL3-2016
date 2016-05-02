@@ -19,13 +19,11 @@ Members:
 
 ## About the project
 
-**Requirements**
-========
+### Requirements
 *   Java Development Kit 8
 *	Git
 *	Maven
 
-**Usage**
-========
+### Usage
 Download and run the .jar file, which we will provide as a Release.
 
