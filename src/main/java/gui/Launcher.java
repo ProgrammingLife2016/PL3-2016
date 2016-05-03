@@ -1,10 +1,8 @@
 package gui;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import db.DatabaseManager;
-import db.DatabaseProcessor;
 import db.GfaException;
 import db.GfaParser;
 import javafx.application.Application;
@@ -22,7 +20,6 @@ public class Launcher extends Application {
 		
 	@Override
 	public void start(Stage stage) throws Exception {
-
 		String filename = "TB10";
     	String gfaPath = System.getProperty("user.dir") + "/Data/" + filename
     			+ "/" + filename + ".gfa";

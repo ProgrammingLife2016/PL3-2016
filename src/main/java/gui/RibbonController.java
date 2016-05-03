@@ -7,22 +7,31 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 @SuppressWarnings("restriction")
 public class RibbonController implements Initializable {
-	@FXML Group group;
+	@FXML AnchorPane pane;
+	@FXML ScrollPane scrollPane;
+	@FXML Canvas canvas;
+	
+	private GraphicsContext gc;
+	
 	private DatabaseManager dbm;
 	
 	/**
@@ -35,24 +44,13 @@ public class RibbonController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		this.dbm = Launcher.dbm;
 		
-		PannableCanvas pc = new PannableCanvas();
-		pc.setTranslateX(100);
-        pc.setTranslateY(100);
-        
-		NodeGestures nodeGestures = new NodeGestures(pc);
-		draw(pc, nodeGestures);
-		
-        Label label1 = new Label("SCENE 1");
-        label1.setTranslateX(10);
-        label1.setTranslateY(10);
-        pc.getChildren().addAll(label1);
-        SceneGestures sceneGestures = new SceneGestures(pc);
-        group.addEventFilter( MouseEvent.MOUSE_PRESSED,
-		sceneGestures.getOnMousePressedEventHandler());
-        group.addEventFilter( MouseEvent.MOUSE_DRAGGED,
-		sceneGestures.getOnMouseDraggedEventHandler());
-        group.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
-        group.getChildren().add(pc);
+		gc = canvas.getGraphicsContext2D();
+		gc.setFill(Color.GREEN);
+        gc.setStroke(Color.BLUE);
+        gc.setLineWidth(5);
+        gc.strokeLine(440, 410, 410, 440);
+        gc.fillOval(410, 460, 30, 30);
+        gc.strokeOval(460, 460, 30, 30);
 
 	}
 	
