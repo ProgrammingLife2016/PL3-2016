@@ -7,32 +7,22 @@ import java.util.ResourceBundle;
 import coordinates.Coordinate;
 import coordinates.CoordinateDetermination;
 import db.DatabaseManager;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 
 public class RibbonController implements Initializable, SetScreen {
-	@FXML Pane dummyPane;
+	@FXML PannableCanvas pane;
 	private DatabaseManager dbm;
-	private GraphicsContext gc ;
-	private ScreenManager myScreenPane;
+	private ScreenManager screenManager;
 
-
-	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
      
@@ -57,27 +47,10 @@ public class RibbonController implements Initializable, SetScreen {
         scene.addEventFilter( MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
         scene.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
 
-        Launcher.scm.currentStage.setScene(scene);
-        Launcher.scm.currentStage.show();
-        
-        
-        
-
-
+        ScreenManager.currentStage.setScene(scene);
+        ScreenManager.currentStage.show();
  
-        
-        
-        
-        
-        
-        
-        
-        
 	}
-	
-
-	
-
 
 	public void draw(PannableCanvas pc, NodeGestures nodeGestures) {
 		CoordinateDetermination cdm = new CoordinateDetermination(dbm);
@@ -120,10 +93,6 @@ public class RibbonController implements Initializable, SetScreen {
 		return y;
 	}
 	
-
-    
-
-	
 	private Path drawPath(Coordinate from, Coordinate to, int maxX, int maxY) {
 		MoveTo moveto = new MoveTo(0.1 * from.getX(), 0.5 * from.getY());
 		LineTo lineto = new LineTo(0.1 * to.getX() , 0.5 * to.getY());
@@ -134,34 +103,8 @@ public class RibbonController implements Initializable, SetScreen {
 
 	@Override
 	public void setScreenDriver(ScreenManager screenPage) {
-		myScreenPane = screenPage;
+		this.screenManager = screenPage;
 		
 	}
-	
-	
-	
-
-    
-    
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }
