@@ -1,6 +1,5 @@
 package gui;
 
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import coordinates.Coordinate;
@@ -8,7 +7,6 @@ import coordinates.CoordinateDetermination;
 import db.DatabaseManager;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.HLineTo;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
