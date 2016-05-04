@@ -1,20 +1,10 @@
 package customMain;
 
-
-import javafx.application.Application;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import db.*;
-import db.tables.*;
+import db.DatabaseManager;
+import db.GfaException;
+import db.GfaParser;
 
 public abstract class Main {
-	
-//	private static Class c0 = Gui.class;
-//	private static Class c1 = TutorialSceneswitch.class;
-//	private static Class c2 = Graphdrawer.class;
-//	static Class Tutorials[] = {c0, c1, c2};
 	
 	/**
 	 * Launch application.
