@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
+@SuppressWarnings("restriction")
 public class SceneGestures {
 	 int position = 0;
 	 
@@ -32,8 +33,9 @@ public class SceneGestures {
 
     private EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {
         public void handle(MouseEvent event) {
-            if(!event.isSecondaryButtonDown())
+            if (!event.isSecondaryButtonDown()) {
                 return;
+            }
             sceneDragContext.mouseAnchorX = event.getSceneX();
             sceneDragContext.mouseAnchorY = event.getSceneY();
             sceneDragContext.translateAnchorX = canvas.getTranslateX();

@@ -1,24 +1,58 @@
 package coordinates;
 
-import java.util.ArrayList;
-
 import db.DatabaseManager;
 
+import java.util.ArrayList;
+
+/**
+ * @author Rob Kapel
+ * 
+ * Class for determining the coordinates of the path that a ribbon should travel.
+ */
 public class CoordinateDetermination {
 	
-	private ArrayList<Integer> fromIDs;
-	private ArrayList<Integer> toIDs;
+	/**
+	 * List with starting points of each link.
+	 * The segment Id's correspond to those in the "toIDs" list (in order).
+	 */
+	protected ArrayList<Integer> fromIDs;
 	
-	private int[] noOfGpS;
-	private Coordinate[] coordinates;
-	private int[] cWeights;
-	private DatabaseManager dbm;
+	/**
+	 * List with ending points of each link.
+	 * The segment Id's correspond to those in the "fromIDs" list (in order).
+	 */
+	protected ArrayList<Integer> toIDs;
+	
+	/**
+	 * ?
+	 */
+	protected int[] noOfGpS;
+	
+	/**
+	 * List with coordinates of each segment.
+	 */
+	protected Coordinate[] coordinates;
+	
+	/**
+	 * List with amount of genomes that travel through a certain link.
+	 */
+	protected int[] cweights;
+	
+	/**
+	 * Database Object required to extract required data about segments and links.
+	 */
+	protected DatabaseManager dbm;
 	
 	public CoordinateDetermination(DatabaseManager dbm) {
 		this.dbm = dbm;
 		getData();
 	}
 	
+	/**
+	 * Calculates coordinates for segments using parsed arrays from the database.
+	 * 
+	 * @return list of coordinates of segments.
+	 */
 	public Coordinate[] calcCoords() {
 		getData();
 		int noOfSegments = toIDs.get(toIDs.size() - 1);
@@ -27,68 +61,80 @@ public class CoordinateDetermination {
 		 * TODO: Substitute "4" for number of genomes
 		 */
 		coordinates = new Coordinate[noOfSegments];
-		cWeights = new int[noOfSegments];
+		cweights = new int[noOfSegments];
 		coordinates[0] = new Coordinate(0,10);
-		cWeights[0] = 10;
+		cweights[0] = 10;
 		
 		System.out.println(noOfSegments);
-		for(int i = 1; i <= noOfSegments; i++) {
+		for (int i = 1; i <= noOfSegments; i++) {
 			System.out.println(i);
 			int alreadyDrawn = 0;
 			int leftToDraw = countGenomesInSeg(i);
-			Coordinate c = coordinates[i-1];
-			ArrayList<Integer> tos = getToIDs(i);
+			Coordinate coords = coordinates[i - 1];
+			ArrayList<Integer> outgoingedges = getToIDs(i);
 			
-			for(int j = 0; j < tos.size(); j++) {
-				leftToDraw = leftToDraw - countGenomesInLink(i, tos.get(j));
-				int x = c.getX() + 1;
-				int y = c.getY() - leftToDraw + alreadyDrawn;
-				storeCoord(new Coordinate(x,y), tos.get(j), countGenomesInLink(i, tos.get(j)));
-				alreadyDrawn += countGenomesInLink(i, tos.get(j));
+			for (int j = 0; j < outgoingedges.size(); j++) {
+				leftToDraw = leftToDraw - countGenomesInLink(i, outgoingedges.get(j));
+				int xc = coords.getX() + 1;
+				int yc = coords.getY() - leftToDraw + alreadyDrawn;
+				storeCoord(new Coordinate(xc,yc), outgoingedges.get(j),
+						countGenomesInLink(i, outgoingedges.get(j)));
+				alreadyDrawn += countGenomesInLink(i, outgoingedges.get(j));
 			}
 		}
 		for (int i = 1; i <= 9; i++) {
 			System.out.println("SegID: " + i);
-			System.out.println("X: " + coordinates[i-1].getX());
-			System.out.println("Y: " + coordinates[i-1].getY());
+			System.out.println("X: " + coordinates[i - 1].getX());
+			System.out.println("Y: " + coordinates[i - 1].getY());
 		}
 		return coordinates;
 	}
 	
-	public void storeCoord(Coordinate c, int segID, int weight) {
-		if (coordinates[segID-1] == null) {
-			coordinates[segID-1] = c;
-			cWeights[segID-1] = weight;
-		}
-		else {
-			Coordinate oldCoord = coordinates[segID-1];
-			int newX = Math.max(c.getX(), oldCoord.getX());
-			int newY = (c.getY() * weight + oldCoord.getY() * cWeights[segID-1]) / (weight + cWeights[segID-1]);
-			coordinates[segID-1] = new Coordinate(newX, newY);
-			cWeights[segID-1] += weight;
+	/**
+	 * Stores an x,y coordinate of where a segment should appear.
+	 * 
+	 * @param coord
+	 * 			Coordinate to be stored.
+	 * @param segId
+	 * 			Id of segment of which coordinate is to be stored.
+	 * @param weight
+	 * 			Amount of genomes that pass through a segment.
+	 */
+	public void storeCoord(Coordinate coord, int segId, int weight) {
+		if (coordinates[segId - 1] == null) {
+			coordinates[segId - 1] = coord;
+			cweights[segId - 1] = weight;
+		} else {
+			Coordinate oldCoord = coordinates[segId - 1];
+			int newX = Math.max(coord.getX(), oldCoord.getX());
+			int newY = (coord.getY() * weight + oldCoord.getY() * cweights[segId - 1])
+					/ (weight + cweights[segId - 1]);
+			coordinates[segId - 1] = new Coordinate(newX, newY);
+			cweights[segId - 1] += weight;
 		}
 	}
 	
 	
-	private ArrayList<Integer> getTo(int fromID) {
-		return dbm.getDBReader().getToIDs(fromID);
+	@SuppressWarnings("unused")
+	private ArrayList<Integer> getTo(int fromId) {
+		return dbm.getDbReader().getToIDs(fromId);
 	}
 
 	private void getData() {
-		fromIDs = dbm.getDBReader().getAllFromID();
-		toIDs = dbm.getDBReader().getAllToID();
+		fromIDs = dbm.getDbReader().getAllFromId();
+		toIDs = dbm.getDbReader().getAllToId();
 	}
 	
-	public int countGenomesInLink(int i, int j) {
-		return dbm.getDBReader().countGenomesInLink(i, j);
+	public int countGenomesInLink(int from, int to) {
+		return dbm.getDbReader().countGenomesInLink(from, to);
 	}
 	
-	public int countGenomesInSeg(int segmentID) {
-		return dbm.getDBReader().countGenomesInSeg(segmentID);
+	public int countGenomesInSeg(int segmentId) {
+		return dbm.getDbReader().countGenomesInSeg(segmentId);
 	}
 	
-	public ArrayList<Integer> getToIDs(int fromID) {
-		return dbm.getDBReader().getToIDs(fromID);
+	public ArrayList<Integer> getToIDs(int fromId) {
+		return dbm.getDbReader().getToIDs(fromId);
 	}
 	
 }

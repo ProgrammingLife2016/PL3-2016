@@ -1,22 +1,34 @@
 package db;
 
+import db.tables.Table;
+import db.tuples.Tuple;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import db.tables.Table;
-import db.tuples.Tuple;
-
 /**
- * 
  * Provides access methods to the database.
  *
+ * @author Björn Ho, Daniël van den Berg
  */
 public class DatabaseManager {
-	private Statement db;
+	
+	/**
+	 * Object for connecting with database.
+	 */
 	private Connection dbConnection;
+	
+	/**
+	 * Object required the the DatabaseReader to function.
+	 */
+	private Statement db;
+	
+	/**
+	 * Object for executing queries in the H2 database.
+	 */
 	private DatabaseReader dbReader;
 	
 	public DatabaseManager(String dbPath) {
@@ -32,9 +44,9 @@ public class DatabaseManager {
 	/**
 	 * Closes the connection to the database.
 	 * 
-	 * @return returns true if the connection is closed successfully, false otherwise.
+	 * @return boolean, true if the connection is closed successfully, false otherwise.
 	 */
-	public boolean closeDBConnection() {
+	public boolean closeDbConnection() {
 		try {
 			this.db.close();
 			this.dbConnection.close();
@@ -79,7 +91,7 @@ public class DatabaseManager {
 		}
 	}
 	
-	public DatabaseReader getDBReader() {
+	public DatabaseReader getDbReader() {
 		return this.dbReader;
 	}
 }

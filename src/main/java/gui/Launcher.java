@@ -6,17 +6,19 @@ import db.GfaParser;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class Launcher extends Application{
+@SuppressWarnings("restriction")
+public class Launcher extends Application {
 	public static DatabaseManager dbm;
 	public static ScreenManager scm;
 		
+
 	@Override
 	public void start(Stage stage) throws Exception {
-		String filename = "TB10";
-    	String gfaPath = System.getProperty("user.dir") + "/Data/" + filename + "/" + filename + ".gfa";
+		String filename = "example";
+    	String gfaPath = System.getProperty("user.dir") + "/Data/" + filename
+    			+ "/" + filename + ".gfa";
 		String dbPath = System.getProperty("user.dir") + "/db/" + filename;
 		dbm = new DatabaseManager(dbPath);
-		ScreenManager mainContainer = new ScreenManager();
 		
 		ScreenManager.currentStage = stage;
 		GfaParser parser = new GfaParser(dbm);
@@ -29,6 +31,7 @@ public class Launcher extends Application{
 		stage.setMinHeight(480);
         stage.setMinWidth(640);
         
+		ScreenManager mainContainer = new ScreenManager();
 		mainContainer.loadScreen("RibbonLevel", ScreenManager.RibbonLevelFXML);
 		scm = mainContainer;
 		mainContainer.setScreen("RibbonLevel");
