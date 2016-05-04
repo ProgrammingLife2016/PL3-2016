@@ -1,4 +1,4 @@
-package db;
+package parsers;
 
 public class GfaException extends Exception {
 
