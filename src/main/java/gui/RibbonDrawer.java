@@ -1,7 +1,5 @@
 package gui;
 
-import java.util.ArrayList;
-
 import coordinates.Coordinate;
 import coordinates.CoordinateDetermination;
 import db.DatabaseManager;
@@ -11,10 +9,23 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 
+import java.util.ArrayList;
+
+/**
+ * 
+ * 
+ * LIKELY REDUNDANT CLASS TO BE REMOVED, KEPT AROUND UNTIL CONTROLLER CLASS CAN
+ * REPLACE THIS ONE.
+ *
+ *
+ *
+ *
+ */
+@SuppressWarnings("restriction")
 public class RibbonDrawer {
 	private DatabaseManager dbm;
 	
-	public RibbonDrawer (DatabaseManager db){
+	public RibbonDrawer(DatabaseManager db) {
 		this.dbm = db;
 	}
 
@@ -22,47 +33,58 @@ public class RibbonDrawer {
 		
 		CoordinateDetermination cdm = new CoordinateDetermination(dbm);
 		Coordinate[] coords = cdm.calcCoords();
-		ArrayList<Integer> from = dbm.getDBReader().getAllFromID();
-		ArrayList<Integer> to = dbm.getDBReader().getAllToID();
+		ArrayList<Integer> from = dbm.getDbReader().getAllFromId();
+		ArrayList<Integer> to = dbm.getDbReader().getAllToId();
 		
 		int maxX = getMaxX(coords);
 		int maxY = getMaxY(coords);
 		
 		Group group = new Group();
 		
-		for(int i = 0; i < from.size(); i++) {
-			int fromID = from.get(i);
-			int toID = to.get(i);
+		for (int i = 0; i < from.size(); i++) {
+			int fromId = from.get(i);
+			int toId = to.get(i);
 			System.out.println(i);
-			Path path = drawPath(coords[fromID-1], coords[toID-1], maxX, maxY);
-	        path.addEventFilter( MouseEvent.MOUSE_PRESSED, nodeGestures.getOnMousePressedEventHandler());
-	        path.addEventFilter( MouseEvent.MOUSE_DRAGGED, nodeGestures.getOnMouseDraggedEventHandler());
-	        path.setStrokeWidth(0.01 + 0.003 * dbm.getDBReader().countGenomesInLink(fromID, toID));
+			Path path = drawPath(coords[fromId - 1], coords[toId - 1], maxX, maxY);
+	        path.addEventFilter( MouseEvent.MOUSE_PRESSED,
+	        		nodeGestures.getOnMousePressedEventHandler());
+	        path.addEventFilter( MouseEvent.MOUSE_DRAGGED,
+	        		nodeGestures.getOnMouseDraggedEventHandler());
+	        path.setStrokeWidth(0.01 + 0.003 * dbm.getDbReader().countGenomesInLink(fromId, toId));
 	        canvas.getChildren().add(path);
 		}
 		return group;
 	}
 	
 	private int getMaxX(Coordinate[] coordinates) {
-		int x = 0;
-		for(int i = 0; i < coordinates.length; i++) {
-			if(coordinates[i].getX() > x) {
-				x = coordinates[i].getX();
+		int xc = 0;
+		for (int i = 0; i < coordinates.length; i++) {
+			if (coordinates[i].getX() > xc) {
+				xc = coordinates[i].getX();
 			}
 		}
-		return x;
+		return xc;
 	}
 	
 	private int getMaxY(Coordinate[] coordinates) {
-		int y = 0;
-		for(int i = 0; i < coordinates.length; i++) {
-			if(coordinates[i].getY() > y) {
-				y = coordinates[i].getY();
+		int yc = 0;
+		for (int i = 0; i < coordinates.length; i++) {
+			if (coordinates[i].getY() > yc) {
+				yc = coordinates[i].getY();
 			}
 		}
-		return y;
+		return yc;
 	}
 	
+	/**
+	 * Draws a line between 2 points of segments.
+	 * 
+	 * @param from
+	 * 			Segment from which path is drawn.
+	 * @param to
+	 * 			Segment to which path is drawn.	
+	 * @return A Path through which the lines goes.
+	 */
 	private Path drawPath(Coordinate from, Coordinate to, int maxX, int maxY) {
 		MoveTo moveto = new MoveTo(0.1 * from.getX(), 0.5 * from.getY());
 		LineTo lineto = new LineTo(0.1 * to.getX() , 0.5 * to.getY());

@@ -4,6 +4,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 
+@SuppressWarnings("restriction")
 public class NodeGestures {
 
 	private DragContext nodeDragContext = new DragContext();
@@ -28,8 +29,9 @@ public class NodeGestures {
 		public void handle(MouseEvent event) {
 
 			// left mouse button => dragging
-			if (!event.isPrimaryButtonDown())
+			if (!event.isPrimaryButtonDown()) {
 				return;
+			}
 
 			nodeDragContext.setMouseAnchorX(event.getSceneX());
 			nodeDragContext.setMouseAnchorY(event.getSceneY());
@@ -47,8 +49,9 @@ public class NodeGestures {
 		public void handle(MouseEvent event) {
 
 			// left mouse button => dragging
-			if (!event.isPrimaryButtonDown())
+			if (!event.isPrimaryButtonDown()) {
 				return;
+			}
 
 			double scale = canvas.getScale();
 

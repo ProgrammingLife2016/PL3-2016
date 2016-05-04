@@ -36,7 +36,15 @@ package parsers;
 
 import java.util.*;
 
-/**
+/** 
+ * POSSIBLY REDUNDANT CLASS, IS NOT FUNCTIONING AT THIS MOMENT
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
 * A class representing a node of a (phylogenetic) tree. The tree that this
 * node belongs to is of type Tree. Nodes have fields that store a pre- and
 * post-ordering.

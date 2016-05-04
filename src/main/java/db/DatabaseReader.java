@@ -5,6 +5,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+/**
+ * @author Björn Ho, Daniel van de Berg
+ *
+ * Class for executing queries to read data out of a database.
+ */
 public class DatabaseReader {
 	private Statement db;
 	
@@ -21,9 +26,10 @@ public class DatabaseReader {
 	 * @return the number of genomes that the given segment is part of, or -1 if
 	 *         no segment with the given id exists.
 	 */
-	public int countGenomesInSeg(int segmentID) {
+	public int countGenomesInSeg(int segmentId) {
 		try {
-			ResultSet rs = this.db.executeQuery("SELECT COUNT(GENOMEID) FROM GENOMESEGMENTLINK WHERE SEGMENTID = "  + segmentID);
+			ResultSet rs = this.db.executeQuery("SELECT COUNT(GENOMEID)"
+					+ "FROM GENOMESEGMENTLINK WHERE SEGMENTID = "  + segmentId);
 			rs.next();
 			return rs.getInt(1);
 		} catch (SQLException e) {
@@ -43,7 +49,7 @@ public class DatabaseReader {
 	 * @return The number of genomes in the link from fromID to toID, or -1 if
 	 *         the link does not exist.
 	 */
-	public int countGenomesInLink(int fromID, int toID) {
+	public int countGenomesInLink(int fromId, int toId) {
 		try {
 			String query = new StringBuilder()
 				.append("SELECT COUNT(G1) ")
@@ -51,11 +57,13 @@ public class DatabaseReader {
 				.append("SELECT * FROM (")
 				.append("SELECT FROMID, TOID ")
 				.append("FROM LINKS ")
-				.append("WHERE FROMID = " + fromID +" AND TOID = " + toID + " ")
+				.append("WHERE FROMID = " + fromId + " AND TOID = " + toId + " ")
 				.append(") AS T1 ")
-				.append("LEFT OUTER JOIN (SELECT SEGMENTID AS S1, GENOMEID AS G1 FROM GENOMESEGMENTLINK) AS GSL ")
+				.append("LEFT OUTER JOIN (SELECT SEGMENTID AS S1, GENOMEID AS G1 "
+						+ "FROM GENOMESEGMENTLINK) AS GSL ")
 				.append("ON T1.FROMID = GSL.S1 ")
-				.append("LEFT OUTER JOIN (SELECT SEGMENTID AS S2, GENOMEID AS G2 FROM GENOMESEGMENTLINK) AS GSL2 ")
+				.append("LEFT OUTER JOIN (SELECT SEGMENTID AS S2, GENOMEID AS G2 "
+						+ "FROM GENOMESEGMENTLINK) AS GSL2 ")
 				.append("ON T1.TOID = GSL2.S2")
 				.append(") ")
 				.append("WHERE G1 = G2")
@@ -75,14 +83,14 @@ public class DatabaseReader {
 	 * 
 	 * @return All id's of the segments that have one or more outgoing links.
 	 */
-	public ArrayList<Integer> getAllFromID() {
+	public ArrayList<Integer> getAllFromId() {
 		try {
 			ResultSet rs = this.db.executeQuery("SELECT * FROM LINKS");
-			ArrayList<Integer> fromIDList = new ArrayList<Integer>();
-			while(rs.next()) {
-				fromIDList.add(rs.getInt(1));
+			ArrayList<Integer> fromIdList = new ArrayList<Integer>();
+			while (rs.next()) {
+				fromIdList.add(rs.getInt(1));
 			 }
-			return fromIDList;
+			return fromIdList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -94,14 +102,14 @@ public class DatabaseReader {
 	 * 
 	 * @return All id's of the segments that have one or more ingoing links.
 	 */
-	public ArrayList<Integer> getAllToID() {
+	public ArrayList<Integer> getAllToId() {
 		try {
 			ResultSet rs = this.db.executeQuery("SELECT * FROM LINKS");
-			ArrayList<Integer> toIDList = new ArrayList<Integer>();
-			while(rs.next()) {
-				toIDList.add(rs.getInt(2));
+			ArrayList<Integer> toIdList = new ArrayList<Integer>();
+			while (rs.next()) {
+				toIdList.add(rs.getInt(2));
 			 }
-			return toIDList;
+			return toIdList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -119,14 +127,14 @@ public class DatabaseReader {
 	 * @return All id's of the links entering the segment with the given id, or
 	 *         null if no segment exists with the given id.
 	 */
-	public ArrayList<Integer> getFromIDs(int toID) {
+	public ArrayList<Integer> getFromIDs(int toId) {
 		try {
-			ResultSet rs = this.db.executeQuery("SELECT FROMID FROM LINKS WHERE TOID = " + toID);
-			ArrayList<Integer> fromIDList = new ArrayList<Integer>();
-			while(rs.next()) {
-				fromIDList.add(rs.getInt(1));
+			ResultSet rs = this.db.executeQuery("SELECT FROMID FROM LINKS WHERE TOID = " + toId);
+			ArrayList<Integer> fromIdList = new ArrayList<Integer>();
+			while (rs.next()) {
+				fromIdList.add(rs.getInt(1));
 			 }
-			return fromIDList;
+			return fromIdList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -142,14 +150,15 @@ public class DatabaseReader {
 	 * @return All id's of the links leaving the segment with the given id, or
 	 *         null if no segment exists with the given id.
 	 */
-	public ArrayList<Integer> getToIDs(int fromID) {
+	public ArrayList<Integer> getToIDs(int fromId) {
 		try {
-			ResultSet rs = this.db.executeQuery("SELECT TOID FROM LINKS WHERE FROMID = " + fromID);
-			ArrayList<Integer> toIDList = new ArrayList<Integer>();
-			while(rs.next()) {
-				toIDList.add(rs.getInt(1));
+			ResultSet rs = this.db.executeQuery("SELECT TOID "
+					+ "FROM LINKS WHERE FROMID = " + fromId);
+			ArrayList<Integer> toIdList = new ArrayList<Integer>();
+			while (rs.next()) {
+				toIdList.add(rs.getInt(1));
 			 }
-			return toIDList;
+			return toIdList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -165,9 +174,10 @@ public class DatabaseReader {
 	 * @return The contents of the segment with the given id, or null if no
 	 *         segment with the given id exists.
 	 */
-	public String getContent(int segmentID) {
+	public String getContent(int segmentId) {
 		try {
-			ResultSet rs = this.db.executeQuery("SELECT CONTENT FROM SEGMENTS WHERE ID = " + segmentID);
+			ResultSet rs = this.db.executeQuery("SELECT CONTENT "
+					+ "FROM SEGMENTS WHERE ID = " + segmentId);
 			rs.next();
 			return rs.getString(1);
 		} catch (SQLException e) {

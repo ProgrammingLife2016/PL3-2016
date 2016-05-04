@@ -38,6 +38,12 @@ import java.util.*;
 import java.text.Collator;
 
 /**
+ * POSSIBLY REDUNDANT CLASS, IS NOT FUNCTIONING AT THIS MOMENT
+ * 
+ * 
+ * 
+ * 
+ * 
  * A public class representing a (phylognenetic) tree.
  * Nodes of the tree are of type TreeNode.
  * Nodes are traversed in pre- and post-orders.

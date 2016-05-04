@@ -13,6 +13,13 @@ import parsers.Tree;
 import parsers.TreeNode;
 
 /**
+ * POSSIBLY REDUNDANT CLASS, IS NOT FUNCTIONING AT THIS MOMENT
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
  * @author James
  *
  *         Parses the newick portion of a file For nexus files, additional

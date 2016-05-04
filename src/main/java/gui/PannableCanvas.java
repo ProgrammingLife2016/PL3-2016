@@ -7,6 +7,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
+/**
+ * LIKELY TO BE REPLACED WITH A SCROLLPANE.
+ * 
+ * A custom Pane which can be panned over.
+ */
+@SuppressWarnings("restriction")
 public class PannableCanvas extends Pane {
 
     DoubleProperty myScale = new SimpleDoubleProperty(1.0);
@@ -50,7 +56,7 @@ public class PannableCanvas extends Pane {
 
         // draw grid lines
         double offset = 50;
-        for( double i=offset; i < w; i+=offset) {
+        for (double i = offset; i < w; i += offset) {
             gc.strokeLine( i, 0, i, h);
             gc.strokeLine( 0, i, w, i);
         }
@@ -68,15 +74,15 @@ public class PannableCanvas extends Pane {
         myScale.set(scale);
     }
 
-    public void reset(){ 
+    public void reset() { 
     	PannableCanvas preset = new PannableCanvas();
     	this.setScale(preset.getScale());
     	this.setTranslateX(100);
     	this.setTranslateY(100);
     }
     
-    public void setPivot( double x, double y) {
-        setTranslateX(getTranslateX()-x);
-        setTranslateY(getTranslateY()-y);
+    public void setPivot(double xc, double yc) {
+        setTranslateX(getTranslateX() - xc);
+        setTranslateY(getTranslateY() - yc);
     }
 }

@@ -1,7 +1,5 @@
 package gui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -15,6 +13,10 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+@SuppressWarnings("restriction")
 public class ScreenManager extends StackPane {
     private HashMap<String, Node> screens = new HashMap<>();
     public static final String RibbonLevelFXML = "RibbonLevel.fxml";
@@ -29,9 +31,9 @@ public class ScreenManager extends StackPane {
      * Add a screen to a hashmap
      * 
      * @param name
-     *            name of the screen
+     *            Name of the screen.
      * @param screen
-     *            loaded screen
+     *            Loaded screen.
      */
     public void addScreen(String name, Node screen) {
         screens.put(name, screen);
@@ -40,21 +42,21 @@ public class ScreenManager extends StackPane {
     /**
      * 
      * @param name
-     *            name of the screen
-     * @return returns the node with the given name from the hashmap
+     *            Name of the screen
+     * @return Node with the given name from the hashmap.
      */
     public Node getScreen(String name) {
         return screens.get(name);
     }
 
     /**
-     * It loads a FXML file and adds the screen to the screen hashmap
+     * It loads a FXML file and adds the screen to the screen hashmap.
      * 
      * @param name
-     *            name of the screen
+     *            Name of the screen.
      * @param resource
-     *            name of the fxml file
-     * @return returns true if screen loading succeeds else false
+     *            Name of the fxml file.
+     * @return Boolean, true if screen loading succeeds, else false.
      */
     public boolean loadScreen(String name, String resource) {
         try {
@@ -72,12 +74,12 @@ public class ScreenManager extends StackPane {
     }
 
     /**
-     * checks if the screen has already been loaded and switches screen with
+     * Checks if the screen has already been loaded and switches screen with
      * screen transistion
      * 
      * @param name
-     *            screen name
-     * @return returns true if setting the screen succeeds else false
+     *            Name of the screen.
+     * @return Boolean, true if setting the screen succeeds, else false.
      */
     public boolean setScreen(final String name) {
         if (screens.get(name) != null) {
@@ -90,20 +92,20 @@ public class ScreenManager extends StackPane {
                     250), new EventHandler<ActionEvent>() { 
                            
             			@Override
-            			public void handle(ActionEvent t) {
+            			public void handle(ActionEvent ae) {
             			//removing the displayed screen
 	                    getChildren().remove(0); 
 	                    //adds the new screen
 	                    getChildren().add(0, screens.get(name));
 	                    //fade in time
-	                    Timeline fadeIn = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(opacity,
-	                    		0.7)), new KeyFrame(new Duration(250), new KeyValue(opacity, 1.0)));
+	                    Timeline fadeIn = new Timeline(new KeyFrame(Duration.ZERO,
+	                    		new KeyValue(opacity, 0.7)), new KeyFrame(new Duration(250),
+	                    		new KeyValue(opacity, 1.0)));
 	                    fadeIn.play();
 	                    }
                     }, new KeyValue(opacity, 0.7)));
                 fade.play();
-            }
-            else {
+            } else {
                 setOpacity(0.7);
                 getChildren().add(screens.get(name));
                 Timeline fadeIn = new Timeline(new KeyFrame(Duration.ZERO,
@@ -112,8 +114,7 @@ public class ScreenManager extends StackPane {
                 fadeIn.play();
             }
             return true;
-        }
-        else {
+        } else {
 			System.err.println("Could not set screen " + name);
             return false;
         }
@@ -123,8 +124,8 @@ public class ScreenManager extends StackPane {
      * this removes (unloads) a screen from the hashmap of screens
      * 
      * @param name
-     *            screen name
-     * @return returns a boolean
+     *            Name of screen.
+     * @return Boolean, true if removed, false if nothing to remove.
      */
     public boolean unloadScreen(String name) {
         if (screens.remove(name) == null) {
@@ -134,6 +135,5 @@ public class ScreenManager extends StackPane {
             return true;
         }
     }
-
 }
 
