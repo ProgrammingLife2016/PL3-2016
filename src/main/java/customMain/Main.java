@@ -1,13 +1,9 @@
 package customMain;
 
-
-import javafx.application.Application;
-
-import java.util.ArrayList;
-import java.util.List;
+import parsers.GfaException;
+import parsers.GfaParser;
 
 import db.*;
-import db.tables.*;
 
 public abstract class Main {
 	

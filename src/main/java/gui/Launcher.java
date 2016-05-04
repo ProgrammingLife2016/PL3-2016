@@ -1,10 +1,10 @@
 package gui;
 
 import db.DatabaseManager;
-import db.GfaException;
-import db.GfaParser;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import parsers.GfaException;
+import parsers.GfaParser;
 
 public class Launcher extends Application{
 	public static DatabaseManager dbm;
