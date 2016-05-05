@@ -1,6 +1,7 @@
 package coordinates;
 
 import db.DatabaseManager;
+import db.DatabaseReader;
 
 import java.util.ArrayList;
 
@@ -41,10 +42,10 @@ public class CoordinateDetermination {
 	/**
 	 * Database Object required to extract required data about segments and links.
 	 */
-	protected DatabaseManager dbm;
+	protected DatabaseReader dbr;
 	
-	public CoordinateDetermination(DatabaseManager dbm) {
-		this.dbm = dbm;
+	public CoordinateDetermination(DatabaseReader dbr) {
+		this.dbr = dbr;
 		getData();
 	}
 	
@@ -56,13 +57,9 @@ public class CoordinateDetermination {
 	public Coordinate[] calcCoords() {
 		getData();
 		int noOfSegments = toIDs.get(toIDs.size() - 1);
-		
-		/***
-		 * TODO: Substitute "4" for number of genomes
-		 */
 		coordinates = new Coordinate[noOfSegments];
 		cweights = new int[noOfSegments];
-		int genomeCount = dbm.getDbReader().countGenomes();
+		int genomeCount = dbr.countGenomes();
 		coordinates[0] = new Coordinate(0, genomeCount);
 		cweights[0] = genomeCount;
 		
@@ -118,25 +115,25 @@ public class CoordinateDetermination {
 	
 	@SuppressWarnings("unused")
 	private ArrayList<Integer> getTo(int fromId) {
-		return dbm.getDbReader().getToIDs(fromId);
+		return dbr.getToIDs(fromId);
 	}
 
 	private void getData() {
-		fromIDs = dbm.getDbReader().getAllFromId();
-		toIDs = dbm.getDbReader().getAllToId();
+		fromIDs = dbr.getAllFromId();
+		toIDs = dbr.getAllToId();
 		System.out.println(fromIDs.size());
 	}
 	
 	public int countGenomesInLink(int from, int to) {
-		return dbm.getDbReader().countGenomesInLink(from, to);
+		return dbr.countGenomesInLink(from, to);
 	}
 	
 	public int countGenomesInSeg(int segmentId) {
-		return dbm.getDbReader().countGenomesInSeg(segmentId);
+		return dbr.countGenomesInSeg(segmentId);
 	}
 	
 	public ArrayList<Integer> getToIDs(int fromId) {
-		return dbm.getDbReader().getToIDs(fromId);
+		return dbr.getToIDs(fromId);
 	}
 	
 }

@@ -6,6 +6,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import coordinates.Coordinate;
+import coordinates.CoordinateDetermination;
+
 
 /**
  * @author Rob Kapel
@@ -20,6 +23,24 @@ public class DatabaseProcessor {
 	public DatabaseProcessor(Statement db, DatabaseReader dbr) {
 		this.db = db;
 		this.dbr = dbr;
+	}
+	
+	/**
+	 * Calculating the coordinates of segments and store them in the database
+	 */
+	public void updateCoordinates() {
+		CoordinateDetermination coorddet = new CoordinateDetermination(dbr);
+		Coordinate[] coordinates = coorddet.calcCoords();
+		for (int i = 1; i <= coordinates.length; i++) {
+			try {
+				this.db.executeUpdate("UPDATE SEGMENTS SET "
+						+ "XCOORD = " + coordinates[i - 1].getX() 
+						+ ", YCOORD = " + coordinates[i - 1].getY()
+						+ " WHERE ID = " + i);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**
@@ -50,19 +71,13 @@ public class DatabaseProcessor {
 		ArrayList<Integer> from = dbr.getAllFromId();
 		ArrayList<Integer> to = dbr.getAllToId();
 		noOfSegments = to.get(to.size() - 1);
-		System.out.println("Hashmap");
 		for (int i = 0; i < from.size(); i++) {
-			System.out.println(i);
 			hashmap.put(noOfSegments * (from.get(i) - 1) + to.get(i) - 1, 0);
 		}
-		System.out.println("Analyze genome");
 		for (int i = 1; i <= dbr.countGenomes(); i++) {
-			System.out.println(i);
 			hashmap = analyzeGenome(hashmap, i);
 		}
-		System.out.println("Updating");
 		for (int i = 0; i < from.size(); i++) {
-			System.out.println(i);
 			updateDblinkcount(from.get(i), to.get(i), 
 					hashmap.get(noOfSegments * (from.get(i) - 1) + to.get(i) - 1));
 		}

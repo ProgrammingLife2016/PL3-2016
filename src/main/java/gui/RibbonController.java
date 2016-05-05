@@ -28,8 +28,8 @@ public class RibbonController implements Initializable {
 	/**
 	 * function that gets executed when the matching fxml file is loaded.
 	 * 
-	 * The group is from within the FXML file. We use that group to add events and the pannable canvas
-	 * on which the drawing of the ribbon takes place.
+	 * The group is from within the FXML file. We use that group to add events and the pannable 
+	 * canvas on which the drawing of the ribbon takes place.
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -65,11 +65,11 @@ public class RibbonController implements Initializable {
 	 * 		event handlers
 	 */
 	public void draw(PannableCanvas pc, NodeGestures nodeGestures) {
-		CoordinateDetermination cdm = new CoordinateDetermination(dbm);
-		Coordinate[] coords = cdm.calcCoords();
 		ArrayList<Integer> from = dbm.getDbReader().getAllFromId();
 		ArrayList<Integer> to = dbm.getDbReader().getAllToId();
 		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
+		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
+		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
 		
 		for (int i = 0; i < from.size(); i++) {
 			int fromId = from.get(i);
@@ -77,7 +77,8 @@ public class RibbonController implements Initializable {
 			System.out.println("FromID: " + from.get(i));
 			System.out.println("ToID: " + to.get(i));
 			System.out.println(counts.get(i));
-			Path path = drawPath(coords[fromId - 1], coords[toId - 1]);
+			Path path = drawPath(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
+					xcoords.get(toId - 1), ycoords.get(toId - 1));
 	        path.addEventFilter( MouseEvent.MOUSE_PRESSED,
 	        		nodeGestures.getOnMousePressedEventHandler());
 	        path.addEventFilter( MouseEvent.MOUSE_DRAGGED,
@@ -132,9 +133,9 @@ public class RibbonController implements Initializable {
 	 * 			Segment to which path is drawn.	
 	 * @return A Path through which the lines goes.
 	 */
-	private Path drawPath(Coordinate from, Coordinate to) {
-		MoveTo moveto = new MoveTo(10 * from.getX(), 5 * from.getY());
-		LineTo lineto = new LineTo(10 * to.getX() , 5 * to.getY());
+	private Path drawPath(int fromX, int fromY, int toX, int toY) {
+		MoveTo moveto = new MoveTo(10 * fromX, 5 * fromY);
+		LineTo lineto = new LineTo(10 * toX , 5 * toY);
 		Path path = new Path();
 		path.getElements().addAll(moveto, lineto);
 		return path;
