@@ -5,6 +5,7 @@ import db.DatabaseProcessor;
 import db.GfaException;
 import db.GfaParser;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 @SuppressWarnings("restriction")
@@ -15,7 +16,7 @@ public class Launcher extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		String filename = "TB10";
+		String filename = "example";
     	String gfaPath = System.getProperty("user.dir") + "/Data/" + filename
     			+ "/" + filename + ".gfa";
 		String dbPath = System.getProperty("user.dir") + "/db/" + filename;
@@ -38,10 +39,15 @@ public class Launcher extends Application {
         stage.setMinWidth(640);
         
 		ScreenManager mainContainer = new ScreenManager();
-		mainContainer.loadScreen("RibbonLevel", ScreenManager.RibbonLevelFXML);
+		mainContainer.loadScreen("Main", ScreenManager.MainFXML);
 		scm = mainContainer;
-		mainContainer.setScreen("RibbonLevel");
+		mainContainer.setScreen("Main");
 		
+		
+		Scene scene = new Scene(mainContainer);
+		System.out.println("showing");
+		stage.setScene(scene);
+		stage.show();
 	}
 	
 	public static void main(String[] args) {

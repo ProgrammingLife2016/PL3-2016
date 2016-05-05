@@ -10,7 +10,7 @@ import javafx.scene.input.ScrollEvent;
 public class SceneGestures {
 	 int position = 0;
 	 
-    private final double MAX_SCALE = 10.0d;
+    private final double MAX_SCALE = 100.0d;
     private final double MIN_SCALE = .1d;
     private DragContext sceneDragContext = new DragContext();
     PannableCanvas canvas;

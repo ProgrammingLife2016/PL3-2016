@@ -19,7 +19,7 @@ import java.util.HashMap;
 @SuppressWarnings("restriction")
 public class ScreenManager extends StackPane {
     private HashMap<String, Node> screens = new HashMap<>();
-    public static final String RibbonLevelFXML = "RibbonLevel.fxml";
+    public static final String MainFXML = "Main.fxml";
 	public static Stage currentStage;
 	public static ArrayList<PannableCanvas> canvasList = new ArrayList<PannableCanvas>();
 
