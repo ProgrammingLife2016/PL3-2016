@@ -8,7 +8,7 @@
   <tabs>
     <Tab text="Untitled Tab 1">
       <content>
-      	<fx:include fx:id="tabPage" source="RibbonLevel.fxml"/>
+      	<fx:include fx:id="ribbonTab" source="RibbonLevel.fxml"/>
       </content>
     </Tab>
     <Tab text="Untitled Tab 2">

@@ -10,7 +10,14 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 
 public class MainController implements Initializable {
+	/**
+	 * You can interact with an indiviual tab page if you need it.
+	 */
+	@FXML private RibbonController ribbonTab;
 	
+	/**
+	 * Right now this MainController is empty but perhaps there will be additions later on. Keeping it for now.
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

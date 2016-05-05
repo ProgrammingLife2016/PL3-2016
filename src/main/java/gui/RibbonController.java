@@ -22,11 +22,15 @@ import java.util.ResourceBundle;
 
 @SuppressWarnings("restriction")
 public class RibbonController implements Initializable {
-	@FXML PannableCanvas pane;
 	@FXML Group group;
-	
 	private DatabaseManager dbm;
 	
+	/**
+	 * function that gets executed when the matching fxml file is loaded.
+	 * 
+	 * The group is from within the FXML file. We use that group to add events and the pannable canvas
+	 * on which the drawing of the ribbon takes place.
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.dbm = Launcher.dbm;
@@ -51,7 +55,15 @@ public class RibbonController implements Initializable {
         group.getChildren().add(pc);
 
 	}
-
+	
+	/**
+	 * Function to draw the Ribbons on a pannable canvas
+	 * 
+	 * @param pc 
+	 * 		a given pannable canvas
+	 * @param nodeGestures
+	 * 		event handlers
+	 */
 	public void draw(PannableCanvas pc, NodeGestures nodeGestures) {
 		CoordinateDetermination cdm = new CoordinateDetermination(dbm);
 		Coordinate[] coords = cdm.calcCoords();

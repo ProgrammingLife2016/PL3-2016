@@ -10,6 +10,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * This launcher which starts the application.
+ */
 @SuppressWarnings("restriction")
 public class Launcher extends Application {
 	public static DatabaseManager dbm;
