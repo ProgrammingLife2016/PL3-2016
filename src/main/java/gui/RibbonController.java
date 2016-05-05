@@ -8,6 +8,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.shape.LineTo;
@@ -19,12 +21,16 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 @SuppressWarnings("restriction")
-public class RibbonController implements Initializable, SetScreen {
-	@FXML PannableCanvas pane;
+public class RibbonController implements Initializable {
+	@FXML Group group;
 	private DatabaseManager dbm;
-	@SuppressWarnings("unused")
-	private ScreenManager screenManager;
-
+	
+	/**
+	 * function that gets executed when the matching fxml file is loaded.
+	 * 
+	 * The group is from within the FXML file. We use that group to add events and the pannable canvas
+	 * on which the drawing of the ribbon takes place.
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.dbm = Launcher.dbm;
@@ -40,29 +46,30 @@ public class RibbonController implements Initializable, SetScreen {
         label1.setTranslateX(10);
         label1.setTranslateY(10);
         pc.getChildren().addAll(label1);
-		Group group = new Group();
-        group.getChildren().add(pc);
-        
-        Scene scene = new Scene(group, 1024, 768);
         SceneGestures sceneGestures = new SceneGestures(pc);
-        scene.addEventFilter( MouseEvent.MOUSE_PRESSED,
-        		sceneGestures.getOnMousePressedEventHandler());
-        scene.addEventFilter( MouseEvent.MOUSE_DRAGGED,
-        		sceneGestures.getOnMouseDraggedEventHandler());
-        scene.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
+        group.addEventFilter( MouseEvent.MOUSE_PRESSED,
+		sceneGestures.getOnMousePressedEventHandler());
+        group.addEventFilter( MouseEvent.MOUSE_DRAGGED,
+		sceneGestures.getOnMouseDraggedEventHandler());
+        group.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
+        group.getChildren().add(pc);
 
-        ScreenManager.currentStage.setScene(scene);
-        ScreenManager.currentStage.show();
- 
 	}
-
+	
+	/**
+	 * Function to draw the Ribbons on a pannable canvas
+	 * 
+	 * @param pc 
+	 * 		a given pannable canvas
+	 * @param nodeGestures
+	 * 		event handlers
+	 */
 	public void draw(PannableCanvas pc, NodeGestures nodeGestures) {
 		CoordinateDetermination cdm = new CoordinateDetermination(dbm);
 		Coordinate[] coords = cdm.calcCoords();
 		ArrayList<Integer> from = dbm.getDbReader().getAllFromId();
 		ArrayList<Integer> to = dbm.getDbReader().getAllToId();
 		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
-		
 		
 		for (int i = 0; i < from.size(); i++) {
 			int fromId = from.get(i);
@@ -132,13 +139,4 @@ public class RibbonController implements Initializable, SetScreen {
 		path.getElements().addAll(moveto, lineto);
 		return path;
 	}
-
-	/**
-	 * Sets a particular Screen manager for a particular page.
-	 */
-	@Override
-	public void setScreenDriver(ScreenManager screenPage) {
-		this.screenManager = screenPage;
-	}
-
 }

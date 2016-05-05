@@ -10,7 +10,7 @@ import javafx.scene.input.ScrollEvent;
 public class SceneGestures {
 	 int position = 0;
 	 
-    private final double MAX_SCALE = 10.0d;
+    private final double MAX_SCALE = 100.0d;
     private final double MIN_SCALE = .1d;
     private DragContext sceneDragContext = new DragContext();
     PannableCanvas canvas;
@@ -78,38 +78,11 @@ public class SceneGestures {
             double zoom = scale/MAX_SCALE;
             System.out.println("Zoom percentage: " + zoom);
             
-            if(zoom == 1.0 && position < ScreenManager.canvasList.size() - 1) {
-            	position++;
-            	System.out.println("Zooming in");
-            	changed = true;
-            }
-            else if(zoom == .01 && position > 0) {
-            	position--;
-            	System.out.println("Zooming out");
-            	changed = true;
-            }
-            
             double f = (scale / oldScale)-1;
             double dx = (event.getSceneX() - (canvas.getBoundsInParent().getWidth()/2 + canvas.getBoundsInParent().getMinX()));
             double dy = (event.getSceneY() - (canvas.getBoundsInParent().getHeight()/2 + canvas.getBoundsInParent().getMinY()));
             canvas.setScale( scale);
             canvas.setPivot(f*dx, f*dy);
-            
-            if(changed) {
-            	System.out.println("Switching to canvas #" + position);
-            	canvas.reset();
-            	canvas = ScreenManager.canvasList.get(position);
-            	System.out.println("Switching to scene #" + position);
-
-            	Group groupTemp = new Group();
-            	groupTemp.getChildren().add(ScreenManager.canvasList.get(position));
-                Scene sceneTemp = new Scene(groupTemp, 1024, 768);
-            	SceneGestures sceneGestures = new SceneGestures(ScreenManager.canvasList.get(position));
-                sceneTemp.addEventFilter( MouseEvent.MOUSE_PRESSED, sceneGestures.getOnMousePressedEventHandler());
-                sceneTemp.addEventFilter( MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
-                sceneTemp.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
-            	ScreenManager.currentStage.setScene(sceneTemp);
-            }
             event.consume();
         }
     };
