@@ -38,6 +38,17 @@ public class DatabaseReader {
 		}
 	}
 	
+	public int countGenomes() {
+		try {
+			ResultSet rs = this.db.executeQuery("SELECT COUNT(ID) FROM GENOMES");
+			rs.next();
+			return rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
 	/**
 	 * Returns the number of genomes in the link between fromID and toID, given
 	 * that a link exists between the 2. Returns -1 if no link exists.
@@ -51,26 +62,20 @@ public class DatabaseReader {
 	 */
 	public int countGenomesInLink(int fromId, int toId) {
 		try {
-			String query = new StringBuilder()
-				.append("SELECT COUNT(G1) ")
-				.append("FROM (")
-				.append("SELECT * FROM (")
-				.append("SELECT FROMID, TOID ")
-				.append("FROM LINKS ")
-				.append("WHERE FROMID = " + fromId + " AND TOID = " + toId + " ")
-				.append(") AS T1 ")
-				.append("LEFT OUTER JOIN (SELECT SEGMENTID AS S1, GENOMEID AS G1 "
-						+ "FROM GENOMESEGMENTLINK) AS GSL ")
-				.append("ON T1.FROMID = GSL.S1 ")
-				.append("LEFT OUTER JOIN (SELECT SEGMENTID AS S2, GENOMEID AS G2 "
-						+ "FROM GENOMESEGMENTLINK) AS GSL2 ")
-				.append("ON T1.TOID = GSL2.S2")
-				.append(") ")
-				.append("WHERE G1 = G2")
-				.toString();
-			ResultSet rs = this.db.executeQuery(query);
+			ResultSet rs = this.db.executeQuery("SELECT * FROM LINKS WHERE FROMID = " + fromId + " AND TOID = " + toId);
 			rs.next();
-			return rs.getInt(1);
+			return rs.getInt(3);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	public int getLinkCount(int fromID, int toID) {
+		try {
+			ResultSet rs = this.db.executeQuery("SELECT * FROM LINKS WHERE FROMID = " + fromID + " AND TOID = " + toID);
+			rs.next();
+			return rs.getInt(3);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return -1;
@@ -116,6 +121,19 @@ public class DatabaseReader {
 		return null;
 	}
 	
+	public ArrayList<Integer> getAllCounts() {
+		try {
+			ResultSet rs = this.db.executeQuery("SELECT * FROM LINKS");
+			ArrayList<Integer> toIdList = new ArrayList<Integer>();
+			while (rs.next()) {
+				toIdList.add(rs.getInt(3));
+			 }
+			return toIdList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	
 	/**

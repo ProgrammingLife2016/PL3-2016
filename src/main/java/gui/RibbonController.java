@@ -61,17 +61,21 @@ public class RibbonController implements Initializable, SetScreen {
 		Coordinate[] coords = cdm.calcCoords();
 		ArrayList<Integer> from = dbm.getDbReader().getAllFromId();
 		ArrayList<Integer> to = dbm.getDbReader().getAllToId();
+		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
+		
 		
 		for (int i = 0; i < from.size(); i++) {
 			int fromId = from.get(i);
 			int toId = to.get(i);
-			System.out.println(i);
+			System.out.println("FromID: " + from.get(i));
+			System.out.println("ToID: " + to.get(i));
+			System.out.println(counts.get(i));
 			Path path = drawPath(coords[fromId - 1], coords[toId - 1]);
 	        path.addEventFilter( MouseEvent.MOUSE_PRESSED,
 	        		nodeGestures.getOnMousePressedEventHandler());
 	        path.addEventFilter( MouseEvent.MOUSE_DRAGGED,
 	        		nodeGestures.getOnMouseDraggedEventHandler());
-	        path.setStrokeWidth(0.01 + 0.003 * dbm.getDbReader().countGenomesInLink(fromId, toId));
+	        path.setStrokeWidth(0.1 + 0.1 * counts.get(i));
 	        pc.getChildren().add(path);
 		}
 	}
@@ -122,8 +126,8 @@ public class RibbonController implements Initializable, SetScreen {
 	 * @return A Path through which the lines goes.
 	 */
 	private Path drawPath(Coordinate from, Coordinate to) {
-		MoveTo moveto = new MoveTo(0.1 * from.getX(), 0.5 * from.getY());
-		LineTo lineto = new LineTo(0.1 * to.getX() , 0.5 * to.getY());
+		MoveTo moveto = new MoveTo(10 * from.getX(), 5 * from.getY());
+		LineTo lineto = new LineTo(10 * to.getX() , 5 * to.getY());
 		Path path = new Path();
 		path.getElements().addAll(moveto, lineto);
 		return path;

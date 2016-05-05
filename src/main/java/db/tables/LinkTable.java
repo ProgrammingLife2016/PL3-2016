@@ -9,7 +9,7 @@ public class LinkTable extends Table {
 	
 	public LinkTable() {
 		this.name = "LINKS";
-		this.names = new String[]{"FROMID","TOID"};
-		this.types = new String[]{"INT","INT"};
+		this.names = new String[]{"FROMID","TOID", "COUNT"};
+		this.types = new String[]{"INT","INT", "INT"};
 	}
 }

@@ -55,15 +55,15 @@ public class CoordinateDetermination {
 	 */
 	public Coordinate[] calcCoords() {
 		getData();
-		int noOfSegments = toIDs.get(toIDs.size() - 1);
+		int noOfSegments = toIDs.get(toIDs.size()-1);
 		
 		/***
 		 * TODO: Substitute "4" for number of genomes
 		 */
 		coordinates = new Coordinate[noOfSegments];
 		cweights = new int[noOfSegments];
-		coordinates[0] = new Coordinate(0,10);
-		cweights[0] = 10;
+		coordinates[0] = new Coordinate(0,4);
+		cweights[0] = 4;
 		
 		System.out.println(noOfSegments);
 		for (int i = 1; i <= noOfSegments; i++) {
@@ -123,6 +123,7 @@ public class CoordinateDetermination {
 	private void getData() {
 		fromIDs = dbm.getDbReader().getAllFromId();
 		toIDs = dbm.getDbReader().getAllToId();
+		System.out.println(fromIDs.size());
 	}
 	
 	public int countGenomesInLink(int from, int to) {

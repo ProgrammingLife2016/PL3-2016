@@ -1,6 +1,7 @@
 package gui;
 
 import db.DatabaseManager;
+import db.DatabaseProcessor;
 import db.GfaException;
 import db.GfaParser;
 import javafx.application.Application;
@@ -14,7 +15,7 @@ public class Launcher extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		String filename = "example";
+		String filename = "TB10";
     	String gfaPath = System.getProperty("user.dir") + "/Data/" + filename
     			+ "/" + filename + ".gfa";
 		String dbPath = System.getProperty("user.dir") + "/db/" + filename;
@@ -22,11 +23,16 @@ public class Launcher extends Application {
 		
 		ScreenManager.currentStage = stage;
 		GfaParser parser = new GfaParser(dbm);
+		System.out.println("Start Parsing");
 		try {
 			parser.parse(gfaPath);
 		} catch (GfaException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Start Calculating");
+		dbm.getDbProcessor().calculateLinkCounts();
+		
+		
 		
 		stage.setMinHeight(480);
         stage.setMinWidth(640);
