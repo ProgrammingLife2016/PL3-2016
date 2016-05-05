@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
- * @author Björn Ho, Daniel van de Berg
+ * @author Björn Ho, Daniel van de Berg, Rob Kapel
  *
  * Class for executing queries to read data out of a database.
  */
@@ -38,6 +38,11 @@ public class DatabaseReader {
 		}
 	}
 	
+	/**
+	 * Returns the number of genomes in the database, or -1 if an error occurs
+	 * 
+	 * @return the number of genomes in the database, or -1 if an error occurs
+	 */
 	public int countGenomes() {
 		try {
 			ResultSet rs = this.db.executeQuery("SELECT COUNT(ID) FROM GENOMES");
@@ -62,7 +67,8 @@ public class DatabaseReader {
 	 */
 	public int countGenomesInLink(int fromId, int toId) {
 		try {
-			ResultSet rs = this.db.executeQuery("SELECT * FROM LINKS WHERE FROMID = " + fromId + " AND TOID = " + toId);
+			ResultSet rs = this.db.executeQuery("SELECT * "
+					+ "FROM LINKS WHERE FROMID = " + fromId + " AND TOID = " + toId);
 			rs.next();
 			return rs.getInt(3);
 		} catch (SQLException e) {
@@ -71,9 +77,18 @@ public class DatabaseReader {
 		}
 	}
 	
-	public int getLinkCount(int fromID, int toID) {
+	/**
+	 * Return the amount of genomes through a certain link
+	 * 
+	 * @param fromID Start ID of the link
+	 * @param toID End ID of the link
+	 * @return the number of genomes through the link, or -1 if the link does not exist
+	 */
+	
+	public int getLinkcount(int fromId, int toId) {
 		try {
-			ResultSet rs = this.db.executeQuery("SELECT * FROM LINKS WHERE FROMID = " + fromID + " AND TOID = " + toID);
+			ResultSet rs = this.db.executeQuery("SELECT * "
+					+ "FROM LINKS WHERE FROMID = " + fromId + " AND TOID = " + toId);
 			rs.next();
 			return rs.getInt(3);
 		} catch (SQLException e) {
@@ -120,6 +135,12 @@ public class DatabaseReader {
 		}
 		return null;
 	}
+	
+	/**
+	 * Returns the number of genomes through each link in your database.
+	 * 
+	 * @return the number of genomes through each link in your database.
+	 */
 	
 	public ArrayList<Integer> getAllCounts() {
 		try {

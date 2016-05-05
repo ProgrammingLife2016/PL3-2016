@@ -55,7 +55,7 @@ public class CoordinateDetermination {
 	 */
 	public Coordinate[] calcCoords() {
 		getData();
-		int noOfSegments = toIDs.get(toIDs.size()-1);
+		int noOfSegments = toIDs.get(toIDs.size() - 1);
 		
 		/***
 		 * TODO: Substitute "4" for number of genomes
