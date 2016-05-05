@@ -62,8 +62,9 @@ public class CoordinateDetermination {
 		 */
 		coordinates = new Coordinate[noOfSegments];
 		cweights = new int[noOfSegments];
-		coordinates[0] = new Coordinate(0,10);
-		cweights[0] = 10;
+		int genomeCount = dbm.getDbReader().countGenomes();
+		coordinates[0] = new Coordinate(0, genomeCount);
+		cweights[0] = genomeCount;
 		
 		System.out.println(noOfSegments);
 		for (int i = 1; i <= noOfSegments; i++) {
@@ -123,6 +124,7 @@ public class CoordinateDetermination {
 	private void getData() {
 		fromIDs = dbm.getDbReader().getAllFromId();
 		toIDs = dbm.getDbReader().getAllToId();
+		System.out.println(fromIDs.size());
 	}
 	
 	public int countGenomesInLink(int from, int to) {

@@ -30,12 +30,14 @@ public class DatabaseManager {
 	 * Object for executing queries in the H2 database.
 	 */
 	private DatabaseReader dbReader;
+	private DatabaseProcessor dbProcessor;
 	
 	public DatabaseManager(String dbPath) {
 		try {
 		    dbConnection = DriverManager.getConnection("jdbc:h2:" + dbPath);
 			db = dbConnection.createStatement();
 			dbReader = new DatabaseReader(db);
+			dbProcessor = new DatabaseProcessor(db, dbReader);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -93,5 +95,9 @@ public class DatabaseManager {
 	
 	public DatabaseReader getDbReader() {
 		return this.dbReader;
+	}
+	
+	public DatabaseProcessor getDbProcessor() {
+		return this.dbProcessor;
 	}
 }
