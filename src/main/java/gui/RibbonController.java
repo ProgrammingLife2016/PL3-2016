@@ -21,13 +21,11 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 @SuppressWarnings("restriction")
-public class RibbonController implements Initializable, SetScreen {
+public class RibbonController implements Initializable {
 	@FXML PannableCanvas pane;
 	@FXML Group group;
 	
 	private DatabaseManager dbm;
-	@SuppressWarnings("unused")
-	private ScreenManager screenManager;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -60,7 +58,6 @@ public class RibbonController implements Initializable, SetScreen {
 		ArrayList<Integer> from = dbm.getDbReader().getAllFromId();
 		ArrayList<Integer> to = dbm.getDbReader().getAllToId();
 		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
-		
 		
 		for (int i = 0; i < from.size(); i++) {
 			int fromId = from.get(i);
@@ -130,13 +127,4 @@ public class RibbonController implements Initializable, SetScreen {
 		path.getElements().addAll(moveto, lineto);
 		return path;
 	}
-
-	/**
-	 * Sets a particular Screen manager for a particular page.
-	 */
-	@Override
-	public void setScreenDriver(ScreenManager screenPage) {
-		this.screenManager = screenPage;
-	}
-
 }

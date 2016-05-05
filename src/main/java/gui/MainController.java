@@ -9,19 +9,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 
-public class MainController implements Initializable, SetScreen{
+public class MainController implements Initializable {
 	
-	@SuppressWarnings("unused")
-	private ScreenManager screenManager;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 	}
-
-	@Override
-	public void setScreenDriver(ScreenManager screenPage) {
-		this.screenManager = screenPage;
-	
-	}
-
 }

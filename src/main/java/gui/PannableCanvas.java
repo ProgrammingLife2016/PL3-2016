@@ -19,7 +19,6 @@ public class PannableCanvas extends Pane {
 
     public PannableCanvas() {
         setPrefSize(600, 600);
-        //setStyle("-fx-background-color: white; -fx-border-color: white;");
 
         // add scale transform
         scaleXProperty().bind(myScale);
