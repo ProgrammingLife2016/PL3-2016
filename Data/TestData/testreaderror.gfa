@@ -1,0 +1,22 @@
+Q	VN:Z:1.0
+H	ORI:Z:seq1.fasta;seq2.fasta;seq3.fasta;seq4.fasta;
+S	1	TC	*	ORI:Z:seq1.fasta;seq2.fasta;seq3.fasta;seq4.fasta;	CRD:Z:seq1.fasta	START:Z:0
+L	1	+	2	+	0M
+L	1	+	3	+	0M
+S	2	AGATCAAT	*	ORI:Z:seq1.fasta;seq2.fasta;	CRD:Z:seq1.fasta	START:Z:2
+L	2	+	4	+	0M
+L	2	+	5	+	0M
+S	3	CTTCGTGA	*	ORI:Z:seq3.fasta;seq4.fasta;	CRD:Z:seq3.fasta	START:Z:2
+L	3	+	6	+	0M
+L	3	+	8	+	0M
+S	4	AC	*	ORI:Z:seq1.fasta;	CRD:Z:seq1.fasta	START:Z:10
+L	4	+	7	+	0M
+S	5	TG	*	ORI:Z:seq2.fasta;	CRD:Z:seq2.fasta	START:Z:10
+L	5	+	7	+	0M
+S	6	GT	*	ORI:Z:seq3.fasta;	CRD:Z:seq3.fasta	START:Z:10
+L	6	+	8	+	0M
+S	7	T	*	ORI:Z:seq1.fasta;seq2.fasta;	CRD:Z:seq1.fasta	START:Z:12
+L	7	+	9	+	0M
+S	8	A	*	ORI:Z:seq3.fasta;seq4.fasta;	CRD:Z:seq3.fasta	START:Z:12
+L	8	+	9	+	0M
+S	9	AG	*	ORI:Z:seq1.fasta;seq2.fasta;seq3.fasta;seq4.fasta;	CRD:Z:seq1.fasta	START:Z:13

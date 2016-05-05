@@ -21,3 +21,4 @@ target/
 .classpath
 .eclipse-pmd
 .DS_STORE
+.checkstyle

@@ -143,5 +143,9 @@ public class GfaParser {
 		dbManager.insert(new LinkTuple(Integer.parseInt(split[LINKFROM_IDX]), 
 				Integer.parseInt(split[LINKTO_IDX])));
 	}
+	
+	public HashMap<String, Integer> getGenomes() {
+		return this.genomes;
+	}
 		
 }
