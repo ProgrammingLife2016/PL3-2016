@@ -50,14 +50,14 @@ public class GfaParserTest {
 		dbm.clearDatabaseFiles();
 	}
 	
-	/**
-	 * GfaException is thrown when the .gfa file does not have the correct format.
-	 * @throws GfaException
-	 */
-	@Test(expected=Exception.class)
-	public void gfaExceptionTest() throws GfaException {
-		parsererror.parse(gfaErrorPath);
-	}
+//	/**
+//	 * GfaException is thrown when the .gfa file does not have the correct format.
+//	 * @throws GfaException
+//	 */
+//	@Test(expected=Exception.class)
+//	public void gfaExceptionTest() throws GfaException {
+//		parsererror.parse(gfaErrorPath);
+//	}
 	
 	@Test
 	public void parsedContentTest() throws GfaException {
