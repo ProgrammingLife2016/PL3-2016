@@ -23,11 +23,11 @@ public class GfaParserTest {
 	 * Locations of test files.
 	 */
 	private static String dbPath = System.getProperty("user.dir") + "/db/" + "testread";
-	private static String dbErrorPath = System.getProperty("user.dir") + "/db/dberror/" + "testreaderror";
+//	private static String dbErrorPath = System.getProperty("user.dir") + "/db/dberror/" + "testreaderror";
 	private static String gfaPath = System.getProperty("user.dir") + "/Data/TestData/"
 			+ "testread" + ".gfa";
-	private static String gfaErrorPath = System.getProperty("user.dir") + "/Data/TestData/"
-			+ "testreaderror" + ".gfa";
+//	private static String gfaErrorPath = System.getProperty("user.dir") + "/Data/TestData/"
+//			+ "testreaderror" + ".gfa";
 
 	/**
 	 * Run necessary functions before running each test.
@@ -36,9 +36,9 @@ public class GfaParserTest {
 	@BeforeClass
 	public static void before() {
 		dbm = new DatabaseManager(dbPath);
-		dbmerror = new DatabaseManager(dbErrorPath);
+//		dbmerror = new DatabaseManager(dbErrorPath);
 		parser = new GfaParser(dbm);
-		parsererror = new GfaParser(dbmerror);
+//		parsererror = new GfaParser(dbmerror);
 	}
 	
 	/**
@@ -46,7 +46,7 @@ public class GfaParserTest {
 	 */
 	@AfterClass
 	public static void after() {
-		dbmerror.clearDatabaseFiles("dberror");
+//		dbmerror.clearDatabaseFiles("dberror");
 		dbm.clearDatabaseFiles();
 	}
 	
