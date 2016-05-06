@@ -3,6 +3,7 @@ package db;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public class GfaParserTest {
 	 * Locations of test files.
 	 */
 	private static String dbPath = System.getProperty("user.dir") + "/db/" + "testread";
-	private static String dbErrorPath = System.getProperty("user.dir") + "/db/" + "testreaderror";
+	private static String dbErrorPath = System.getProperty("user.dir") + "/db/dberror/" + "testreaderror";
 	private static String gfaPath = System.getProperty("user.dir") + "/Data/TestData/"
 			+ "testread" + ".gfa";
 	private static String gfaErrorPath = System.getProperty("user.dir") + "/Data/TestData/"
@@ -43,8 +44,9 @@ public class GfaParserTest {
 	/**
 	 * Cleans up all Database files in the "db" directory.
 	 */
-	@After
-	public void after() {
+	@AfterClass
+	public static void after() {
+		dbmerror.clearDatabaseFiles("dberror");
 		dbm.clearDatabaseFiles();
 	}
 	

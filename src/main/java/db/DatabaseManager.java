@@ -95,10 +95,23 @@ public class DatabaseManager {
 	}
 	
 	/**
-	 * Clears all files in the db directory.
+	 * Clears all db files in the db directory.
 	 */
 	public void clearDatabaseFiles() {
 		String directoryName = System.getProperty("user.dir") + "/db/";
+		File directory = new File(directoryName);
+		File[] files = directory.listFiles();
+		
+		for (File file : files) {
+			file.delete();
+		}
+	}
+	
+	/**
+	 * Clears all db files in a specified directory in "db/".
+	 */
+	public void clearDatabaseFiles(String dbdirectory) {
+		String directoryName = System.getProperty("user.dir") + "/db/" + dbdirectory;
 		File directory = new File(directoryName);
 		File[] files = directory.listFiles();
 		
