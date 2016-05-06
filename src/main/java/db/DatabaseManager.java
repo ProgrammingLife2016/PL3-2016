@@ -3,6 +3,7 @@ package db;
 import db.tables.Table;
 import db.tuples.Tuple;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -90,6 +91,32 @@ public class DatabaseManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
+		}
+	}
+	
+	/**
+	 * Clears all db files in the db directory.
+	 */
+	public void clearDatabaseFiles() {
+		String directoryName = System.getProperty("user.dir") + "/db/";
+		File directory = new File(directoryName);
+		File[] files = directory.listFiles();
+		
+		for (File file : files) {
+			file.delete();
+		}
+	}
+	
+	/**
+	 * Clears all db files in a specified directory in "db/".
+	 */
+	public void clearDatabaseFiles(String dbdirectory) {
+		String directoryName = System.getProperty("user.dir") + "/db/" + dbdirectory;
+		File directory = new File(directoryName);
+		File[] files = directory.listFiles();
+		
+		for (File file : files) {
+			file.delete();
 		}
 	}
 	
