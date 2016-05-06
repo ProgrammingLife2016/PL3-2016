@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -36,6 +37,14 @@ public class DatabaseReaderTest {
 		parser = new GfaParser(dbm);
 		parser.parse(gfaPath);
 		dbm.getDbProcessor().calculateLinkCounts();
+	}
+	
+	/**
+	 * Cleans up all Database files in the "db" directory at the end of all tests.
+	 */
+	@AfterClass
+	public static void after() {
+		dbm.clearDatabaseFiles();
 	}
 	
 	/**
