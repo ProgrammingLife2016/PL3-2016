@@ -12,7 +12,7 @@ public class Launcher extends Application{
 		
 	@Override
 	public void start(Stage stage) throws Exception {
-		String filename = "TB10";
+		String filename = "example";
     	String gfaPath = System.getProperty("user.dir") + "/Data/" + filename + "/" + filename + ".gfa";
 		String dbPath = System.getProperty("user.dir") + "/db/" + filename;
 		dbm = new DatabaseManager(dbPath);
@@ -29,9 +29,9 @@ public class Launcher extends Application{
 		stage.setMinHeight(480);
         stage.setMinWidth(640);
         
-		mainContainer.loadScreen("RibbonLevel", ScreenManager.RibbonLevelFXML);
+		mainContainer.loadScreen("PhylogenyView", ScreenManager.PhylogenyFXML);
 		scm = mainContainer;
-		mainContainer.setScreen("RibbonLevel");
+		mainContainer.setScreen("PhylogenyView");
 		
 	}
 	
