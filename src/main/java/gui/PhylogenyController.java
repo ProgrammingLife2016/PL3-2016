@@ -36,6 +36,10 @@ public class PhylogenyController implements Initializable, SetScreen {
 
 		Group node = getDrawableTree(tree, 20, 10, 20);
 		
+//		Group node = new Group();
+//		node.getChildren().add(new NewickEdge(new InternalNewickNode(10,10),new InternalNewickNode(50,50)));
+		
+		
 //		NewickNode node1 = new InternalNewickNode();
 //		NewickNode child1 = new ExternalNewickNode(40,0,"A");
 //		NewickNode child2 = new ExternalNewickNode(60,40,"B");
@@ -173,7 +177,7 @@ public class PhylogenyController implements Initializable, SetScreen {
 			}
 		}
 		
-		parentNode.shiftRootNode((toY + fromY)/2);
+		parentNode.shiftRootNode(100);
 
 		parentNode.setTranslateX(100);
 		parentNode.setTranslateY(100);
