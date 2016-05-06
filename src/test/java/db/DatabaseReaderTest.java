@@ -35,6 +35,7 @@ public class DatabaseReaderTest {
 		dbm = new DatabaseManager(dbPath);
 		parser = new GfaParser(dbm);
 		parser.parse(gfaPath);
+		dbm.getDbProcessor().calculateLinkCounts();
 	}
 	
 	/**
@@ -45,7 +46,7 @@ public class DatabaseReaderTest {
 		ArrayList<Integer> fromallids = dbm.getDbReader().getAllFromId();
 		int[] expectedids = {1, 1, 2, 2, 3, 3, 4, 5, 6, 7, 8};
 		for (int i = 0; i < 11; i++) {
-			assertEquals((int)fromallids.get(i), expectedids[i]);
+			assertEquals(expectedids[i], (int)fromallids.get(i));
 		}
 	}
 	
@@ -56,7 +57,7 @@ public class DatabaseReaderTest {
 		ArrayList<Integer> toallids = dbm.getDbReader().getAllToId();
 		int[] expectedids = {2, 3, 4, 5, 6, 8, 7, 7, 8, 9, 9};
 		for (int i = 0; i < 2; i++) {
-			assertEquals((int)toallids.get(i), expectedids[i]);
+			assertEquals(expectedids[i], (int)toallids.get(i));
 		}
 	}
 	
@@ -68,7 +69,7 @@ public class DatabaseReaderTest {
 		ArrayList<Integer> fromids = dbm.getDbReader().getFromIDs(7);
 		int[] expectedids = {4, 5};
 		for (int i = 0; i < 2; i++) {
-			assertEquals((int)fromids.get(i), expectedids[i]);
+			assertEquals(expectedids[i], (int)fromids.get(i));
 		}
 	}
 	
@@ -80,7 +81,7 @@ public class DatabaseReaderTest {
 		ArrayList<Integer> toids = dbm.getDbReader().getToIDs(1);
 		int[] expectedids = {2, 3};
 		for (int i = 0; i < 2; i++) {
-			assertEquals((int)toids.get(i), expectedids[i]);
+			assertEquals(expectedids[i], (int)toids.get(i));
 		}
 	}
 	
@@ -89,9 +90,9 @@ public class DatabaseReaderTest {
 	 */
 	@Test
 	public void countGenomesInLinkTest() {
-		assertEquals(dbm.getDbReader().countGenomesInLink(1,2), 2);
-		assertEquals(dbm.getDbReader().countGenomesInLink(2,4), 1);
-		assertEquals(dbm.getDbReader().countGenomesInLink(8,9), 2);
+		assertEquals(2, dbm.getDbReader().countGenomesInLink(1,2));
+		assertEquals(1, dbm.getDbReader().countGenomesInLink(2,4));
+		assertEquals(2, dbm.getDbReader().countGenomesInLink(8,9));
 	}
 	
 	/**
@@ -99,9 +100,9 @@ public class DatabaseReaderTest {
 	 */
 	@Test
 	public void countGenomesInSegTest() {
-		assertEquals(dbm.getDbReader().countGenomesInSeg(1), 4);
-		assertEquals(dbm.getDbReader().countGenomesInSeg(2), 2);
-		assertEquals(dbm.getDbReader().countGenomesInSeg(8), 2);
+		assertEquals(4, dbm.getDbReader().countGenomesInSeg(1));
+		assertEquals(2, dbm.getDbReader().countGenomesInSeg(2));
+		assertEquals(2, dbm.getDbReader().countGenomesInSeg(8));
 	}
 	
 	/**
@@ -111,7 +112,7 @@ public class DatabaseReaderTest {
 	public void getContentTest() {
 		String[] expectedcontent = {"empty", "TC", "AGATCAAT", "CTTCGTGA", "AC", "TG", "GT", "T", "A", "AG"};
 		for (int i = 1; i <= 9; i++) {
-			assertEquals(dbm.getDbReader().getContent(i), expectedcontent[i]);
+			assertEquals(expectedcontent[i], dbm.getDbReader().getContent(i));
 		}
 	}
 }
