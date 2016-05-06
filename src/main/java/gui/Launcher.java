@@ -1,5 +1,8 @@
 package gui;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import db.DatabaseManager;
 import db.DatabaseProcessor;
 import db.GfaException;
@@ -19,21 +22,30 @@ public class Launcher extends Application {
 		
 	@Override
 	public void start(Stage stage) throws Exception {
-		String filename = "example";
+
+		String filename = "TB10";
     	String gfaPath = System.getProperty("user.dir") + "/Data/" + filename
     			+ "/" + filename + ".gfa";
 		String dbPath = System.getProperty("user.dir") + "/db/" + filename;
-		dbm = new DatabaseManager(dbPath);
 		
-		GfaParser parser = new GfaParser(dbm);
-		System.out.println("Start Parsing");
-		try {
-			parser.parse(gfaPath);
-		} catch (GfaException e) {
-			e.printStackTrace();
+		File database = new File(dbPath + ".mv.db");
+		
+		//Check to see whether the database needs to be parsed or not
+		if (!database.exists()) {
+			dbm = new DatabaseManager(dbPath);
+			GfaParser parser = new GfaParser(dbm);
+			System.out.println("Start Parsing");
+			try {
+				parser.parse(gfaPath);
+			} catch (GfaException e) {
+				e.printStackTrace();
+			}
+			System.out.println("Start Calculating");
+			dbm.getDbProcessor().calculateLinkCounts();
+			dbm.getDbProcessor().updateCoordinates();
+		} else {
+			dbm = new DatabaseManager(dbPath);
 		}
-		System.out.println("Start Calculating");
-		dbm.getDbProcessor().calculateLinkCounts();
 		
         Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
         Scene scene = new Scene(root);

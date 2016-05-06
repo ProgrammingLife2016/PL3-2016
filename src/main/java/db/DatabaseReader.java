@@ -118,6 +118,44 @@ public class DatabaseReader {
 	}
 	
 	/**
+	 * Returns all x-coordinates of the segments in the database.
+	 * 
+	 * @return All x-coordinates of the segments in the database.
+	 */
+	public ArrayList<Integer> getAllXCoord() {
+		try {
+			ResultSet rs = this.db.executeQuery("SELECT * FROM SEGMENTS");
+			ArrayList<Integer> fromIdList = new ArrayList<Integer>();
+			while (rs.next()) {
+				fromIdList.add(rs.getInt(3));
+			 }
+			return fromIdList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns all x-coordinates of the segments in the database.
+	 * 
+	 * @return All x-coordinates of the segments in the database.
+	 */
+	public ArrayList<Integer> getAllYCoord() {
+		try {
+			ResultSet rs = this.db.executeQuery("SELECT * FROM SEGMENTS");
+			ArrayList<Integer> fromIdList = new ArrayList<Integer>();
+			while (rs.next()) {
+				fromIdList.add(rs.getInt(4));
+			 }
+			return fromIdList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
 	 * Returns all id's of the segments that have one or more ingoing links.
 	 * 
 	 * @return All id's of the segments that have one or more ingoing links.
