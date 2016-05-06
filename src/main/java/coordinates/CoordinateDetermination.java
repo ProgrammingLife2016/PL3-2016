@@ -55,17 +55,18 @@ public class CoordinateDetermination {
 	 * @return list of coordinates of segments.
 	 */
 	public Coordinate[] calcCoords() {
-		getData();
 		int noOfSegments = toIDs.get(toIDs.size() - 1);
 		coordinates = new Coordinate[noOfSegments];
 		cweights = new int[noOfSegments];
 		int genomeCount = dbr.countGenomes();
 		coordinates[0] = new Coordinate(0, genomeCount);
 		cweights[0] = genomeCount;
-		
-		System.out.println(noOfSegments);
+		System.out.println("Calculating segment coordinates");
+
 		for (int i = 1; i <= noOfSegments; i++) {
-			System.out.println(i);
+			if (i % (noOfSegments / 10) == 0) {
+				System.out.println((i * 100 / noOfSegments) + 1 + "% Calculated");
+			}
 			int alreadyDrawn = 0;
 			int leftToDraw = countGenomesInSeg(i);
 			Coordinate coords = coordinates[i - 1];
@@ -79,11 +80,6 @@ public class CoordinateDetermination {
 						countGenomesInLink(i, outgoingedges.get(j)));
 				alreadyDrawn += countGenomesInLink(i, outgoingedges.get(j));
 			}
-		}
-		for (int i = 1; i <= 9; i++) {
-			System.out.println("SegID: " + i);
-			System.out.println("X: " + coordinates[i - 1].getX());
-			System.out.println("Y: " + coordinates[i - 1].getY());
 		}
 		return coordinates;
 	}

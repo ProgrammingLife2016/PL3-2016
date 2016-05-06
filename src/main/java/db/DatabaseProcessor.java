@@ -29,9 +29,14 @@ public class DatabaseProcessor {
 	 * Calculating the coordinates of segments and store them in the database
 	 */
 	public void updateCoordinates() {
+		
 		CoordinateDetermination coorddet = new CoordinateDetermination(dbr);
 		Coordinate[] coordinates = coorddet.calcCoords();
+		System.out.println("Saving segment coordinates");
 		for (int i = 1; i <= coordinates.length; i++) {
+			if (i % (coordinates.length / 10) == 0) {
+				System.out.println((i * 100 / coordinates.length + 1) + "% Stored");
+			}
 			try {
 				this.db.executeUpdate("UPDATE SEGMENTS SET "
 						+ "XCOORD = " + coordinates[i - 1].getX() 
@@ -71,13 +76,23 @@ public class DatabaseProcessor {
 		ArrayList<Integer> from = dbr.getAllFromId();
 		ArrayList<Integer> to = dbr.getAllToId();
 		noOfSegments = to.get(to.size() - 1);
+		System.out.println("Retrieving link data");
 		for (int i = 0; i < from.size(); i++) {
+			if ( (i + 1) % (from.size() / 10) == 0) {
+				System.out.println((i * 100 / from.size() + 1) + "% Retrieved");
+			}
 			hashmap.put(noOfSegments * (from.get(i) - 1) + to.get(i) - 1, 0);
 		}
+		System.out.println("Starting to analyze genomes");
 		for (int i = 1; i <= dbr.countGenomes(); i++) {
 			hashmap = analyzeGenome(hashmap, i);
+			System.out.println(i + "genome(s) analyzed");
 		}
+		System.out.println("Storing link data");
 		for (int i = 0; i < from.size(); i++) {
+			if ( (i + 1) % (from.size() / 10) == 0) {
+				System.out.println((i * 100 / from.size() + 1) + "% Stored");
+			}
 			updateDblinkcount(from.get(i), to.get(i), 
 					hashmap.get(noOfSegments * (from.get(i) - 1) + to.get(i) - 1));
 		}
@@ -92,7 +107,6 @@ public class DatabaseProcessor {
 	 */
 	public HashMap<Integer, Integer> analyzeGenome(HashMap<Integer, Integer> map, int genomeId) {
 		try {
-			System.out.println(genomeId);
 			ResultSet rs = this.db.executeQuery("SELECT * "
 					+ "FROM GENOMESEGMENTLINK WHERE GENOMEID = " + genomeId);
 			rs.next();

@@ -74,9 +74,6 @@ public class RibbonController implements Initializable {
 		for (int i = 0; i < from.size(); i++) {
 			int fromId = from.get(i);
 			int toId = to.get(i);
-			System.out.println("FromID: " + from.get(i));
-			System.out.println("ToID: " + to.get(i));
-			System.out.println(counts.get(i));
 			Path path = drawPath(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 					xcoords.get(toId - 1), ycoords.get(toId - 1));
 	        path.addEventFilter( MouseEvent.MOUSE_PRESSED,
