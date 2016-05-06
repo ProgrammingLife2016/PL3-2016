@@ -7,18 +7,23 @@ import javafx.scene.shape.VLineTo;
 
 public class NewickEdge extends Path {
 	
-	public NewickEdge(NewickNode dst) {
+	public NewickEdge(NewickNode src, NewickNode dst) {
 		MoveTo moveTo = new MoveTo();
 
 		// Set start coordinates of the path.
-		this.setTranslateX(0);
-		this.setTranslateY(0);
+//		this.setTranslateX(src.getX());
+//		this.setTranslateY(src.getX());
+		
+//		this.translateXProperty().bind(src.getXProperty());
+//		this.translateYProperty().bind(src.getYProperty());
 
 		// Set the destination of the path.
-		moveTo.setX(dst.getX());
-		moveTo.setY(dst.getY());
-//		moveTo.xProperty().bindBidirectional(dst.getXProperty());
-//		moveTo.yProperty().bindBidirectional(dst.getXProperty());
+//		moveTo.setX(dst.getX());
+//		moveTo.setY(dst.getY());
+
+		
+		moveTo.xProperty().bindBidirectional(dst.getXProperty());
+		moveTo.yProperty().bindBidirectional(dst.getYProperty());
 		this.getElements().add(moveTo);
 
 		// Add a horizontal line from the current position to the x-coordinate
@@ -31,8 +36,8 @@ public class NewickEdge extends Path {
 		VLineTo vertical = new VLineTo();
 		this.getElements().add(vertical);
 		
-		horizontal.xProperty().bindBidirectional(dst.translateXProperty());
-		vertical.yProperty().bindBidirectional(dst.translateYProperty());
+//		horizontal.xProperty().bindBidirectional(dst.translateXProperty());
+//		vertical.yProperty().bindBidirectional(dst.translateXProperty());
 	}
 	
 }

@@ -34,22 +34,24 @@ public class PhylogenyController implements Initializable, SetScreen {
 //		}
 		tree = NewickTreeParser.parse("(A:200,B:100,C:150,D:50);");
 
-//		Group node = getDrawableTree(tree, 20, 10, 20);
+		Group node = getDrawableTree(tree, 20, 10, 20);
 		
-		NewickNode node1 = new InternalNewickNode();
-		NewickNode child1 = new ExternalNewickNode(40,-20,"A");
-		NewickNode child2 = new ExternalNewickNode(60,20,"B");
-		Path edge1 = new NewickEdge(child1);
-		Path edge2 = new NewickEdge(child2);
-		
-		node1.getChildren().add(child1);
-		node1.getChildren().add(child2);
-		node1.getChildren().add(edge1);
-		node1.getChildren().add(edge2);
-		
-		node1.setTranslateX(200);
-		node1.setTranslateY(200);
-		
+//		NewickNode node1 = new InternalNewickNode();
+//		NewickNode child1 = new ExternalNewickNode(40,0,"A");
+//		NewickNode child2 = new ExternalNewickNode(60,40,"B");
+//		Path edge1 = new NewickEdge(child1);
+//		Path edge2 = new NewickEdge(child2);
+//		
+//		node1.getChildren().add(child1);
+//		node1.getChildren().add(child2);
+//		node1.getChildren().add(edge1);
+//		node1.getChildren().add(edge2);
+//		
+//		node1.shiftRootNode(20);
+//		
+//		node1.setTranslateX(200);
+//		node1.setTranslateY(200);
+//		
 		
 		Group root = new Group();
         Scene scene = new Scene(root, 800, 600);
@@ -58,7 +60,7 @@ public class PhylogenyController implements Initializable, SetScreen {
         int scale = 1000;
         
         
-		root.getChildren().add(node1);
+		root.getChildren().add(node);
 //		root.setTranslateX(200);
 //		root.setTranslateY(200);
 //		root.getChildren().add(new NewickEdge(new Coordinate(100,100),new Coordinate(200,200)));
@@ -136,49 +138,48 @@ public class PhylogenyController implements Initializable, SetScreen {
 //	}
 //	
 //	
-//	public NewickNode getDrawableTree(NewickTree tree, int startX, int minY, int vSpacing) {
-//		NewickTree current = tree;
-//		Stack<NewickTree> stack = new Stack<>();
-//		
-//		NewickNode root = new InternalNewickNode(startX,0);
-//		
-//		int currentX = startX;
-//		int currentY = minY;
-//		
-//		while(!current.isLeaf()) {
-//			stack.push(current);
-//			current = current.getChildren().get(0);
-//			currentX += current.getDistance();
-//		}
-//		
-//		NewickTree parent = stack.pop();
-//		
-//		int fromY = Integer.MAX_VALUE;
-//		int toY = -1;
-//		
-//		NewickNode parentNode = new InternalNewickNode();
-//
-//		for(NewickTree child : parent.getChildren()) {
-//			NewickNode leaf = new ExternalNewickNode(currentX + (int) child.getDistance(), currentY,child.getName());
-//			
-//			parentNode.getChildren().add(leaf);
-//			parentNode.getChildren().add(new NewickEdge(leaf));
-//			
-//			currentY += vSpacing;
-//			if(leaf.getY() < fromY) {
-//				fromY = leaf.getY();
-//			}
-//			if(leaf.getY() > toY) {
-//				toY = leaf.getY();
-//			}
-//		}
-//
-//		root.getChildren().add(parentNode);
-//		root.setTranslateX(100);
-//		root.setTranslateY(100);
-//		
-//		return root;
-//	}
+	public NewickNode getDrawableTree(NewickTree tree, int startX, int minY, int vSpacing) {
+		NewickTree current = tree;
+		Stack<NewickTree> stack = new Stack<>();
+		
+		int currentX = startX;
+		int currentY = 0;
+		
+		while(!current.isLeaf()) {
+			stack.push(current);
+			current = current.getChildren().get(0);
+			currentX += current.getDistance();
+		}
+		
+		NewickTree parent = stack.pop();
+		
+		double fromY = Integer.MAX_VALUE;
+		double toY = -1;
+		
+		NewickNode parentNode = new InternalNewickNode();
+
+		for(NewickTree child : parent.getChildren()) {
+			NewickNode leaf = new ExternalNewickNode(currentX + (int) child.getDistance(), currentY,child.getName());
+			
+			parentNode.getChildren().add(leaf);
+			parentNode.getChildren().add(new NewickEdge(parentNode,leaf));
+			
+			currentY += vSpacing;
+			if(leaf.getY() < fromY) {
+				fromY = leaf.getY();
+			}
+			if(leaf.getY() > toY) {
+				toY = leaf.getY();
+			}
+		}
+		
+		parentNode.shiftRootNode((toY + fromY)/2);
+
+		parentNode.setTranslateX(100);
+		parentNode.setTranslateY(100);
+		
+		return parentNode;
+	}
 	
 	
 //	public void getDrawableTree(Group root, NewickTree tree, int startX, int minY, int vSpacing) {
