@@ -26,6 +26,36 @@ public class NewickEdge extends Group {
 		horizontal.endXProperty().bindBidirectional(dst.getXProperty());
 		horizontal.endYProperty().bindBidirectional(dst.getYProperty());
 		
+//		vertical.startXProperty().bindBidirectional(src.translateXProperty());
+//		vertical.startYProperty().bindBidirectional(src.translateYProperty());
+//		vertical.endXProperty().bindBidirectional(src.translateXProperty());
+//		vertical.endYProperty().bindBidirectional(dst.translateYProperty());
+//		
+//		horizontal.startXProperty().bindBidirectional(src.translateXProperty());
+//		horizontal.startYProperty().bindBidirectional(dst.translateYProperty());
+//		horizontal.endXProperty().bindBidirectional(dst.translateXProperty());
+//		horizontal.endYProperty().bindBidirectional(dst.translateYProperty());
+		
+//		vertical.startXProperty().bind(src.getXProperty());
+//		vertical.startYProperty().bind(src.getYProperty());
+//		vertical.endXProperty().bind(src.getXProperty());
+//		vertical.endYProperty().bind(dst.getYProperty());
+//		
+//		horizontal.startXProperty().bind(src.getXProperty());
+//		horizontal.startYProperty().bind(dst.getYProperty());
+//		horizontal.endXProperty().bind(dst.getXProperty());
+//		horizontal.endYProperty().bind(dst.getYProperty());
+		
+//		vertical.setStartX(src.getTranslateX());
+//		vertical.setStartY(src.getTranslateY());
+//		vertical.setEndX(src.getTranslateX());
+//		vertical.setEndY(dst.getTranslateY());
+//		
+//		horizontal.setStartX(src.getTranslateX());
+//		horizontal.setStartY(dst.getTranslateY());
+//		horizontal.setEndX(dst.getTranslateX());
+//		horizontal.setEndY(dst.getTranslateY());
+		
 		this.getChildren().add(vertical);
 		this.getChildren().add(horizontal);
 		

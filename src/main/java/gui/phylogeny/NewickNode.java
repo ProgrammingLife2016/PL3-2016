@@ -10,6 +10,10 @@ public abstract class NewickNode extends Group {
 	private static final int SIZE = 10;
 
 	private Rectangle node = new Rectangle(0 - SIZE / 2, 0 - SIZE / 2, SIZE, SIZE);
+	
+	// Keeps track of the vertical distance between the upper left corner of the
+	// complete group and the root Rectangle.
+	private double offset = 0;
 
 	private DoubleProperty xCoordinate = new SimpleDoubleProperty(0);
 	private DoubleProperty yCoordinate = new SimpleDoubleProperty(0);
@@ -20,8 +24,8 @@ public abstract class NewickNode extends Group {
 	
 	public NewickNode(int x, int y) {
 		
-		node.translateXProperty().bind(xCoordinate);
-		node.translateYProperty().bind(yCoordinate);
+		this.translateXProperty().bind(xCoordinate);
+		this.translateYProperty().bind(yCoordinate);
 		
 		xCoordinate.set(x);
 		yCoordinate.set(y);
@@ -33,7 +37,9 @@ public abstract class NewickNode extends Group {
 	 * @param y Distance to shift (y > 0 is a downwards shift)
 	 */
 	public void shiftRootNode(double y) {
-		yCoordinate.set(y);
+		node.setTranslateY(y);
+//		yCoordinate.set(yCoordinate.get() + y);
+		offset += y;
 	}
 	
 	public DoubleProperty getXProperty() {
@@ -52,25 +58,14 @@ public abstract class NewickNode extends Group {
 		return xCoordinate.get();
 	}
 	
-//	public void setX(int x) {
-//		coord.x = x;
-//		this.node.setX(x - SIZE / 2);
-//		this.setTranslateX(x);
-//	}
-//
-//	public void setY(int y) {
-//		coord.y = y;
-//		this.node.setY(y - SIZE / 2);
-//		this.setTranslateY(y);
-//	}
+	public void translateY(double dy) {
+		yCoordinate.set(yCoordinate.get() + dy);
+//		this.setTranslateY(dy-offset);
+	}
 	
-//	public DoubleProperty getXProperty() {
-//		return this.xProperty;
-//	}
-//	
-//	public DoubleProperty getYProperty() {
-//		return this.yProperty;
-//	}
-	
+	public void translateX(double dx) {
+		xCoordinate.set(xCoordinate.get() + dx);
+//		this.setTranslateX(dx);
+	}	
 	
 }

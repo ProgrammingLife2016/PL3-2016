@@ -3,6 +3,14 @@ package gui.phylogeny;
 import javafx.scene.control.Label;
 
 public class ExternalNewickNode extends NewickNode {
+	
+	public ExternalNewickNode(String name) {
+		super();
+		Label label = new Label(name);
+		label.setTranslateX(10);
+		label.setTranslateY(-5);
+		this.getChildren().add(label);
+	}
 
 	public ExternalNewickNode(int x, int y, String name) {
 		super(x, y);
