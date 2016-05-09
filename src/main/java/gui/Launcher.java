@@ -29,7 +29,7 @@ public class Launcher extends Application {
 		String dbPath = System.getProperty("user.dir") + "/db/" + filename;
 		
 		File database = new File(dbPath + ".mv.db");
-		
+			
 		//Check to see whether the database needs to be parsed or not
 		if (!database.exists()) {
 			dbm = new DatabaseManager(dbPath);
@@ -47,7 +47,7 @@ public class Launcher extends Application {
 			dbm = new DatabaseManager(dbPath);
 		}
 		
-        Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("splashScreen.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();

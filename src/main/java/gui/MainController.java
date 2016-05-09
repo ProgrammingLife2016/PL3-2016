@@ -19,6 +19,6 @@ public class MainController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		ribbonTab.getChildren();
+		//ribbonTab.getChildren();
 	}
 }
