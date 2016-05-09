@@ -2,6 +2,7 @@ package coordinates;
 
 import db.DatabaseManager;
 import db.DatabaseReader;
+import gui.SplashController;
 
 import java.util.ArrayList;
 
@@ -61,11 +62,11 @@ public class CoordinateDetermination {
 		int genomeCount = dbr.countGenomes();
 		coordinates[0] = new Coordinate(0, genomeCount);
 		cweights[0] = genomeCount;
-		System.out.println("Calculating segment coordinates");
+		SplashController.progressString.set("Calculating segment coordinates");
 
 		for (int i = 1; i <= noOfSegments; i++) {
 			if (i % (noOfSegments / 10) == 0) {
-				System.out.println((i * 100 / noOfSegments) + 1 + "% Calculated");
+				SplashController.progressString.set((i * 100 / noOfSegments) + 1 + "% Calculated");
 			}
 			int alreadyDrawn = 0;
 			int leftToDraw = countGenomesInSeg(i);
@@ -117,7 +118,7 @@ public class CoordinateDetermination {
 	private void getData() {
 		fromIDs = dbr.getAllFromId();
 		toIDs = dbr.getAllToId();
-		System.out.println(fromIDs.size());
+		SplashController.progressString.set("From ID's size is: " + fromIDs.size());
 	}
 	
 	public int countGenomesInLink(int from, int to) {

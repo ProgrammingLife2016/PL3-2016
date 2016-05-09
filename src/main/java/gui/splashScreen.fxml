@@ -7,15 +7,15 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="535.0" prefWidth="800.0" style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainController">
+<VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="535.0" prefWidth="800.0" style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SplashController">
    <children>
       <ImageView fitHeight="500.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/splashScreen.png" />
          </image>
       </ImageView>
-      <ProgressBar prefWidth="800.0" progress="1.0" />
-      <Label text="Label">
+      <ProgressBar fx:id="progressBar" prefWidth="800.0" progress="0.0" />
+      <Label fx:id="progressText" text="Label">
          <VBox.margin>
             <Insets />
          </VBox.margin>

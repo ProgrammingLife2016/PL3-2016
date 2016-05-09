@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import coordinates.Coordinate;
 import coordinates.CoordinateDetermination;
+import gui.SplashController;
 
 
 /**
@@ -32,10 +33,10 @@ public class DatabaseProcessor {
 		
 		CoordinateDetermination coorddet = new CoordinateDetermination(dbr);
 		Coordinate[] coordinates = coorddet.calcCoords();
-		System.out.println("Saving segment coordinates");
+		SplashController.progressString.set("Saving segment coordinates");
 		for (int i = 1; i <= coordinates.length; i++) {
 			if (i % (coordinates.length / 10) == 0) {
-				System.out.println((i * 100 / coordinates.length + 1) + "% Stored");
+				SplashController.progressString.set((i * 100 / coordinates.length + 1) + "% Stored");
 			}
 			try {
 				this.db.executeUpdate("UPDATE SEGMENTS SET "
@@ -76,22 +77,22 @@ public class DatabaseProcessor {
 		ArrayList<Integer> from = dbr.getAllFromId();
 		ArrayList<Integer> to = dbr.getAllToId();
 		noOfSegments = to.get(to.size() - 1);
-		System.out.println("Retrieving link data");
+		SplashController.progressString.set("Retrieving link data");
 		for (int i = 0; i < from.size(); i++) {
 			if ( (i + 1) % (from.size() / 10) == 0) {
-				System.out.println((i * 100 / from.size() + 1) + "% Retrieved");
+				SplashController.progressString.set((i * 100 / from.size() + 1) + "% Retrieved");
 			}
 			hashmap.put(noOfSegments * (from.get(i) - 1) + to.get(i) - 1, 0);
 		}
-		System.out.println("Starting to analyze genomes");
+		SplashController.progressString.set("Starting to analyze genomes");
 		for (int i = 1; i <= dbr.countGenomes(); i++) {
 			hashmap = analyzeGenome(hashmap, i);
-			System.out.println(i + "genome(s) analyzed");
+			SplashController.progressString.set(i + "genome(s) analyzed");
 		}
-		System.out.println("Storing link data");
+		SplashController.progressString.set("Storing link data");
 		for (int i = 0; i < from.size(); i++) {
 			if ( (i + 1) % (from.size() / 10) == 0) {
-				System.out.println((i * 100 / from.size() + 1) + "% Stored");
+				SplashController.progressString.set((i * 100 / from.size() + 1) + "% Stored");
 			}
 			updateDblinkcount(from.get(i), to.get(i), 
 					hashmap.get(noOfSegments * (from.get(i) - 1) + to.get(i) - 1));
