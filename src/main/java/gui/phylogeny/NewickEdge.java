@@ -16,15 +16,15 @@ public class NewickEdge extends Group {
 	
 	public NewickEdge(NewickNode src, NewickNode dst) {
 		
-		vertical.startXProperty().bindBidirectional(src.getXProperty());
-		vertical.startYProperty().bindBidirectional(src.getYProperty());
-		vertical.endXProperty().bindBidirectional(src.getXProperty());
-		vertical.endYProperty().bindBidirectional(dst.getYProperty());
+		vertical.startXProperty().bind(src.translateXProperty());
+		vertical.startYProperty().bind( src.translateYProperty().add(src.getRootNodeOffset()) );
+		vertical.endXProperty().bind(src.translateXProperty());
+		vertical.endYProperty().bind(dst.translateYProperty().add(dst.getRootNodeOffset()) );
 		
-		horizontal.startXProperty().bindBidirectional(src.getXProperty());
-		horizontal.startYProperty().bindBidirectional(dst.getYProperty());
-		horizontal.endXProperty().bindBidirectional(dst.getXProperty());
-		horizontal.endYProperty().bindBidirectional(dst.getYProperty());
+		horizontal.startXProperty().bind(src.translateXProperty());
+		horizontal.startYProperty().bind(dst.translateYProperty().add(dst.getRootNodeOffset()));
+		horizontal.endXProperty().bind(dst.translateXProperty());
+		horizontal.endYProperty().bind(dst.translateYProperty().add(dst.getRootNodeOffset()));
 		
 //		vertical.startXProperty().bindBidirectional(src.translateXProperty());
 //		vertical.startYProperty().bindBidirectional(src.translateYProperty());

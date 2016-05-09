@@ -34,11 +34,11 @@ public class PhylogenyController implements Initializable, SetScreen {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		tree = NewickTreeParser.parse("(A:200,B:100,C:150,D:50);");
+		tree = NewickTreeParser.parse("(A:100,(B:100,C:50):100);");
 
 		NewickNode node = getDrawableTree(tree);
-//		node.translateX(100);
-//		node.translateY(100);	
+		node.setLayoutX(100);
+		node.setLayoutY(100);	
 		
 		Group root = new Group();
         Scene scene = new Scene(root, 800, 600);
@@ -79,18 +79,21 @@ public class PhylogenyController implements Initializable, SetScreen {
 
 		for(NewickTree child : parent.getChildren()) {
 			NewickNode childNode = getDrawableTree(child);
-			
-			childNode.translateX(currentX + child.getDistance());
-			childNode.translateY(currentY);
+			System.out.println(child.getName() + " " + currentX + "," + child.getDistance());
+			childNode.setTranslateX(child.getDistance());
+			childNode.setTranslateY(currentY);
+
 			parentNode.getChildren().add(childNode);
 			parentNode.getChildren().add(new NewickEdge(parentNode,childNode));
 			
-			currentY += SPACING;
+			currentY += SPACING;// + 2*childNode.getRootNodeOffset().get();
 		}
 		
 		double toY = currentY - SPACING;
 		
-		parentNode.shiftRootNode((fromY+toY)/2);
+		double offset = (fromY+toY)/2;
+		parentNode.shiftRootNode(offset);
+		parentNode.setTranslateY(-offset);
 		
 		return parentNode;
 	}
