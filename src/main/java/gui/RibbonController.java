@@ -16,6 +16,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -26,7 +27,7 @@ import java.util.ResourceBundle;
 
 @SuppressWarnings("restriction")
 public class RibbonController implements Initializable {
-	@FXML AnchorPane pane;
+	@FXML GridPane pane;
 	@FXML ScrollPane scrollPane;
 	@FXML Canvas canvas;
 	
@@ -43,6 +44,18 @@ public class RibbonController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.dbm = Launcher.dbm;
+		
+		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
+		    pane.setPrefWidth(newValue.getWidth());
+		    pane.setPrefHeight(newValue.getHeight());
+		    scrollPane.setPrefWidth(newValue.getWidth());
+		    scrollPane.setPrefHeight(newValue.getHeight());
+		});
+		
+//		scrollPane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
+//		    pane.setMinWidth(newValue.getWidth());
+//		    pane.setMinHeight(newValue.getHeight());
+//		});
 		
 		gc = canvas.getGraphicsContext2D();
 		gc.setFill(Color.GREEN);
