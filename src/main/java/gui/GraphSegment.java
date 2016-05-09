@@ -13,21 +13,25 @@ public class GraphSegment extends StackPane {
 	private int segmentid;
 	private int depth;
 	private int[] children;
+	private char[] dnacontent;
+	private boolean drawn = false;
+	Circle image;
 	
 	/**
 	 * Creates a new GraphSegment with some standard settings.
 	 * (subject to change)
 	 */
-	public GraphSegment(int segmentid, int childcount) {
+	public GraphSegment(int segmentid, int childcount, char[] dnacontent) {
 		this.setLayout();
 	    this.depth = 1;
 	    this.segmentid = segmentid;
 	    this.children = new int[childcount];
+	    this.setDnacontent(dnacontent);
 	}
 	
 	public void setLayout() {
-	    Circle image = new Circle();
-	    image.setRadius(25);
+	    image = new Circle();
+	    image.setRadius(30);
 	    image.setFill(Color.DODGERBLUE);
 	    image.setStroke(Color.BLACK);
 	    image.setStrokeType(StrokeType.INSIDE);
@@ -52,6 +56,26 @@ public class GraphSegment extends StackPane {
 	
 	public int[] getSegmentChildren() {
 		return this.children;
+	}
+
+	public boolean isDrawn() {
+		return drawn;
+	}
+
+	public void setDrawn(boolean drawn) {
+		this.drawn = drawn;
+	}
+
+	public char[] getDnacontent() {
+		return dnacontent;
+	}
+
+	public void setDnacontent(char[] dnacontent) {
+		this.dnacontent = dnacontent;
+	}
+	
+	public double getRadius() {
+		return this.image.getRadius();
 	}
 	
 //	
