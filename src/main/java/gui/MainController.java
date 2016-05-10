@@ -23,7 +23,7 @@ public class MainController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 //		System.out.println(scrollPane.widthProperty().get());
-		ribbonTab.setPrefWidth(ribbonTab.boundsInParentProperty().get().getWidth());
-		ribbonTab.setPrefHeight(ribbonTab.boundsInParentProperty().get().getHeight());
+//		ribbonTab.setPrefWidth(ribbonTab.boundsInParentProperty().get().getWidth());
+//		ribbonTab.setPrefHeight(ribbonTab.boundsInParentProperty().get().getHeight());
 	}
 }

@@ -4,11 +4,11 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<TabPane fx:id="tabPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.71" fx:controller="gui.MainController">
+<TabPane fx:id="tabPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainController">
   <tabs>
     <Tab text="Ribbon view">
       <content>
-      	<fx:include fx:id="ribbonTab" source="RibbonLevel.fxml"/>
+      	<fx:include fx:id="ribbonTab" source="RibbonLevel.fxml" />
       </content>
     </Tab>
     <Tab text="Graph view">

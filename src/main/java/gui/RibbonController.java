@@ -1,39 +1,29 @@
 package gui;
 
 import coordinates.Coordinate;
-import coordinates.CoordinateDetermination;
 import db.DatabaseManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
 @SuppressWarnings("restriction")
 public class RibbonController implements Initializable {
 	@FXML GridPane pane;
 	@FXML ScrollPane scrollPane;
-	@FXML Canvas canvas;
-	
-	private GraphicsContext gc;
+	@FXML Pane graphPane;
 	
 	private DatabaseManager dbm;
+	private int maxX;
+	private int maxY;
 	
 	/**
 	 * function that gets executed when the matching fxml file is loaded.
@@ -45,91 +35,42 @@ public class RibbonController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		this.dbm = Launcher.dbm;
 		
+		// Resize the scrollpane along with the window.
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
-		    pane.setPrefWidth(newValue.getWidth());
-		    pane.setPrefHeight(newValue.getHeight());
 		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
 		});
-		
-//		scrollPane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
-//		    pane.setMinWidth(newValue.getWidth());
-//		    pane.setMinHeight(newValue.getHeight());
-//		});
-		
-		gc = canvas.getGraphicsContext2D();
-		gc.setFill(Color.GREEN);
-        gc.setStroke(Color.BLUE);
-        gc.setLineWidth(5);
-        gc.strokeLine(440, 410, 410, 440);
-        gc.fillOval(410, 460, 30, 30);
-        gc.strokeOval(460, 460, 30, 30);
+		draw();
 
 	}
 	
 	/**
-	 * Function to draw the Ribbons on a pannable canvas
-	 * 
-	 * @param pc 
-	 * 		a given pannable canvas
-	 * @param nodeGestures
-	 * 		event handlers
+	 * Function to draw the Ribbons on the pane
 	 */
-	public void draw(PannableCanvas pc, NodeGestures nodeGestures) {
+	public void draw() {
 		ArrayList<Integer> from = dbm.getDbReader().getAllFromId();
 		ArrayList<Integer> to = dbm.getDbReader().getAllToId();
 		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
-		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
-		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
+		ArrayList<Integer> xCoords = dbm.getDbReader().getAllXCoord();
+		ArrayList<Integer> yCoords = dbm.getDbReader().getAllYCoord();
+		
+		maxX = Collections.max(xCoords);
+		maxY = Collections.max(yCoords);
+		
+		graphPane.setPrefHeight(500);
+		graphPane.setPrefWidth(maxX*10);
+		graphPane.setTranslateY(250);
+		
+		System.out.println(xCoords.get(xCoords.size()-1));
 		
 		for (int i = 0; i < from.size(); i++) {
 			int fromId = from.get(i);
 			int toId = to.get(i);
-			Path path = drawPath(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
-					xcoords.get(toId - 1), ycoords.get(toId - 1));
-	        path.addEventFilter( MouseEvent.MOUSE_PRESSED,
-	        		nodeGestures.getOnMousePressedEventHandler());
-	        path.addEventFilter( MouseEvent.MOUSE_DRAGGED,
-	        		nodeGestures.getOnMouseDraggedEventHandler());
+			Path path = createPath(xCoords.get(fromId - 1), yCoords.get(fromId - 1), 
+					xCoords.get(toId - 1), yCoords.get(toId - 1));
 	        path.setStrokeWidth(0.1 + 0.1 * counts.get(i));
-	        pc.getChildren().add(path);
+	        graphPane.getChildren().add(path);
 		}
-	}
-	
-	/**
-	 * Function to determine the maximum x-coordinate of all segments.
-	 * 
-	 * @param coordinates
-	 * 				Array of segment coordinates.
-	 * @return The maximum x-coordinate.
-	 */
-	@SuppressWarnings("unused")
-	private int getMaxX(Coordinate[] coordinates) {
-		int xc = 0;
-		for (int i = 0; i < coordinates.length; i++) {
-			if (coordinates[i].getX() > xc) {
-				xc = coordinates[i].getX();
-			}
-		}
-		return xc;
-	}
-	
-	/**
-	 * Function to determine the maximum y-coordinate of all segments.
-	 * 
-	 * @param coordinates
-	 * 				Array of segment coordinates.
-	 * @return The maximum y-coordinate.
-	 */
-	@SuppressWarnings("unused")
-	private int getMaxY(Coordinate[] coordinates) {
-		int yc = 0;
-		for (int i = 0; i < coordinates.length; i++) {
-			if (coordinates[i].getY() > yc) {
-				yc = coordinates[i].getY();
-			}
-		}
-		return yc;
 	}
 	
 	/**
@@ -141,7 +82,7 @@ public class RibbonController implements Initializable {
 	 * 			Segment to which path is drawn.	
 	 * @return A Path through which the lines goes.
 	 */
-	private Path drawPath(int fromX, int fromY, int toX, int toY) {
+	private Path createPath(int fromX, int fromY, int toX, int toY) {
 		MoveTo moveto = new MoveTo(10 * fromX, 5 * fromY);
 		LineTo lineto = new LineTo(10 * toX , 5 * toY);
 		Path path = new Path();
