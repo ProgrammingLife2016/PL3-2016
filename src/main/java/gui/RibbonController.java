@@ -4,6 +4,7 @@ import coordinates.Coordinate;
 import db.DatabaseManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -19,11 +20,11 @@ import java.util.ResourceBundle;
 public class RibbonController implements Initializable {
 	@FXML GridPane pane;
 	@FXML ScrollPane scrollPane;
-	@FXML Pane graphPane;
+	@FXML Group graph;
 	
 	private DatabaseManager dbm;
-	private int maxX;
-	private int maxY;
+	private static final int YSCALE = 5;
+	private static final int XSCALE = 10;
 	
 	/**
 	 * function that gets executed when the matching fxml file is loaded.
@@ -54,12 +55,12 @@ public class RibbonController implements Initializable {
 		ArrayList<Integer> xCoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> yCoords = dbm.getDbReader().getAllYCoord();
 		
-		maxX = Collections.max(xCoords);
-		maxY = Collections.max(yCoords);
-		
-		graphPane.setPrefHeight(500);
-		graphPane.setPrefWidth(maxX*10);
-		graphPane.setTranslateY(250);
+//		int maxX = XSCALE * xCoords.get(xCoords.size()-1);
+//		int maxY = YSCALE * Collections.max(yCoords);
+//		
+//		graph.setPrefHeight(maxY);
+//		graph.setPrefWidth(maxX);
+//		graph.translateYProperty().bind(scrollPane.heightProperty().divide(2));
 		
 		System.out.println(xCoords.get(xCoords.size()-1));
 		
@@ -69,7 +70,7 @@ public class RibbonController implements Initializable {
 			Path path = createPath(xCoords.get(fromId - 1), yCoords.get(fromId - 1), 
 					xCoords.get(toId - 1), yCoords.get(toId - 1));
 	        path.setStrokeWidth(0.1 + 0.1 * counts.get(i));
-	        graphPane.getChildren().add(path);
+	        graph.getChildren().add(path);
 		}
 	}
 	
@@ -83,8 +84,8 @@ public class RibbonController implements Initializable {
 	 * @return A Path through which the lines goes.
 	 */
 	private Path createPath(int fromX, int fromY, int toX, int toY) {
-		MoveTo moveto = new MoveTo(10 * fromX, 5 * fromY);
-		LineTo lineto = new LineTo(10 * toX , 5 * toY);
+		MoveTo moveto = new MoveTo(XSCALE * fromX, YSCALE * fromY);
+		LineTo lineto = new LineTo(XSCALE * toX , YSCALE * toY);
 		Path path = new Path();
 		path.getElements().addAll(moveto, lineto);
 		return path;
