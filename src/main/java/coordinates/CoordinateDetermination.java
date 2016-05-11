@@ -1,6 +1,6 @@
 package coordinates;
 
-import db.DatabaseManager;
+
 import db.DatabaseReader;
 
 import java.util.ArrayList;
@@ -23,6 +23,24 @@ public class CoordinateDetermination {
 	 * The segment Id's correspond to those in the "fromIDs" list (in order).
 	 */
 	protected ArrayList<Integer> toIDs;
+	
+	/**
+	 * List for each link per segment.
+	 */
+	
+	protected ArrayList<ArrayList<Integer>> links;
+	
+	/**
+	 * List for each weight per segment
+	 */
+	
+	protected ArrayList<ArrayList<Integer>> counts;
+	
+	/**
+	 * List of number of genomes through each segment
+	 */
+	
+	protected ArrayList<Integer> segmentWeights;
 	
 	/**
 	 * ?
@@ -55,12 +73,10 @@ public class CoordinateDetermination {
 	 * @return list of coordinates of segments.
 	 */
 	public Coordinate[] calcCoords() {
-		int noOfSegments = toIDs.get(toIDs.size() - 1);
+		int noOfSegments = dbr.countSegments();
 		coordinates = new Coordinate[noOfSegments];
 		cweights = new int[noOfSegments];
-		int genomeCount = dbr.countGenomes();
-		coordinates[0] = new Coordinate(0, genomeCount);
-		cweights[0] = genomeCount;
+		calcStartCoords();
 		System.out.println("Calculating segment coordinates");
 
 		for (int i = 1; i <= noOfSegments; i++) {
@@ -70,7 +86,8 @@ public class CoordinateDetermination {
 			int alreadyDrawn = 0;
 			int leftToDraw = countGenomesInSeg(i);
 			Coordinate coords = coordinates[i - 1];
-			ArrayList<Integer> outgoingedges = getToIDs(i);
+			
+			ArrayList<Integer> outgoingedges = links.get(i - 1);
 			
 			for (int j = 0; j < outgoingedges.size(); j++) {
 				leftToDraw = leftToDraw - countGenomesInLink(i, outgoingedges.get(j));
@@ -82,6 +99,34 @@ public class CoordinateDetermination {
 			}
 		}
 		return coordinates;
+	}
+	
+	private void calcStartCoords() {
+		ArrayList<Integer> segIds = new ArrayList<Integer>();
+		ArrayList<Integer> segWeights = new ArrayList<Integer>();
+		ArrayList<Integer> firstSegments = dbr.getFirstOfAllGenomes();
+		
+		System.out.println("Calculating start coordinates");
+		for (int i = 1; i <= firstSegments.size(); i++) {
+			int segId = firstSegments.get(i - 1);
+			int index = segIds.indexOf(segId);
+			if (index == -1) {
+				segIds.add(segId);
+				segWeights.add(1);
+			} else {
+				int currentWeight = segWeights.get(index);
+				segWeights.set(index, currentWeight + 1);
+			}
+		}
+		int genomesDrawn = 0;
+		for (int i = 0; i < segIds.size(); i++) {
+			int index = segIds.get(i);
+			int weight = segWeights.get(i);
+			coordinates[index - 1] = new Coordinate(0, 2 * genomesDrawn + weight);
+			cweights[index - 1] = weight;
+			genomesDrawn += weight;
+		}
+		
 	}
 	
 	/**
@@ -117,19 +162,20 @@ public class CoordinateDetermination {
 	private void getData() {
 		fromIDs = dbr.getAllFromId();
 		toIDs = dbr.getAllToId();
+		links = dbr.getLinks();
+		counts = dbr.getLinkWeights();
+		segmentWeights = dbr.countAllGenomesInSeg();
+		
 		System.out.println(fromIDs.size());
 	}
 	
 	public int countGenomesInLink(int from, int to) {
-		return dbr.countGenomesInLink(from, to);
+		int linkTo = links.get(from - 1).indexOf(to);
+		return counts.get(from - 1).get(linkTo);
 	}
 	
 	public int countGenomesInSeg(int segmentId) {
-		return dbr.countGenomesInSeg(segmentId);
-	}
-	
-	public ArrayList<Integer> getToIDs(int fromId) {
-		return dbr.getToIDs(fromId);
+		return segmentWeights.get(segmentId - 1);
 	}
 	
 }
