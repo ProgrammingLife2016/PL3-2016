@@ -1,6 +1,9 @@
 package gui;
 
-import db.DatabaseManager;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,9 +15,7 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import db.DatabaseManager;
 
 /**
  * Controller class for the Ribbon screen/tab.
@@ -40,27 +41,25 @@ public class RibbonController implements Initializable {
 			event.consume();
 			
 			// Ctrl down: zoom in/out
-	    	if(event.isControlDown()) {
+	    	if (event.isControlDown()) {
 	    		double deltaY = event.getDeltaY();
 	    		
 	            double delta = 1.2;
-	            double scale = innerGroup.getScaleY(); // currently we only use Y, same value is used for X
+	            double scale = innerGroup.getScaleY();
 	            
-	            if (deltaY < 0) {
+				if (deltaY < 0) {
 					scale /= Math.pow(delta, -event.getDeltaY() / 20);
 					// Cut off the scale if it is bigger than the minimum
 					// allowed scale
 					scale = scale < MIN_SCALE ? MIN_SCALE : scale;
-				}
-
-				else if (deltaY > 0) {
+				} else if (deltaY > 0) {
 					scale *= Math.pow(delta, event.getDeltaY() / 20);
 					// Cut off the scale if it is bigger than the maximum
 					// allowed scale
 					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
-	            }
+				}
 				
-	            double zoom = scale/MAX_SCALE;
+				double zoom = scale / MAX_SCALE;
 	            System.out.println("Zoom percentage: " + zoom);
 	            innerGroup.setScaleY( scale);
 	    		return;
@@ -70,18 +69,16 @@ public class RibbonController implements Initializable {
 	    	double deltaY = event.getDeltaY();
 	    	double deltaX = event.getDeltaX();
 	    	
-	        if (deltaY < 0) {
-	            scrollPane.setHvalue(Math.min(1,scrollPane.getHvalue()+0.0007));
-	        }
-	        else if (deltaY > 0){
-	            scrollPane.setHvalue(Math.max(0,scrollPane.getHvalue()-0.0007));
-	        }
-	        if (deltaX < 0) {
-	        	scrollPane.setVvalue(Math.min(1, scrollPane.getVvalue()+0.05));
-	        }
-	        else if (deltaX > 0) {
-	        	scrollPane.setVvalue(Math.max(0, scrollPane.getVvalue()-0.05));
-	        }
+			if (deltaY < 0) {
+				scrollPane.setHvalue(Math.min(1, scrollPane.getHvalue() + 0.0007));
+			} else if (deltaY > 0) {
+				scrollPane.setHvalue(Math.max(0, scrollPane.getHvalue() - 0.0007));
+			}
+			if (deltaX < 0) {
+				scrollPane.setVvalue(Math.min(1, scrollPane.getVvalue() + 0.05));
+			} else if (deltaX > 0) {
+				scrollPane.setVvalue(Math.max(0, scrollPane.getVvalue() - 0.05));
+			}
 	    }
 	};
     
@@ -122,14 +119,14 @@ public class RibbonController implements Initializable {
 		ArrayList<Integer> from = dbm.getDbReader().getAllFromId();
 		ArrayList<Integer> to = dbm.getDbReader().getAllToId();
 		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
-		ArrayList<Integer> xCoords = dbm.getDbReader().getAllXCoord();
-		ArrayList<Integer> yCoords = dbm.getDbReader().getAllYCoord();
+		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
+		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
 		
 		for (int i = 0; i < from.size(); i++) {
 			int fromId = from.get(i);
 			int toId = to.get(i);
-			Path path = createPath(xCoords.get(fromId - 1), yCoords.get(fromId - 1), 
-					xCoords.get(toId - 1), yCoords.get(toId - 1));
+			Path path = createPath(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
+					xcoords.get(toId - 1), ycoords.get(toId - 1));
 	        path.setStrokeWidth(0.1 + 0.1 * counts.get(i));
 	        res.getChildren().add(path);
 		}

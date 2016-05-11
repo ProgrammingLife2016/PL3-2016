@@ -2,21 +2,21 @@ package gui;
 
 import java.io.File;
 
-import db.DatabaseManager;
-import db.GfaException;
-import db.GfaParser;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import db.DatabaseManager;
+import db.GfaException;
+import db.GfaParser;
+
 /**
  * This launcher which starts the application.
  */
-@SuppressWarnings("restriction")
 public class Launcher extends Application {
-	public static DatabaseManager dbm;
+	static DatabaseManager dbm;
 		
 	@Override
 	public void start(Stage stage) throws Exception {
