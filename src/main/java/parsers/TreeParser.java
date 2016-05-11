@@ -109,8 +109,9 @@ public class TreeParser {
 	 *            Display the string, for debugging.
 	 */
 	public void debugOutput(String string) {
-		if (debugOutput)
+		if (debugOutput) {
 			System.out.println(string);
+		}
 	}
 
 	/**
@@ -141,8 +142,9 @@ public class TreeParser {
 			TreeNode parent = (TreeNode) nodeStack.peek();
 			parent.addChild(topNode);
 		} catch (EmptyStackException e) {
-			if (topNode != rootNode)
+			if (topNode != rootNode) {
 				System.out.println("Parser error on node " + topNode);
+			}
 		}
 		topNode.setExtremeLeaves(); // sets leftmost and rightmost leaf,
 									// non-recursive
@@ -192,13 +194,15 @@ public class TreeParser {
 		boolean nameNext = true;
 		int percentage = 0;
 		try {
-			while (eot == false && (thisToken = tokenizer.nextToken()) != StreamTokenizer.TT_EOF) {
+			while (eot == false && 
+					(thisToken = tokenizer.nextToken()) != StreamTokenizer.TT_EOF) {
 				switch (thisToken) {
 				// case quote:
 				case doubleQuote:
 				case StreamTokenizer.TT_WORD:
 					if (!nameNext) {
-						System.err.println("Error: didn't expect this name here: " + tokenizer.sval);
+						System.err.println("Error: didn't expect this name here: " 
+								+ tokenizer.sval);
 					}
 					lastNamed = popAndName(tokenizer.sval, nodeStack);
 					progress += tokenizer.sval.length();
@@ -213,7 +217,8 @@ public class TreeParser {
 							lastNamed.setWeight(tokenizer.nval);
 						}
 						else {
-							System.err.println("Error: can't set value " + tokenizer.nval + " to a null node");
+							System.err.println("Error: can't set value " 
+									+ tokenizer.nval + " to a null node");
 						}
 						lastNamed = null;
 					}
@@ -264,7 +269,8 @@ public class TreeParser {
 		} catch (IOException e) {
 		}
 		if (!nodeStack.isEmpty()) {
-			System.err.println("Node stack still has " + nodeStack.size() + " things");
+			System.err.println("Node stack still has " 
+					+ nodeStack.size() + " things");
 		}
 		t.postProcess();
 		return t;
@@ -277,13 +283,14 @@ public class TreeParser {
 	 *            Program arguments. Only first argument used (for filename).
 	 */
 	public static void main(String[] args) {
-		String fileName = "/home/daniel/Projects/TU/Y2/TI2806_Context/PL3-2016/Data/TB10/340tree.rooted.TKK.nwk";
+		String fileName = 
+				"/home/daniel/Projects/TU/Y2/TI2806_Context/PL3-2016/Data/TB10/340tree.rooted.TKK.nwk";
 		long start = System.currentTimeMillis();
-		File f = new File(fileName);
+		File file = new File(fileName);
 		try {
-			BufferedReader r = new BufferedReader(new FileReader(f));
-			TreeParser tp = new TreeParser(r);
-			Tree t = tp.tokenize(f.length(), f.getName());
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			TreeParser tp = new TreeParser(reader);
+			Tree tree = tp.tokenize(file.length(), file.getName());
 		} 
 		catch (FileNotFoundException e) {
 			System.out.println("Couldn't find file: " + fileName);

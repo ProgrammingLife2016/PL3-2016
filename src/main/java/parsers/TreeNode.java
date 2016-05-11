@@ -138,12 +138,12 @@ public class TreeNode {
 	 * @param o The other object to compare this node to.
 	 * @return -1 if this is smaller than the object's key, +1 if greater, 0 if equal. 
 	 */
-	public int compareTo(Object o) {
-		if (key == ((TreeNode) o).key) {
+	public int compareTo(Object object) {
+		if (key == ((TreeNode) object).key) {
 			return 0;
 		}
 		else {
-			if (key < ((TreeNode) o).key) {
+			if (key < ((TreeNode) object).key) {
 					return -1;
 			}
 			else {
@@ -233,8 +233,8 @@ public class TreeNode {
 	 * Set the name for this node, the name is usually the label drawn with this node.
 	 * @param s The new value of {@link #name}, the name for this node.
 	 */
-	public void setName(String s) {
-		name = s;
+	public void setName(String string) {
+		name = string;
 	}
 
 	/**
@@ -250,9 +250,9 @@ public class TreeNode {
 	 * @param i The child index to get.
 	 * @return The i(th) child for this node.
 	 */
-	public TreeNode getChild(int i) {
-		if (i < children.size()) {
-			return (TreeNode) children.get(i);
+	public TreeNode getChild(int integer) {
+		if (integer < children.size()) {
+			return (TreeNode) children.get(integer);
 		}
 		else {
 			return null;
@@ -284,8 +284,8 @@ public class TreeNode {
 	 * @param n Second node to test vs. this node.
 	 * @return True if the names of both nodes are the same, false otherwise.
 	 */
-	public boolean equals(TreeNode n) {
-		return (name.equals(n.name));
+	public boolean equals(TreeNode node) {
+		return (name.equals(node.name));
 	}
 
 	/**
@@ -295,9 +295,9 @@ public class TreeNode {
 	 * up pointers and leaf properties, for example) is done later.
 	 * @param n New child node for this node.
 	 */
-	public void addChild(TreeNode n) {
-		children.add(n);
-		n.parent = this;
+	public void addChild(TreeNode node) {
+		children.add(node);
+		node.parent = this;
 	}
 	/**
 	 * Get the parent for this node.
@@ -312,8 +312,8 @@ public class TreeNode {
 	 * Edge weights are not implemented currently for drawing.
 	 * @param w New edge weight for this node, {@link #weight}.
 	 */
-	public void setWeight(double w) {
-		weight = (float) w;
+	public void setWeight(double weightT) {
+		weight = (float) weightT;
 	}
 
 	/**

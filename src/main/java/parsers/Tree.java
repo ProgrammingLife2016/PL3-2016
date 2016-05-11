@@ -71,19 +71,22 @@ public class Tree {
 	 */
 	private HashMap<String,TreeNode> nodesByName; 
 
-	/** key should be unique for each tree, set by object that creates trees  */
+	/** key should be unique for each tree, set by 
+	 * object that creates trees  */
 	private int key;
 
-	/** Leaf counter, for determining grid size, making arrays for tree comparisons */
+	/** Leaf counter, for determining grid size, 
+	 * making arrays for tree comparisons */
 	private int numLeaves = 0;
 
 	// reference for array of leaves in SC.cullingObject
-	/** Split axis reference for leaf recovery (leaves are attached to split line culling objects) */
+	/** Split axis reference for leaf recovery 
+	 * (leaves are attached to split line culling objects) */
 	//private StaticSplitAxis leafSplitAxis;
 
 	/**
-	 * Default tree constructor.  Nodes are created by parser and added in later.
-	 *
+	 * Default tree constructor.  Nodes are created by parser 
+	 * and added in later.
 	 */
 	public Tree() {
 		root = new TreeNode();
@@ -105,7 +108,7 @@ public class Tree {
 		fileName = treeToCopy.fileName;
 		height = treeToCopy.height;
 		key = treeToCopy.key;
-//		leafSplitAxis = new SplitAxis(treeToCopy.leafSplitAxis); // not implemented
+//		leafSplitAxis = new SplitAxis(treeToCopy.leafSplitAxis);
 		nexusIndex = treeToCopy.nexusIndex;
 		nodes = new ArrayList<TreeNode>(treeToCopy.nodes);
 		nodesByName = new HashMap<String, TreeNode>(treeToCopy.nodesByName);
@@ -120,7 +123,7 @@ public class Tree {
 	 */   
 	public void close() {
 		TreeNode pren = root.leftmostLeaf;		
-		for(TreeNode n = pren.preorderNext; n!=null; n=n.preorderNext) {
+		for (TreeNode n = pren.preorderNext; n != null; n = n.preorderNext) {
 			n.close();				 
 		}
 	}
@@ -167,20 +170,22 @@ public class Tree {
 	
 	/**
 	 * Returns the node given by the string.
-	 * @param s Name/label of node to retrieve.
+	 * @param string Name/label of node to retrieve.
 	 * @return Treenode referenced by the given name.
 	 */
-	public TreeNode getNodeByName(String s) { 
-		return (TreeNode) nodesByName.get(s);
+	public TreeNode getNodeByName(String string) { 
+		return (TreeNode) nodesByName.get(string);
 	}
 
 	/**
-	 * Height of tree, which is also the longest path from the root to some leaf node.
+	 * Height of tree, which is also the longest 
+	 * path from the root to some leaf node.
 	 */
 	private int height = 0;
 	
 	/**
-	 * Accessor for height of tree.  This is also the longest path from the root to some leaf node.
+	 * Accessor for height of tree.  This is also the longest 
+	 * path from the root to some leaf node.
 	 * @return value of {@link #height}.
 	 */
 	public int getHeight() { 
@@ -188,10 +193,10 @@ public class Tree {
 	}
 
 	/** Mutator for key
-	 * @param i New value for {@link #key}.
+	 * @param integer New value for {@link #key}.
 	 */
-	public void setKey(int i) {
-		key = i;
+	public void setKey(int integer) {
+		key = integer;
 	}
 	
 	/** Accessor for key.
@@ -210,7 +215,8 @@ public class Tree {
 	}
 	
 	/** Left most leaf accessor.  This is the "min leaf"
-	 * @return root's left most leaf, which is the smallest indexed leaf node in the tree.
+	 * @return root's left most leaf, which is the 
+	 * smallest indexed leaf node in the tree.
 	 */
 	public TreeNode getLeftmostLeaf() { 
 		return root.leftmostLeaf; 
@@ -234,7 +240,7 @@ public class Tree {
 	/**
 	 * Index of tree in nexus file, if this tree is from a nexus file.
 	 */
-	private int nexusIndex = 0; // the number (>0 for nexus, appended to nexus filename)
+	private int nexusIndex = 0; 
 	
 	/**
 	 * Root node of this tree
@@ -270,39 +276,39 @@ public class Tree {
 	public void postProcess() {
 		preorderPostProcess();
 		linkLeaves();
-//		System.out.println("progress bar updated: min:" + jpb.getMinimum() + " max:" + jpb.getMaximum() + " value:" + jpb.getValue());
 	}
 
 	/**
 	 * 
-	 * Traverses the tree in pre-order, stores the ordering in the preorderNext field of TreeNodes
+	 * Traverses the tree in pre-order, stores the
+	 * ordering in the preorderNext field of TreeNodes
 	 * Sets node count for the tree.
 	 *
 	 * @see     TreeNode
 	 */
-	private void preorderPostProcess()
-	{
+	private void preorderPostProcess() {
 		// munge names here, names become fully qualified, labels are what names were
 		final char separator = '/'; // separator between name fields
 		// arbitrary seen by users in search, no parsing on this is required later
 		int index = 0;
 		height = 1;
-		for(TreeNode n = root; n != null; n = n.preorderNext) {
+		for (TreeNode n = root; n != null; n = n.preorderNext) {
 			n.label = n.name;
 			n.key = index++;
 			nodes.add(n);
-			if(n.name != null && n.name.length() > 0) {
+			if (n.name != null && n.name.length() > 0) {
 				// don't put an empty string in the
 				// hash table
 				nodesByName.put(n.name, n);
 			}
-			n.height = (null != n.parent) ? n.parent.height+1 : 1;
+			n.height = (null != n.parent) ? n.parent.height + 1 : 1;
 			height = (n.height > height) ? n.height : height;
 		}
 	}
 
 	/**
-	 * Traverse the tree and initialize the {@link #nodesByName} and {@link #nodes} data structures.
+	 * Traverse the tree and initialize the {@link #nodesByName} 
+	 * and {@link #nodes} data structures.
 	 * Used when modifying the names of nodes as well as initialization.
 	 *
 	 */
@@ -311,44 +317,45 @@ public class Tree {
 		nodes = new ArrayList<TreeNode>();
 		nodesByName = new HashMap<String, TreeNode>();
 		final char separator = '/'; // separator between name fields
-		for(TreeNode n = root; n != null; n = n.preorderNext) {
+		for (TreeNode n = root; n != null; n = n.preorderNext) {
 			n.label = n.name;
 			nodes.add(n);
-			if(n.name != null && n.name.length() > 0) {
+			if (n.name != null && n.name.length() > 0) {
 				// don't put an empty string in the
 				// hash table
 				nodesByName.put(n.name, n);
 			}
-			n.height = (null != n.parent) ? n.parent.height+1 : 1;
+			n.height = (null != n.parent) ? n.parent.height + 1 : 1;
 			height = (n.height > height) ? n.height : height;
 		}
 	}
 	
 	/**
-	 * Wrapper for initiating {@link #linkSubtreeNodesInPreorder(TreeNode)} with the root node.
+	 * Wrapper for initiating {@link #linkSubtreeNodesInPreorder(TreeNode)} 
+	 * with the root node.
 	 */
 	private void linkNodesInPreorder() {
 		linkSubtreeNodesInPreorder(root);
 	}
 
 	/**
-	 * Traverses the subtree rooted at TreeNode n in pre-order, stores the
+	 * Traverses the subtree rooted at TreeNode node in pre-order, stores the
 	 * ordering in the preorderNext field of TreeNodes. 
-	 * @param   n the root of the subtree
+	 * @param   node the root of the subtree
 	 *
 	 * @see     TreeNode
 	 */
-	private void linkSubtreeNodesInPreorder(TreeNode n) {
-		if(n.isLeaf()) return;
-		for(int i = 0; i < n.numberChildren(); i++) {
-			linkSubtreeNodesInPreorder(n.getChild(i));
+	private void linkSubtreeNodesInPreorder(TreeNode node) {
+		if (node.isLeaf()) return;
+		for (int i = 0; i < node.numberChildren(); i++) {
+			linkSubtreeNodesInPreorder(node.getChild(i));
 		}
 
-		n.preorderNext = n.firstChild();
-		for(int i = 0; i < n.numberChildren()-1; i++) {
-			n.getChild(i).rightmostLeaf.preorderNext = n.getChild(i + 1);
+		node.preorderNext = node.firstChild();
+		for (int i = 0; i < node.numberChildren()-1; i++) {
+			node.getChild(i).rightmostLeaf.preorderNext = node.getChild(i + 1);
 		}
-		n.rightmostLeaf.preorderNext = null;
+		node.rightmostLeaf.preorderNext = null;
 	}
 
 	/**
@@ -369,9 +376,9 @@ public class Tree {
 		Vector<TreeNode> leaves = new Vector<TreeNode>();
 		leaves.add(pren);
 //		pren.lindex = 0;
-		for(TreeNode n = pren.preorderNext; n!=null; n=n.preorderNext) {
+		for (TreeNode n = pren.preorderNext; n != null; n = n.preorderNext) {
 			counter++;
-			if(n.isLeaf()) {
+			if (n.isLeaf()) {
 				leaves.add(n);
 			}
 		}
@@ -384,8 +391,8 @@ public class Tree {
 		int index = 0;
 		TreeNode curr = sortedLeafArray[0];
 		TreeNode next;
-		for(int i = 0; i < leaves.size()-1; i++) {
-			next = sortedLeafArray[i+1]; // only 1 index lookup per iteration
+		for (int i = 0; i < leaves.size()-1; i++) {
+			next = sortedLeafArray[i + 1]; // only 1 index lookup per iteration
 			boolean compare = myNameComparator.compare(curr, next) == 0; 
 			if (compare || index > 0) {
 				String name = curr.getName();
@@ -394,12 +401,14 @@ public class Tree {
 				// leaves was broken, much fewer differences in trees with many leaves that
 				// have the same name (imagine: all index.html occurences being marked as
 				// different since numbering convention doesn't string match the original node name)
-				curr.setName(name+ " " + index); //sb.toString());
-				nodesByName.put(name+ " " + index, curr); // add the node back with number convention
-				if (!compare)
+				curr.setName(name + " " + index); //sb.toString());
+				nodesByName.put(name + " " + index, curr); // add the node back with number convention
+				if (!compare) {
 					index = 0;
-				else
+				}
+				else {
 					index++;
+				}
 			}
 			curr = next;
 		}
@@ -442,10 +451,13 @@ public class Tree {
 	//}
 	
 	/**
-	 * Get the leaves under this node.  Used for tree to tree comparison, removing leaf nodes from difference calculations when they only appear in one side of the tree.
-	 * This operation is constant time per leaf, since it relies on pre-ordered node links and pointers to extreme leaves.
-	 * Time complexity of this function is linear in the number of leaves in the subtree under the node.
-	 * @param node Node to get leaves under.  The root node will return all leaves in the tree, leaves return a list of just themselves.
+	 * Get the leaves under this node.  Used for tree to tree comparison, removing leaf 
+	 * nodes from difference calculations when they only appear in one side of the tree.
+	 * This operation is constant time per leaf, since it relies on pre-ordered node 
+	 * links and pointers to extreme leaves. Time complexity of this function is linear 
+	 * in the number of leaves in the subtree under the node.
+	 * @param node Node to get leaves under.  The root node will return all leaves in 
+	 * 				the tree, leaves return a list of just themselves.
 	 * @return List of leaves under this node.
 	 */
 	public LinkedList<TreeNode> getLeaves(TreeNode node) {

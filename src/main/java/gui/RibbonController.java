@@ -48,9 +48,9 @@ public class RibbonController implements Initializable {
         pc.getChildren().addAll(label1);
         SceneGestures sceneGestures = new SceneGestures(pc);
         group.addEventFilter( MouseEvent.MOUSE_PRESSED,
-		sceneGestures.getOnMousePressedEventHandler());
+        		sceneGestures.getOnMousePressedEventHandler());
         group.addEventFilter( MouseEvent.MOUSE_DRAGGED,
-		sceneGestures.getOnMouseDraggedEventHandler());
+        		sceneGestures.getOnMouseDraggedEventHandler());
         group.addEventFilter( ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
         group.getChildren().add(pc);
 

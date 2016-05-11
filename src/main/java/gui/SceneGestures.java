@@ -8,8 +8,8 @@ import javafx.scene.input.ScrollEvent;
 public class SceneGestures {
 	 int position = 0;
 	 
-    private final double MAX_SCALE = 100.0d;
-    private final double MIN_SCALE = .1d;
+    private final double maxScale = 100.0d;
+    private final double minScale = .1d;
     private DragContext sceneDragContext = new DragContext();
     PannableCanvas canvas;
 
@@ -46,7 +46,7 @@ public class SceneGestures {
     private EventHandler<MouseEvent> onMouseDraggedEventHandler = 
     		new EventHandler<MouseEvent>() {
         public void handle(MouseEvent event) {
-            if(!event.isSecondaryButtonDown()) {
+            if (!event.isSecondaryButtonDown()) {
                 return;
             }
             canvas.setTranslateX(sceneDragContext.translateAnchorX 
@@ -77,29 +77,29 @@ public class SceneGestures {
                  scale *= Math.pow(delta, event.getDeltaY() / 20);
             }
 
-            scale = clamp( scale, MIN_SCALE, MAX_SCALE);
-            double zoom = scale / MAX_SCALE;
+            scale = clamp(scale, minScale, maxScale);
+            double zoom = scale / maxScale;
             System.out.println("Zoom percentage: " + zoom);
             
-            double f = (scale / oldScale) - 1;
-            double dx = (event.getSceneX() - 
-            		(canvas.getBoundsInParent().getWidth()/2 
+            double weight = (scale / oldScale) - 1;
+            double dx = (event.getSceneX() 
+            		- (canvas.getBoundsInParent().getWidth() / 2 
             				+ canvas.getBoundsInParent().getMinX()));
-            double dy = (event.getSceneY() - 
-            		(canvas.getBoundsInParent().getHeight()/2 
+            double dy = (event.getSceneY() 
+            		- (canvas.getBoundsInParent().getHeight() / 2 
             				+ canvas.getBoundsInParent().getMinY()));
             canvas.setScale(scale);
-            canvas.setPivot(f * dx, f * dy);
+            canvas.setPivot(weight * dx, weight * dy);
             event.consume();
         }
     };
     
     public double clamp(double value, double min, double max) {
-        if(Double.compare(value, min) < 0) {
+        if (Double.compare(value, min) < 0) {
             return min;
         }
         else {
-        	if( Double.compare(value, max) > 0) {
+        	if (Double.compare(value, max) > 0) {
         		return max;
         	}
         	else {
