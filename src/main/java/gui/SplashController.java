@@ -10,34 +10,45 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+/**
+ * Manages the splash screen when loading the program.
+ * Loads main.fxml when finished.
+ * @author Björn Ho
+ */
 public class SplashController implements Initializable{
-
+	
+	/**
+	 * Those variables will be changed whenever progress is being made.
+	 * Both implement ObservableValue so they can be observed when changes
+	 * are made to those variables
+	 */
 	public static SimpleIntegerProperty progressNum = new SimpleIntegerProperty(0);
 	public static SimpleStringProperty progressString = new SimpleStringProperty("");
 	
+	/**
+	 * These enable the FXMLLoader to inject values defined in a FXML file
+	 * into references in this controller class
+	 */
 	@FXML Label progressText;
 	@FXML ProgressBar progressBar;
 	@FXML VBox vBox;
 	
+	/**
+	 * Creating a new listenerTask and binding progressText and progressBar
+	 * to the task so the task can update it later on.
+	 * Note that this task runs on a new thread and NOT the JavaFX application thread.
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
@@ -52,7 +63,12 @@ public class SplashController implements Initializable{
 		}
 	}
 	
-    public Task<Void> listenerTask() throws Exception {
+	/**
+	 * Makes a task in which listeners get added.
+	 * updateMessage and updateProgress perform the updates on the FX application thread.
+	 * @return Task		a Task to start.
+	 */
+    public Task<Void> listenerTask() {
         final Task<Void> listenerTask = new Task<Void>() {
         	@Override
             public Void call() throws InterruptedException {
@@ -83,6 +99,9 @@ public class SplashController implements Initializable{
         return listenerTask;
     }
 	
+    /**
+     * Performs the animation of fading out and when finished it calls launchMain.
+     */
 	private void fadeOutSplash() {
 		Platform.runLater(new Runnable(){
 			@Override
@@ -100,6 +119,10 @@ public class SplashController implements Initializable{
 		});
     }
 	
+	/**
+	 * Loads up Main.fxml on the Java FX Application thread.
+	 * This shows up our main scene of our program.
+	 */
 	private void launchMain() {
 		Platform.runLater(new Runnable(){
 			@Override
@@ -111,7 +134,6 @@ public class SplashController implements Initializable{
 			        Launcher.stage.setScene(scene);
 			        Launcher.stage.show();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
