@@ -312,8 +312,7 @@ public class Tree {
 	 * Used when modifying the names of nodes as well as initialization.
 	 *
 	 */
-	public void setUpNameLists()
-	{
+	public void setUpNameLists() {
 		nodes = new ArrayList<TreeNode>();
 		nodesByName = new HashMap<String, TreeNode>();
 		final char separator = '/'; // separator between name fields
@@ -346,7 +345,9 @@ public class Tree {
 	 * @see     TreeNode
 	 */
 	private void linkSubtreeNodesInPreorder(TreeNode node) {
-		if (node.isLeaf()) return;
+		if (node.isLeaf()) {
+			return;
+		}
 		for (int i = 0; i < node.numberChildren(); i++) {
 			linkSubtreeNodesInPreorder(node.getChild(i));
 		}
@@ -401,8 +402,7 @@ public class Tree {
 				nodesByName.put(name + " " + index, curr);
 				if (!compare) {
 					index = 0;
-				}
-				else {
+				} else {
 					index++;
 				}
 			}

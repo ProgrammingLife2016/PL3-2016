@@ -140,8 +140,7 @@ public class TreeNode {
 	protected boolean getEdge(int xy) {
 		if (xy == 0) {
 			return !isRoot();
-		}
-		else {
+		} else {
 			return !isLeaf();
 		}
 	}
@@ -153,12 +152,10 @@ public class TreeNode {
 	public int compareTo(Object object) {
 		if (key == ((TreeNode) object).key) {
 			return 0;
-		}
-		else {
+		} else {
 			if (key < ((TreeNode) object).key) {
 					return -1;
-			}
-			else {
+			} else {
 				return 1;
 			}
 		}
@@ -265,8 +262,7 @@ public class TreeNode {
 	public TreeNode getChild(int integer) {
 		if (integer < children.size()) {
 			return (TreeNode) children.get(integer);
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -361,8 +357,7 @@ public class TreeNode {
 	public void print() {
 		if (name != null) {
 			System.out.print("node name: " + name + "\t");
-		}
-		else {
+		} else {
 			System.out.print("node name null,\t");
 		}
 		System.out.println("key: " + key);
@@ -429,8 +424,7 @@ public class TreeNode {
 		numberLeaves = 0;
 		if (isLeaf()) {
 			numberLeaves = 1;
-		}
-		else {
+		} else {
 			for (int i = 0; i < children.size(); i++) {
 				numberLeaves += getChild(i).numberLeaves;
 			}

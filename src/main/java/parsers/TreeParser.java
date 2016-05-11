@@ -211,12 +211,10 @@ public class TreeParser {
 				case StreamTokenizer.TT_NUMBER:
 					if (nameNext) {
 						lastNamed = popAndName(tokenizer.sval, nodeStack);
-					}
-					else {
+					} else {
 						if (lastNamed != null) {
 							lastNamed.setWeight(tokenizer.nval);
-						}
-						else {
+						} else {
 							System.err.println("Error: can't set value " 
 									+ tokenizer.nval + " to a null node");
 						}

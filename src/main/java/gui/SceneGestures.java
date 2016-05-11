@@ -72,8 +72,7 @@ public class SceneGestures {
             
             if (event.getDeltaY() < 0) { 
             	scale /= Math.pow(delta, -event.getDeltaY() / 20); 
-            } 
-            else {
+            } else {
                  scale *= Math.pow(delta, event.getDeltaY() / 20);
             }
 
@@ -96,10 +95,11 @@ public class SceneGestures {
     
     public double clamp(double value, double min, double max) {
         if (Double.compare(value, min) < 0) {
-            return min; }
-        else {
-        	if (Double.compare(value, max) > 0) { return max; }
-        	else {
+            return min; 
+        } else {
+        	if (Double.compare(value, max) > 0) { 
+        		return max; 
+        	} else {
         		return value;
         	}
         }
