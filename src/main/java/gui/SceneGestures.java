@@ -70,9 +70,7 @@ public class SceneGestures {
             double scale = canvas.getScale(); // currently we only use Y, same value is used for X
             double oldScale = scale;
             
-            if (event.getDeltaY() < 0) {
-                 scale /= Math.pow(delta, -event.getDeltaY() / 20);
-            } 
+            if (event.getDeltaY() < 0) { scale /= Math.pow(delta, -event.getDeltaY() / 20); } 
             else {
                  scale *= Math.pow(delta, event.getDeltaY() / 20);
             }
@@ -96,12 +94,9 @@ public class SceneGestures {
     
     public double clamp(double value, double min, double max) {
         if (Double.compare(value, min) < 0) {
-            return min;
-        }
+            return min; }
         else {
-        	if (Double.compare(value, max) > 0) {
-        		return max;
-        	}
+        	if (Double.compare(value, max) > 0) { return max; }
         	else {
         		return value;
         	}
