@@ -34,7 +34,7 @@ THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package parsers;
 
-import java.util.*;
+import java.util.ArrayList;
 
 /** 
  * POSSIBLY REDUNDANT CLASS, IS NOT FUNCTIONING AT THIS MOMENT
@@ -60,7 +60,7 @@ import java.util.*;
 public class TreeNode {
 
 	/** Array of child nodes that are attached below this internal node.  Null if this is a leaf. */
-	protected ArrayList children; // eventually turn this into an array (need
+	protected ArrayList<TreeNode> children; // eventually turn this into an array (need
 									// to change parser)
 
 	/** key is unique for nodes in one tree.  Keys are pre-ordered (root = 0, depth-traversal ordering). */
@@ -126,25 +126,34 @@ public class TreeNode {
 	 * @return True if this node has an edge in the chosen direction.  Only root nodes don't have a horizontal edge, and only leaves don't have vertical edges.
 	 */
 	protected boolean getEdge(int xy) {
-		if (xy == 0)
+		if (xy == 0) {
 			return !isRoot();
-		else
+		}
+		else {
 			return !isLeaf();
+		}
 	}
 
 	/** Implements Comparable interface - sorts on key field. 
 	 * @param o The other object to compare this node to.
-	 * @return -1 if this is smaller than the object's key, +1 if greater, 0 if equal. */
+	 * @return -1 if this is smaller than the object's key, +1 if greater, 0 if equal. 
+	 */
 	public int compareTo(Object o) {
-		if (key == ((TreeNode) o).key)
+		if (key == ((TreeNode) o).key) {
 			return 0;
-		else if (key < ((TreeNode) o).key)
-			return -1;
-		else
-			return 1;
+		}
+		else {
+			if (key < ((TreeNode) o).key) {
+					return -1;
+			}
+			else {
+				return 1;
+			}
+		}
 	}
 
-	/** The parent of this node.  This is null for the root node. */
+	/** The parent of this node.  This is null for the root node. 
+	 */
 	public TreeNode parent;
 
 	/**
@@ -154,27 +163,38 @@ public class TreeNode {
 	 */
 	protected String name = ""; // the long form in fully qualified names
 
-	/** The text that appears when the node is highlighted or has a name displayed. */
+	/** The text that appears when the node is highlighted or has a name displayed. 
+	 */
 	public String label = ""; // always short form
 
-	/** Distance from this node to the root node. The root is at height 1. */
+	/** Distance from this node to the root node. The root is at height 1. 
+	 */
 	public int height;
 
-	/** Weight is the horizontal edge length for the edge immediately above the node.  Edge lengths are not determined by this number currently; all edges are stretched to make leaves right aligned, with minimal integral lengths. */
+	/** Weight is the horizontal edge length for the edge immediately above the node.  
+	 * Edge lengths are not determined by this number currently; all edges are stretched 
+	 * to make leaves right aligned, with minimal integral lengths. 
+	 */
 	public float weight = 0.0f;
 
-	/** Leftmost (minimum) leaf node under this internal node (or this node for leaves). */
+	/** Leftmost (minimum) leaf node under this internal node (or this node for leaves). 
+	 */
 	public TreeNode leftmostLeaf;
-	/** Rightmost (maximum) leaf node under this internal node (or this node for leaves). */
+	
+	/** Rightmost (maximum) leaf node under this internal node (or this node for leaves). 
+	 */
 	public TreeNode rightmostLeaf;
 
-	/** The number of leaves under this internal node (or 1 for leaves). */
+	/** The number of leaves under this internal node (or 1 for leaves). 
+	 */
 	public int numberLeaves;
 
-	/** The next preorder node. */
+	/** The next preorder node. 
+	 */
 	public TreeNode preorderNext = null;
 
-	/** The next postorder node. */
+	/** The next postorder node. 
+	 */
 	public TreeNode posorderNext = null;
 
 	/**
@@ -184,7 +204,7 @@ public class TreeNode {
 	 *  the parser uses this to create nodes attached to the root.
 	 */
 	public TreeNode() {
-		children = new ArrayList(2);
+		children = new ArrayList<TreeNode>(2);
 		bcnScore = new Double(0.0);
 	}
 
@@ -202,7 +222,8 @@ public class TreeNode {
 
 		try {
 			close();
-		} finally {
+		} 
+		finally {
 			super.finalize();
 			// System.out.println("finally clean treeNodes");
 		}
@@ -230,23 +251,29 @@ public class TreeNode {
 	 * @return The i(th) child for this node.
 	 */
 	public TreeNode getChild(int i) {
-		if (i < children.size())
+		if (i < children.size()) {
 			return (TreeNode) children.get(i);
-		else
+		}
+		else {
 			return null;
+		}
 	}
 
 	/**
-	 * Tests to determine if this node is a leaf.  Does not work for nodes not in the tree structure.
-	 * @return True if this node has no linked children, and therefore is a leaf node for the tree.
+	 * Tests to determine if this node is a leaf.  Does not 
+	 * work for nodes not in the tree structure.
+	 * @return True if this node has no linked children, and 
+	 * 		   therefore is a leaf node for the tree.
 	 */
 	public boolean isLeaf() {
 		return children.isEmpty();
 	}
 
 	/**
-	 * Tests to determine if this node is the root of its tree. Does not work for nodes not in the tree structure.
-	 * @return True if this node has no linked parent, and therefore is the root of the tree.
+	 * Tests to determine if this node is the root of its tree. 
+	 * Does not work for nodes not in the tree structure.
+	 * @return True if this node has no linked parent, and 
+	 * therefore is the root of the tree.
 	 */
 	public boolean isRoot() {
 		return (null == parent);
@@ -262,8 +289,10 @@ public class TreeNode {
 	}
 
 	/**
-	 * Add a child to the end of the list of children.  Note there is no remove child method, this is permanent.
-	 * Additional processing for linking nodes (setting up pointers and leaf properties, for example) is done later.
+	 * Add a child to the end of the list of children.  
+	 * Note there is no remove child method, this is permanent.
+	 * Additional processing for linking nodes (setting 
+	 * up pointers and leaf properties, for example) is done later.
 	 * @param n New child node for this node.
 	 */
 	public void addChild(TreeNode n) {
@@ -288,8 +317,9 @@ public class TreeNode {
 	}
 
 	/**
-	 * Get the weight of this treenode, which encodes the length of the horizontal edge.
-	 * Edge weights are not implemented currently for drawing.
+	 * Get the weight of this treenode, which encodes 
+	 * the length of the horizontal edge. Edge weights 
+	 * are not implemented currently for drawing.
 	 * @return Edge weight for this node, {@link #weight}.
 	 */
 	public float getWeight() {
@@ -317,10 +347,12 @@ public class TreeNode {
 	 * 
 	 */
 	public void print() {
-		if (name != null)
+		if (name != null) {
 			System.out.print("node name: " + name + "\t");
-		else
+		}
+		else {
 			System.out.print("node name null,\t");
+		}
 		System.out.println("key: " + key);
 	}
 
@@ -330,8 +362,9 @@ public class TreeNode {
 	 */
 	private void printSubtree() {
 		print();
-		for (int i = 0; i < children.size(); i++)
+		for (int i = 0; i < children.size(); i++) {
 			getChild(i).printSubtree();
+		}
 	}
 
 	/**
@@ -350,21 +383,25 @@ public class TreeNode {
 
 	/** root->leaf traversal, depth first in direction of leftmost leaf. */
 	public void linkNodesInPreorder() {
-		if (isLeaf())
+		if (isLeaf()) {
 			return;
+		}
 		preorderNext = firstChild();
-		for (int i = 0; i < numberChildren() - 1; i++)
+		for (int i = 0; i < numberChildren() - 1; i++) {
 			getChild(i).rightmostLeaf.preorderNext = getChild(i + 1);
+		}
 		// rightmostLeaf.preorderNext = null; // redundant
 	}
 
 	/** Leaf->root traversal, starting at leftmost leaf of tree. */
 	public void linkNodesInPostorder() {
-		if (isLeaf())
+		if (isLeaf()) {
 			return;
+		}
 		// n.posorderNext = null; // redundant
-		for (int i = 0; i < numberChildren() - 1; i++)
+		for (int i = 0; i < numberChildren() - 1; i++) {
 			getChild(i).posorderNext = getChild(i + 1).leftmostLeaf;
+		}
 		lastChild().posorderNext = this;
 	}
 
@@ -376,11 +413,14 @@ public class TreeNode {
 	 */
 	public int setNumberLeaves() {
 		numberLeaves = 0;
-		if (isLeaf())
+		if (isLeaf()) {
 			numberLeaves = 1;
-		else
-			for (int i = 0; i < children.size(); i++)
+		}
+		else {
+			for (int i = 0; i < children.size(); i++) {
 				numberLeaves += getChild(i).numberLeaves;
+			}
+		}
 		return numberLeaves;
 	}
 

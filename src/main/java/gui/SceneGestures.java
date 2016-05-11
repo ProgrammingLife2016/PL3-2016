@@ -1,8 +1,6 @@
 package gui;
 
 import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
@@ -31,7 +29,8 @@ public class SceneGestures {
         return onScrollEventHandler;
     }
 
-    private EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {
+    private EventHandler<MouseEvent> onMousePressedEventHandler = 
+    		new EventHandler<MouseEvent>() {
         public void handle(MouseEvent event) {
             if (!event.isSecondaryButtonDown()) {
                 return;
@@ -44,12 +43,16 @@ public class SceneGestures {
         }
     };
 
-    private EventHandler<MouseEvent> onMouseDraggedEventHandler = new EventHandler<MouseEvent>() {
+    private EventHandler<MouseEvent> onMouseDraggedEventHandler = 
+    		new EventHandler<MouseEvent>() {
         public void handle(MouseEvent event) {
-            if(!event.isSecondaryButtonDown())
+            if(!event.isSecondaryButtonDown()) {
                 return;
-            canvas.setTranslateX(sceneDragContext.translateAnchorX + event.getSceneX() - sceneDragContext.mouseAnchorX);
-            canvas.setTranslateY(sceneDragContext.translateAnchorY + event.getSceneY() - sceneDragContext.mouseAnchorY);
+            }
+            canvas.setTranslateX(sceneDragContext.translateAnchorX 
+            		+ event.getSceneX() - sceneDragContext.mouseAnchorX);
+            canvas.setTranslateY(sceneDragContext.translateAnchorY 
+            		+ event.getSceneY() - sceneDragContext.mouseAnchorY);
             event.consume();
         }
     };
@@ -57,7 +60,8 @@ public class SceneGestures {
     /**
      * Mouse wheel handler: zoom to pivot point
      */
-    private EventHandler<ScrollEvent> onScrollEventHandler = new EventHandler<ScrollEvent>() {
+    private EventHandler<ScrollEvent> onScrollEventHandler = 
+    		new EventHandler<ScrollEvent>() {
 
         @Override
         public void handle(ScrollEvent event) {
@@ -67,34 +71,40 @@ public class SceneGestures {
             double oldScale = scale;
             
             if (event.getDeltaY() < 0) {
-                 scale /= Math.pow(delta, -event.getDeltaY()/20);
+                 scale /= Math.pow(delta, -event.getDeltaY() / 20);
             } 
-            
             else {
-                 scale *= Math.pow(delta, event.getDeltaY()/20);
+                 scale *= Math.pow(delta, event.getDeltaY() / 20);
             }
 
             scale = clamp( scale, MIN_SCALE, MAX_SCALE);
-            double zoom = scale/MAX_SCALE;
+            double zoom = scale / MAX_SCALE;
             System.out.println("Zoom percentage: " + zoom);
             
-            double f = (scale / oldScale)-1;
-            double dx = (event.getSceneX() - (canvas.getBoundsInParent().getWidth()/2 + canvas.getBoundsInParent().getMinX()));
-            double dy = (event.getSceneY() - (canvas.getBoundsInParent().getHeight()/2 + canvas.getBoundsInParent().getMinY()));
-            canvas.setScale( scale);
-            canvas.setPivot(f*dx, f*dy);
+            double f = (scale / oldScale) - 1;
+            double dx = (event.getSceneX() - 
+            		(canvas.getBoundsInParent().getWidth()/2 
+            				+ canvas.getBoundsInParent().getMinX()));
+            double dy = (event.getSceneY() - 
+            		(canvas.getBoundsInParent().getHeight()/2 
+            				+ canvas.getBoundsInParent().getMinY()));
+            canvas.setScale(scale);
+            canvas.setPivot(f * dx, f * dy);
             event.consume();
         }
     };
     
     public double clamp(double value, double min, double max) {
-        if(Double.compare(value, min) < 0)
+        if(Double.compare(value, min) < 0) {
             return min;
-
-        else if( Double.compare(value, max) > 0)
-            return max;
-        
-        else
-        return value;
+        }
+        else {
+        	if( Double.compare(value, max) > 0) {
+        		return max;
+        	}
+        	else {
+        		return value;
+        	}
+        }
     }
 }

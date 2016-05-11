@@ -39,11 +39,11 @@ public class PannableCanvas extends Pane {
      */
     public void addGrid() {
 
-        double w = getBoundsInLocal().getWidth();
-        double h = getBoundsInLocal().getHeight();
+        double widthT = getBoundsInLocal().getWidth();
+        double heightT = getBoundsInLocal().getHeight();
 
         // add grid
-        Canvas grid = new Canvas(w, h);
+        Canvas grid = new Canvas(widthT, heightT);
 
         // don't catch mouse events
         grid.setMouseTransparent(true);
@@ -55,9 +55,9 @@ public class PannableCanvas extends Pane {
 
         // draw grid lines
         double offset = 50;
-        for (double i = offset; i < w; i += offset) {
-            gc.strokeLine( i, 0, i, h);
-            gc.strokeLine( 0, i, w, i);
+        for (double i = offset; i < widthT; i += offset) {
+            gc.strokeLine( i, 0, i, heightT);
+            gc.strokeLine( 0, i, widthT, i);
         }
 
         getChildren().add( grid);

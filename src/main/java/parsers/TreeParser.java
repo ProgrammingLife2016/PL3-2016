@@ -14,12 +14,6 @@ import parsers.TreeNode;
 
 /**
  * POSSIBLY REDUNDANT CLASS, IS NOT FUNCTIONING AT THIS MOMENT
- * 
- * 
- * 
- * 
- * 
- * 
  * @author James
  *
  *         Parses the newick portion of a file For nexus files, additional
@@ -76,8 +70,8 @@ public class TreeParser {
 	 *            or the start of a newick file (basically the beginning of a
 	 *            newick tree, is run for each tree in a nexus file)
 	 */
-	public TreeParser(BufferedReader b) {
-		tokenizer = new StreamTokenizer(b);
+	public TreeParser(BufferedReader bufferRead) {
+		tokenizer = new StreamTokenizer(bufferRead);
 		tokenizer.eolIsSignificant(false);
 		tokenizer.quoteChar('"');
 		// tokenizer.quoteChar('\''); // TODO: check quote layering, quoted
@@ -114,9 +108,9 @@ public class TreeParser {
 	 * @param s
 	 *            Display the string, for debugging.
 	 */
-	public void debugOutput(String s) {
+	public void debugOutput(String string) {
 		if (debugOutput)
-			System.out.println(s);
+			System.out.println(string);
 	}
 
 	/**
@@ -178,8 +172,13 @@ public class TreeParser {
 	 * @return Tree parsed from the stream.
 	 */
 	public Tree tokenize(long fileLength, String streamName) {
-		final char openBracket = '(', closeBracket = ')', childSeparator = ',', treeTerminator = lineTerminator,
-				quote = '\'', doubleQuote = '"', infoSeparator = ':';
+		final char openBracket = '(', 
+				closeBracket = ')', 
+				childSeparator = ',', 
+				treeTerminator = lineTerminator,
+				quote = '\'', 
+				doubleQuote = '"', 
+				infoSeparator = ':';
 		int progress = 0;
 		rootNode = new TreeNode();
 		Tree t = new Tree();
@@ -189,45 +188,51 @@ public class TreeParser {
 		nodeStack.push(rootNode);
 		int thisToken;
 		TreeNode lastNamed = null;
-		boolean EOT = false;
+		boolean eot = false;
 		boolean nameNext = true;
 		int percentage = 0;
 		try {
-			while (EOT == false && (thisToken = tokenizer.nextToken()) != StreamTokenizer.TT_EOF) {
+			while (eot == false && (thisToken = tokenizer.nextToken()) != StreamTokenizer.TT_EOF) {
 				switch (thisToken) {
 				// case quote:
 				case doubleQuote:
 				case StreamTokenizer.TT_WORD:
-					if (!nameNext)
+					if (!nameNext) {
 						System.err.println("Error: didn't expect this name here: " + tokenizer.sval);
+					}
 					lastNamed = popAndName(tokenizer.sval, nodeStack);
 					progress += tokenizer.sval.length();
 					nameNext = false;
 					break;
 				case StreamTokenizer.TT_NUMBER:
-					if (nameNext)
+					if (nameNext) {
 						lastNamed = popAndName(tokenizer.sval, nodeStack);
+					}
 					else {
-						if (lastNamed != null)
+						if (lastNamed != null) {
 							lastNamed.setWeight(tokenizer.nval);
-						else
+						}
+						else {
 							System.err.println("Error: can't set value " + tokenizer.nval + " to a null node");
+						}
 						lastNamed = null;
 					}
 					progress += (new Double(tokenizer.nval).toString()).length();
 					nameNext = false;
 					break;
 				case infoSeparator:
-					if (nameNext)
+					if (nameNext) {
 						lastNamed = popAndName(null, nodeStack);
+					}
 					progress += 1;
 					nameNext = false;
 					break;
 				case treeTerminator:
 				case StreamTokenizer.TT_EOF:
-					if (nameNext)
+					if (nameNext) {
 						lastNamed = popAndName(null, nodeStack);
-					EOT = true;
+					}
+					eot = true;
 					progress += 1;
 					nameNext = false;
 					break;
@@ -237,14 +242,16 @@ public class TreeParser {
 					nameNext = true;
 					break;
 				case closeBracket:
-					if (nameNext)
+					if (nameNext) {
 						lastNamed = popAndName(null, nodeStack);
+					}
 					progress += 1;
 					nameNext = true;
 					break;
 				case childSeparator:
-					if (nameNext)
+					if (nameNext) {
 						lastNamed = popAndName(null, nodeStack);
+					}
 					nodeStack.push(new TreeNode());
 					progress += 1;
 					nameNext = true;
@@ -256,8 +263,9 @@ public class TreeParser {
 			}
 		} catch (IOException e) {
 		}
-		if (!nodeStack.isEmpty())
+		if (!nodeStack.isEmpty()) {
 			System.err.println("Node stack still has " + nodeStack.size() + " things");
+		}
 		t.postProcess();
 		return t;
 	}
@@ -276,7 +284,8 @@ public class TreeParser {
 			BufferedReader r = new BufferedReader(new FileReader(f));
 			TreeParser tp = new TreeParser(r);
 			Tree t = tp.tokenize(f.length(), f.getName());
-		} catch (FileNotFoundException e) {
+		} 
+		catch (FileNotFoundException e) {
 			System.out.println("Couldn't find file: " + fileName);
 		}
 		System.out.println("Parsed in " + ((System.currentTimeMillis() - start) / 1000.0) + " s");

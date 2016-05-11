@@ -1,6 +1,5 @@
 package coordinates;
 
-import db.DatabaseManager;
 import db.DatabaseReader;
 
 import java.util.ArrayList;

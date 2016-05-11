@@ -1,10 +1,7 @@
 package gui;
 
 import java.io.File;
-import java.util.ArrayList;
-
 import db.DatabaseManager;
-import db.DatabaseProcessor;
 import db.GfaException;
 import db.GfaParser;
 import javafx.application.Application;
