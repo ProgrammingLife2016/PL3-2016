@@ -1,5 +1,7 @@
 package gui;
 
+
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -66,12 +68,7 @@ public class Launcher extends Application {
         new Thread(task).start();
         
         
-        
-        
-        
-		
-		
-		SplashController.doneLoading = true;
+
 		
 	}
 	

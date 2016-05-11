@@ -30,7 +30,6 @@ public class SplashController implements Initializable{
 
 	public static SimpleIntegerProperty progressNum = new SimpleIntegerProperty(0);
 	public static SimpleStringProperty progressString = new SimpleStringProperty("");
-	public static boolean doneLoading = false;
 	
 	@FXML Label progressText;
 	@FXML ProgressBar progressBar;
@@ -39,94 +38,62 @@ public class SplashController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
-			start(Launcher.stage);
+			final Task<Void> listenerTask = listenerTask();
+			Thread th = new Thread(listenerTask);
+		    th.setDaemon(true);
+		    progressText.textProperty().bind(listenerTask.messageProperty());
+		    progressBar.progressProperty().bind(listenerTask.progressProperty());
+		    th.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
-    public void start(final Stage initStage) throws Exception {
-        final Task<Void> friendTask = new Task<Void>() {
-            @Override
-            protected Void call() throws InterruptedException {
-    		    progressString.addListener(new ChangeListener<String>() {
-    		
-  			      @Override
-  			      public void changed(ObservableValue<? extends String> ov, String oldVal,
-  			          String newVal) {
-  			        System.out.println("old value:"+oldVal);
-  			        System.out.println("new value:"+newVal);
+    public Task<Void> listenerTask() throws Exception {
+        final Task<Void> listenerTask = new Task<Void>() {
+        	@Override
+            public Void call() throws InterruptedException {
+        		progressString.addListener(new ChangeListener<String>() {
+  			    @Override
+  			    public void changed(ObservableValue<? extends String> ov, String oldVal,
+  			    String newVal) {
+  			    	System.out.println("old value: " + oldVal);
+  			        System.out.println("new value:" + newVal);
   		            updateMessage(newVal);
   			      }
       		    });
-    		    
-    		  progressNum.addListener(new ChangeListener<Number>() {
-    			  @Override
-		      public void changed(ObservableValue<? extends Number> ov, Number oldVal,
-		          Number newVal) {
-		        System.out.println("old value:"+oldVal);
-		        System.out.println("new value:"+newVal);
-		        updateProgress(newVal.longValue(), 100);
-		      }
-		    });
-    		    
-    		    return null;
+        		progressNum.addListener(new ChangeListener<Number>() {
+    			@Override
+    			public void changed(ObservableValue<? extends Number> ov, Number oldVal, 
+		    	Number newVal) {
+    				System.out.println("old value: " + oldVal);
+    				System.out.println("new value: " + newVal);
+    				updateProgress(newVal.longValue(), 100);
+    				if ((int) newVal == 100) {
+    					fadeOutSplash();
+    				}
+    			}
+        	    });
+        		return null;
             }
         };
-        
-        System.out.println("Showing splash");
-        showSplash(
-                initStage,
-                friendTask);
-        
-        Thread th = new Thread(friendTask);
-
-        th.setDaemon(true);
-
-        th.start();
-       // new Thread(friendTask).start();
+        return listenerTask;
     }
 	
-	
-	
-    public interface InitCompletionHandler {
-        void complete();
+	private void fadeOutSplash() {
+		Platform.runLater(new Runnable(){
+			@Override
+			public void run() {
+				progressBar.progressProperty().unbind();
+			    progressText.textProperty().unbind();
+				progressBar.setProgress(1);
+			    FadeTransition fadeSplash = new FadeTransition(Duration.seconds(1.0), vBox);
+			    fadeSplash.setFromValue(1.0);
+			    fadeSplash.setToValue(0.3);
+			    fadeSplash.setDelay(Duration.seconds(1.0));
+			    fadeSplash.setOnFinished(actionEvent -> Launcher.stage.hide());
+			    fadeSplash.play();
+			}
+		});
     }
-	
-	
-	
-	
-	
-	
-	
-    
-    private void showSplash(
-            final Stage initStage,
-            Task<?> task
-    ) {
-    	System.out.println("show splash called");
-        progressText.textProperty().bind(task.messageProperty());
-        progressBar.progressProperty().bind(task.progressProperty());
-        task.stateProperty().addListener((observableValue, oldState, newState) -> {
-            if (newState == Worker.State.SUCCEEDED) {
-            	System.out.println("worker succeeded");
-            	//progressBar.progressProperty().unbind();
-            	//progressBar.setProgress(1);
-                initStage.toFront();
-//                FadeTransition fadeSplash = new FadeTransition(Duration.seconds(1.2), splashLayout);
-//                fadeSplash.setFromValue(1.0);
-//                fadeSplash.setToValue(0.0);
-//                fadeSplash.setOnFinished(actionEvent -> initStage.hide());
-//                fadeSplash.play();
-
-            } 
-        });
-        
-    }
-	
-	
-	
-	
-
 }
