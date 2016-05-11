@@ -19,46 +19,67 @@ import java.util.ResourceBundle;
 
 @SuppressWarnings("restriction")
 public class RibbonController implements Initializable {
-	@FXML GridPane pane;
-	@FXML ScrollPane scrollPane;
-	@FXML Group graph;
+	@FXML private GridPane pane;
+	@FXML private ScrollPane scrollPane;
 	
-	private DatabaseManager dbm;
+	private Group innerGroup;
+	private Group outerGroup;
+	
 	private static final int YSCALE = 5;
 	private static final int XSCALE = 10;
-    private final double MAX_SCALE = 100.0d;
-    private final double MIN_SCALE = .1d;
+    private static final double MAX_SCALE = 100.0d;
+    private static final double MIN_SCALE = .1d;
     
-	private EventHandler<ScrollEvent> scrollEventHandler = new EventHandler<ScrollEvent>() {
+	private DatabaseManager dbm;
+    
+	private final EventHandler<ScrollEvent> scrollEventHandler = new EventHandler<ScrollEvent>() {
 		@Override
 		public void handle(ScrollEvent event) {
-
+//			System.out.println("Type: " + event.getEventType() + ", dx: " + event.getDeltaX() + ", dy: " + event.getDeltaY());
 			event.consume();
 			
+			// Ctrl down: zoom in/out
 	    	if(event.isControlDown()) {
+	    		double deltaY = event.getDeltaY();
+	    		
 	            double delta = 1.2;
-	            double scale = graph.getScaleY(); // currently we only use Y, same value is used for X
+	            double scale = innerGroup.getScaleY(); // currently we only use Y, same value is used for X
 	            
-	            if (event.getDeltaY() < 0) {
-	                 scale /= Math.pow(delta, -event.getDeltaY()/20);
-	            } 
-	            
-	            else {
-	                 scale *= Math.pow(delta, event.getDeltaY()/20);
-	            }
+	            if (deltaY < 0) {
+					scale /= Math.pow(delta, -event.getDeltaY() / 20);
+					// Cut off the scale if it is bigger than the minimum
+					// allowed scale
+					scale = scale < MIN_SCALE ? MIN_SCALE : scale;
+				}
 
-	            scale = clamp( scale, MIN_SCALE, MAX_SCALE);
+				else if (deltaY > 0) {
+					scale *= Math.pow(delta, event.getDeltaY() / 20);
+					// Cut off the scale if it is bigger than the maximum
+					// allowed scale
+					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
+	            }
+				
 	            double zoom = scale/MAX_SCALE;
 	            System.out.println("Zoom percentage: " + zoom);
-	            graph.setScaleY( scale);
+	            innerGroup.setScaleY( scale);
 	    		return;
 	    	}
 	    	
-	        if (event.getDeltaY() < 0) {
+	    	// Ctrl not down: scroll left/right (horizontally) or up/down (vertically)
+	    	double deltaY = event.getDeltaY();
+	    	double deltaX = event.getDeltaX();
+	    	
+	        if (deltaY < 0) {
 	            scrollPane.setHvalue(Math.min(1,scrollPane.getHvalue()+0.0007));
 	        }
-	        else {
+	        else if (deltaY > 0){
 	            scrollPane.setHvalue(Math.max(0,scrollPane.getHvalue()-0.0007));
+	        }
+	        if (deltaX < 0) {
+	        	scrollPane.setVvalue(Math.min(1, scrollPane.getVvalue()+0.05));
+	        }
+	        else if (deltaX > 0) {
+	        	scrollPane.setVvalue(Math.max(0, scrollPane.getVvalue()-0.05));
 	        }
 	    }
 	};
@@ -74,51 +95,37 @@ public class RibbonController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		this.dbm = Launcher.dbm;
 		
+		innerGroup = drawRibbons();
+		outerGroup = new Group(innerGroup);
+		
+		scrollPane.setContent(outerGroup);
+		
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
+		
+//		outerGroup.translateYProperty().bind(scrollPane.heightProperty().divide(2));
 		
 		// Resize the scrollpane along with the window.
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
 		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
 		});
-		draw();
+		drawRibbons();
+		innerGroup.requestLayout();
+		outerGroup.requestLayout();
+		scrollPane.requestLayout();
 
 	}
-	
-
-	
-	
-	
-    public double clamp(double value, double min, double max) {
-        if(Double.compare(value, min) < 0)
-            return min;
-
-        else if( Double.compare(value, max) > 0)
-            return max;
-        
-        else
-        return value;
-    }
 	
 	/**
 	 * Function to draw the Ribbons on the pane
 	 */
-	public void draw() {
+	public Group drawRibbons() {
+		Group res = new Group();
 		ArrayList<Integer> from = dbm.getDbReader().getAllFromId();
 		ArrayList<Integer> to = dbm.getDbReader().getAllToId();
 		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
 		ArrayList<Integer> xCoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> yCoords = dbm.getDbReader().getAllYCoord();
-		
-//		int maxX = XSCALE * xCoords.get(xCoords.size()-1);
-//		int maxY = YSCALE * Collections.max(yCoords);
-//		
-//		graph.setPrefHeight(maxY);
-//		graph.setPrefWidth(maxX);
-		
-		graph.translateYProperty().bind(scrollPane.heightProperty().divide(2));
-		
-		System.out.println(xCoords.get(xCoords.size()-1));
 		
 		for (int i = 0; i < from.size(); i++) {
 			int fromId = from.get(i);
@@ -126,8 +133,9 @@ public class RibbonController implements Initializable {
 			Path path = createPath(xCoords.get(fromId - 1), yCoords.get(fromId - 1), 
 					xCoords.get(toId - 1), yCoords.get(toId - 1));
 	        path.setStrokeWidth(0.1 + 0.1 * counts.get(i));
-	        graph.getChildren().add(path);
+	        res.getChildren().add(path);
 		}
+		return res;
 	}
 	
 	/**
