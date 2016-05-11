@@ -15,15 +15,13 @@ public class MainController implements Initializable {
 	 * You can interact with an indiviual tab page if you need it.
 	 */
 	@FXML private GridPane ribbonTab;
-	@FXML TabPane tabPane;
+	@FXML private TabPane tabPane;
 	
 	/**
 	 * Right now this MainController is empty but perhaps there will be additions later on. Keeping it for now.
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-//		System.out.println(scrollPane.widthProperty().get());
-//		ribbonTab.setPrefWidth(ribbonTab.boundsInParentProperty().get().getWidth());
-//		ribbonTab.setPrefHeight(ribbonTab.boundsInParentProperty().get().getHeight());
+		
 	}
 }

@@ -16,8 +16,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-
-@SuppressWarnings("restriction")
+/**
+ * Controller class for the Ribbon screen/tab.
+ */
 public class RibbonController implements Initializable {
 	@FXML private GridPane pane;
 	@FXML private ScrollPane scrollPane;
@@ -32,10 +33,10 @@ public class RibbonController implements Initializable {
     
 	private DatabaseManager dbm;
     
+	// Handles the scrollwheel actions
 	private final EventHandler<ScrollEvent> scrollEventHandler = new EventHandler<ScrollEvent>() {
 		@Override
 		public void handle(ScrollEvent event) {
-//			System.out.println("Type: " + event.getEventType() + ", dx: " + event.getDeltaX() + ", dy: " + event.getDeltaY());
 			event.consume();
 			
 			// Ctrl down: zoom in/out
@@ -95,31 +96,28 @@ public class RibbonController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		this.dbm = Launcher.dbm;
 		
-		innerGroup = drawRibbons();
+		// Inner group and outer group according to the ScrollPane JavaDoc.
+		innerGroup = createRibbons();
 		outerGroup = new Group(innerGroup);
-		
 		scrollPane.setContent(outerGroup);
 		
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
-		
-//		outerGroup.translateYProperty().bind(scrollPane.heightProperty().divide(2));
 		
 		// Resize the scrollpane along with the window.
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
 		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
 		});
-		drawRibbons();
-		innerGroup.requestLayout();
-		outerGroup.requestLayout();
-		scrollPane.requestLayout();
 
 	}
-	
+
 	/**
-	 * Function to draw the Ribbons on the pane
+	 * Creates all paths that make up the ribbons and returns a {@link Group}
+	 * containing those paths.
+	 * 
+	 * @return A group containing the ribbons.
 	 */
-	public Group drawRibbons() {
+	public Group createRibbons() {
 		Group res = new Group();
 		ArrayList<Integer> from = dbm.getDbReader().getAllFromId();
 		ArrayList<Integer> to = dbm.getDbReader().getAllToId();
@@ -139,19 +137,23 @@ public class RibbonController implements Initializable {
 	}
 	
 	/**
-	 * Draws a line between 2 points of segments.
+	 * Creates a path from (fromX,fromY) to (toX,toY).
 	 * 
-	 * @param from
-	 * 			Segment from which path is drawn.
-	 * @param to
-	 * 			Segment to which path is drawn.	
-	 * @return A Path through which the lines goes.
+	 * @param fromX
+	 *            X coordinate of the starting point.
+	 * @param fromY
+	 *            Y coordinate of the starting point.
+	 * @param toX
+	 *            X coordinate of the destination point.
+	 * @param toY
+	 *            Y coordinate of the destination point.
+	 * @return A path from (fromX,fromY) to (toX,toY).
 	 */
 	private Path createPath(int fromX, int fromY, int toX, int toY) {
-		MoveTo moveto = new MoveTo(XSCALE * fromX, YSCALE * fromY);
-		LineTo lineto = new LineTo(XSCALE * toX , YSCALE * toY);
+		MoveTo moveTo = new MoveTo(XSCALE * fromX, YSCALE * fromY);
+		LineTo lineTo = new LineTo(XSCALE * toX, YSCALE * toY);
 		Path path = new Path();
-		path.getElements().addAll(moveto, lineto);
+		path.getElements().addAll(moveTo, lineTo);
 		return path;
 	}
 }
