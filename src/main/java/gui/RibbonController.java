@@ -1,20 +1,20 @@
 package gui;
 
-import coordinates.Coordinate;
 import db.DatabaseManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.ResourceBundle;
+
 
 @SuppressWarnings("restriction")
 public class RibbonController implements Initializable {
@@ -25,6 +25,8 @@ public class RibbonController implements Initializable {
 	private DatabaseManager dbm;
 	private static final int YSCALE = 5;
 	private static final int XSCALE = 10;
+    private final double MAX_SCALE = 100.0d;
+    private final double MIN_SCALE = .1d;
 	
 	/**
 	 * function that gets executed when the matching fxml file is loaded.
@@ -45,6 +47,48 @@ public class RibbonController implements Initializable {
 
 	}
 	
+	public void onScroll(ScrollEvent event) {
+
+		event.consume();
+		
+    	if(event.isControlDown()) {
+            double delta = 1.2;
+            double scale = graph.getScaleY(); // currently we only use Y, same value is used for X
+            
+            if (event.getDeltaY() < 0) {
+                 scale /= Math.pow(delta, -event.getDeltaY()/20);
+            } 
+            
+            else {
+                 scale *= Math.pow(delta, event.getDeltaY()/20);
+            }
+
+            scale = clamp( scale, MIN_SCALE, MAX_SCALE);
+            double zoom = scale/MAX_SCALE;
+            System.out.println("Zoom percentage: " + zoom);
+            graph.setScaleY( scale);
+    		return;
+    	}
+    	
+        if (event.getDeltaY() < 0) {
+            scrollPane.setHvalue(Math.min(1,scrollPane.getHvalue()+0.0007));
+        }
+        else {
+            scrollPane.setHvalue(Math.max(0,scrollPane.getHvalue()-0.0007));
+        }
+    }
+	
+    public double clamp(double value, double min, double max) {
+        if(Double.compare(value, min) < 0)
+            return min;
+
+        else if( Double.compare(value, max) > 0)
+            return max;
+        
+        else
+        return value;
+    }
+	
 	/**
 	 * Function to draw the Ribbons on the pane
 	 */
@@ -60,7 +104,8 @@ public class RibbonController implements Initializable {
 //		
 //		graph.setPrefHeight(maxY);
 //		graph.setPrefWidth(maxX);
-//		graph.translateYProperty().bind(scrollPane.heightProperty().divide(2));
+		
+		graph.translateYProperty().bind(scrollPane.heightProperty().divide(2));
 		
 		System.out.println(xCoords.get(xCoords.size()-1));
 		
