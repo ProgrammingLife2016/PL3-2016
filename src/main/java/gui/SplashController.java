@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -14,8 +15,10 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -91,9 +94,28 @@ public class SplashController implements Initializable{
 			    fadeSplash.setFromValue(1.0);
 			    fadeSplash.setToValue(0.3);
 			    fadeSplash.setDelay(Duration.seconds(1.0));
-			    fadeSplash.setOnFinished(actionEvent -> Launcher.stage.hide());
+			    fadeSplash.setOnFinished(actionEvent -> launchMain());
 			    fadeSplash.play();
 			}
 		});
     }
+	
+	private void launchMain() {
+		Platform.runLater(new Runnable(){
+			@Override
+			public void run() {
+				Parent root;
+				try {
+					root = FXMLLoader.load(getClass().getResource("Main.fxml"));
+			        Scene scene = new Scene(root);
+			        Launcher.stage.setScene(scene);
+			        Launcher.stage.show();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		});
+	}
 }
