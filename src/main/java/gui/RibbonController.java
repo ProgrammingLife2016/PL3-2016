@@ -1,6 +1,7 @@
 package gui;
 
 import db.DatabaseManager;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -27,6 +28,41 @@ public class RibbonController implements Initializable {
 	private static final int XSCALE = 10;
     private final double MAX_SCALE = 100.0d;
     private final double MIN_SCALE = .1d;
+    
+	private EventHandler<ScrollEvent> scrollEventHandler = new EventHandler<ScrollEvent>() {
+		@Override
+		public void handle(ScrollEvent event) {
+
+			event.consume();
+			
+	    	if(event.isControlDown()) {
+	            double delta = 1.2;
+	            double scale = graph.getScaleY(); // currently we only use Y, same value is used for X
+	            
+	            if (event.getDeltaY() < 0) {
+	                 scale /= Math.pow(delta, -event.getDeltaY()/20);
+	            } 
+	            
+	            else {
+	                 scale *= Math.pow(delta, event.getDeltaY()/20);
+	            }
+
+	            scale = clamp( scale, MIN_SCALE, MAX_SCALE);
+	            double zoom = scale/MAX_SCALE;
+	            System.out.println("Zoom percentage: " + zoom);
+	            graph.setScaleY( scale);
+	    		return;
+	    	}
+	    	
+	        if (event.getDeltaY() < 0) {
+	            scrollPane.setHvalue(Math.min(1,scrollPane.getHvalue()+0.0007));
+	        }
+	        else {
+	            scrollPane.setHvalue(Math.max(0,scrollPane.getHvalue()-0.0007));
+	        }
+	    }
+	};
+    
 	
 	/**
 	 * function that gets executed when the matching fxml file is loaded.
@@ -38,6 +74,8 @@ public class RibbonController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		this.dbm = Launcher.dbm;
 		
+		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
+		
 		// Resize the scrollpane along with the window.
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
 		    scrollPane.setPrefWidth(newValue.getWidth());
@@ -47,36 +85,9 @@ public class RibbonController implements Initializable {
 
 	}
 	
-	public void onScroll(ScrollEvent event) {
 
-		event.consume();
-		
-    	if(event.isControlDown()) {
-            double delta = 1.2;
-            double scale = graph.getScaleY(); // currently we only use Y, same value is used for X
-            
-            if (event.getDeltaY() < 0) {
-                 scale /= Math.pow(delta, -event.getDeltaY()/20);
-            } 
-            
-            else {
-                 scale *= Math.pow(delta, event.getDeltaY()/20);
-            }
-
-            scale = clamp( scale, MIN_SCALE, MAX_SCALE);
-            double zoom = scale/MAX_SCALE;
-            System.out.println("Zoom percentage: " + zoom);
-            graph.setScaleY( scale);
-    		return;
-    	}
-    	
-        if (event.getDeltaY() < 0) {
-            scrollPane.setHvalue(Math.min(1,scrollPane.getHvalue()+0.0007));
-        }
-        else {
-            scrollPane.setHvalue(Math.max(0,scrollPane.getHvalue()-0.0007));
-        }
-    }
+	
+	
 	
     public double clamp(double value, double min, double max) {
         if(Double.compare(value, min) < 0)
