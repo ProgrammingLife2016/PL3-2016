@@ -245,7 +245,7 @@ public class Tree {
 	/**
 	 * Root node of this tree
 	 */
-	protected TreeNode root=null;
+	protected TreeNode root = null;
 
 	/**
 	 * Sets the file name.  Copies the value for some reason.
@@ -352,7 +352,7 @@ public class Tree {
 		}
 
 		node.preorderNext = node.firstChild();
-		for (int i = 0; i < node.numberChildren()-1; i++) {
+		for (int i = 0; i < node.numberChildren() - 1; i++) {
 			node.getChild(i).rightmostLeaf.preorderNext = node.getChild(i + 1);
 		}
 		node.rightmostLeaf.preorderNext = null;
@@ -391,18 +391,14 @@ public class Tree {
 		int index = 0;
 		TreeNode curr = sortedLeafArray[0];
 		TreeNode next;
-		for (int i = 0; i < leaves.size()-1; i++) {
+		for (int i = 0; i < leaves.size() - 1; i++) {
 			next = sortedLeafArray[i + 1]; // only 1 index lookup per iteration
 			boolean compare = myNameComparator.compare(curr, next) == 0; 
 			if (compare || index > 0) {
 				String name = curr.getName();
-				nodesByName.remove(curr); // before all nodes with
-				// same name were being ignored in search and comparing two identically named
-				// leaves was broken, much fewer differences in trees with many leaves that
-				// have the same name (imagine: all index.html occurences being marked as
-				// different since numbering convention doesn't string match the original node name)
-				curr.setName(name + " " + index); //sb.toString());
-				nodesByName.put(name + " " + index, curr); // add the node back with number convention
+				nodesByName.remove(curr);
+				curr.setName(name + " " + index);
+				nodesByName.put(name + " " + index, curr);
 				if (!compare) {
 					index = 0;
 				}
@@ -466,7 +462,7 @@ public class Tree {
 		while (currNode != node.rightmostLeaf) {
 			if (!currNode.isLeaf()) { // internal node?
 				currNode = currNode.leftmostLeaf;
-			}// descend to minimal leaf
+			} // descend to minimal leaf
 			leaves.add(currNode);
 			currNode = currNode.preorderNext;
 		}

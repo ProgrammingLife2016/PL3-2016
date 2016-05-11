@@ -70,7 +70,9 @@ public class SceneGestures {
             double scale = canvas.getScale(); // currently we only use Y, same value is used for X
             double oldScale = scale;
             
-            if (event.getDeltaY() < 0) { scale /= Math.pow(delta, -event.getDeltaY() / 20); } 
+            if (event.getDeltaY() < 0) { 
+            	scale /= Math.pow(delta, -event.getDeltaY() / 20); 
+            } 
             else {
                  scale *= Math.pow(delta, event.getDeltaY() / 20);
             }

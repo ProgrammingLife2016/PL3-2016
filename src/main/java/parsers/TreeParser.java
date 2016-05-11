@@ -127,7 +127,7 @@ public class TreeParser {
 	 * @return Newly added treeNode linked into the tree.
 	 */
 	private TreeNode popAndName(String name, Stack nodeStack) {
-		if(nodeStack.isEmpty()) {
+		if (nodeStack.isEmpty()) {
 			return null;
 		}
 		TreeNode topNode = (TreeNode) nodeStack.pop();
@@ -183,9 +183,9 @@ public class TreeParser {
 				infoSeparator = ':';
 		int progress = 0;
 		rootNode = new TreeNode();
-		Tree t = new Tree();
-		t.setRootNode(rootNode);
-		t.setFileName(streamName);
+		Tree tree = new Tree();
+		tree.setRootNode(rootNode);
+		tree.setFileName(streamName);
 		Stack nodeStack = new Stack();
 		nodeStack.push(rootNode);
 		int thisToken;
@@ -194,8 +194,8 @@ public class TreeParser {
 		boolean nameNext = true;
 		int percentage = 0;
 		try {
-			while (eot == false && 
-					(thisToken = tokenizer.nextToken()) != StreamTokenizer.TT_EOF) {
+			while (eot == false 
+					&& (thisToken = tokenizer.nextToken()) != StreamTokenizer.TT_EOF) {
 				switch (thisToken) {
 				// case quote:
 				case doubleQuote:
@@ -272,8 +272,8 @@ public class TreeParser {
 			System.err.println("Node stack still has " 
 					+ nodeStack.size() + " things");
 		}
-		t.postProcess();
-		return t;
+		tree.postProcess();
+		return tree;
 	}
 
 	/**
@@ -284,7 +284,8 @@ public class TreeParser {
 	 */
 	public static void main(String[] args) {
 		String fileName = 
-				"/home/daniel/Projects/TU/Y2/TI2806_Context/PL3-2016/Data/TB10/340tree.rooted.TKK.nwk";
+				"/home/daniel/Projects/TU/Y2/TI2806_Context/"
+				+ "PL3-2016/Data/TB10/340tree.rooted.TKK.nwk";
 		long start = System.currentTimeMillis();
 		File file = new File(fileName);
 		try {

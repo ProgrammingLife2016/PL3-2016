@@ -59,17 +59,19 @@ import java.util.ArrayList;
 */
 public class TreeNode {
 
-	/** Array of child nodes that are attached below this internal node.  Null if this is a leaf. */
-	protected ArrayList<TreeNode> children; // eventually turn this into an array (need
-									// to change parser)
+	/** Array of child nodes that are attached below 
+	 * this internal node.  Null if this is a leaf. */
+	protected ArrayList<TreeNode> children;
 
-	/** key is unique for nodes in one tree.  Keys are pre-ordered (root = 0, depth-traversal ordering). */
+	/** key is unique for nodes in one tree.  Keys are 
+	 * pre-ordered (root = 0, depth-traversal ordering). */
 	public int key;
 
 	/** Height of font in font points used to draw the label. */
 	private int fontSize;
 
-	/** Score for a node in [0,1] that corresponds to the topological similarity between two tree drawers.
+	/** Score for a node in [0,1] that corresponds to 
+	 * the topological similarity between two tree drawers.
 	 @see TreePairs#getBestCorrNodeScore(Tree, TreeNode, Tree, int) */
 	private Double bcnScore;
 
@@ -86,19 +88,27 @@ public class TreeNode {
 	protected int computedFrame; // store frame midYPosition was last
 									// calculated (needed to place parents)
 
-	/** Cached location (world-space) of the mid point in the vertical of a cell where the horizontal tree edge is drawn. 
-	 * This is (1/2 of cell size + minY) for leaves, midway between first and last child edge for internal nodes. */
+	/** Cached location (world-space) of the mid 
+	 * point in the vertical of a cell where 
+	 * the horizontal tree edge is drawn. 
+	 * This is (1/2 of cell size + minY) for leaves, 
+	 * midway between first and last child edge for 
+	 * internal nodes. */
 	private double midYPosition;
 
-	/**  Returns the minimum key value of nodes in the subtree rooted by this node.
-	 * @return The index of the smallest descendant node (which is the key for this node). */
+	/**  Returns the minimum key value of nodes 
+	 * in the subtree rooted by this node.
+	 * @return The index of the smallest descendant 
+	 * node (which is the key for this node). */
 	// this is the key for this node
 	public int getMin() {
 		return key;
 	}
 
-	/** Returns the maximum key value of nodes in the subtree rooted but this node.
-	 * @return The index of the smallest descendant node (which is the key for the rightmost leaf node). */
+	/** Returns the maximum key value of nodes in 
+	 * the subtree rooted but this node.
+	 * @return The index of the smallest descendant node 
+	 * (which is the key for the rightmost leaf node). */
 	// this is the key of the rightmost leaf
 	public int getMax() {
 		return rightmostLeaf.key;
@@ -123,7 +133,9 @@ public class TreeNode {
 	/**
 	 * Tests to see if this node has a vertical or horizontal edge component.
 	 * @param xy 0/X for horizontal, 1/Y for vertical nodes.
-	 * @return True if this node has an edge in the chosen direction.  Only root nodes don't have a horizontal edge, and only leaves don't have vertical edges.
+	 * @return True if this node has an edge in the chosen direction.  
+	 * Only root nodes don't have a horizontal edge, and only leaves 
+	 * don't have vertical edges.
 	 */
 	protected boolean getEdge(int xy) {
 		if (xy == 0) {
@@ -368,7 +380,9 @@ public class TreeNode {
 	}
 
 	/**
-	 * Set the extreme leaves for this node.  This is done in leaf->root direction, so all linking can be done in O(n) time.
+	 * Set the extreme leaves for this node.  This is 
+	 * done in leaf->root direction, so all linking 
+	 * can be done in O(n) time.
 	 *
 	 */
 	public void setExtremeLeaves() {
@@ -436,10 +450,10 @@ public class TreeNode {
 
 	/**
 	 * Set the {@link #bcnScore} for this node.
-	 * @param n New value of {@link #bcnScore}.
+	 * @param node New value of {@link #bcnScore}.
 	 */
-	public void setBcnScore(float n) {
-		bcnScore = new Double(n);
+	public void setBcnScore(float node) {
+		bcnScore = new Double(node);
 	}
 
 	/**
