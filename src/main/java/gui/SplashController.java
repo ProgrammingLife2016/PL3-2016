@@ -42,7 +42,7 @@ public class SplashController implements Initializable{
 	 */
 	@FXML Label progressText;
 	@FXML ProgressBar progressBar;
-	@FXML VBox vBox;
+	@FXML VBox verticalBox;
 	
 	/**
 	 * Creating a new listenerTask and binding progressText and progressBar
@@ -109,7 +109,8 @@ public class SplashController implements Initializable{
 				progressBar.progressProperty().unbind();
 			    progressText.textProperty().unbind();
 				progressBar.setProgress(1);
-			    FadeTransition fadeSplash = new FadeTransition(Duration.seconds(1.0), vBox);
+			    FadeTransition fadeSplash = new FadeTransition(
+			    		Duration.seconds(1.0), verticalBox);
 			    fadeSplash.setFromValue(1.0);
 			    fadeSplash.setToValue(0.3);
 			    fadeSplash.setDelay(Duration.seconds(1.0));

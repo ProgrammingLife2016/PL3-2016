@@ -1,15 +1,16 @@
 package gui;
 
 import java.io.File;
-import db.DatabaseManager;
-import db.GfaException;
-import db.GfaParser;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import db.DatabaseManager;
+import db.GfaException;
+import db.GfaParser;
 
 /**
  * This launcher starts up our program.
@@ -61,6 +62,7 @@ public class Launcher extends Application {
         			SplashController.progressNum.set(100);
         		} else {
         			dbm = new DatabaseManager(dbPath);
+        			SplashController.progressNum.set(100);
         		}
                 return null ;
             }
