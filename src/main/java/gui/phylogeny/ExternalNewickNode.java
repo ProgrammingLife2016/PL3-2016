@@ -5,18 +5,14 @@ import javafx.scene.control.Label;
 public class ExternalNewickNode extends NewickNode {
 	
 	public ExternalNewickNode(String name) {
-		super();
-		Label label = new Label(name);
-		label.setTranslateX(10);
-		label.setTranslateY(-5);
-		this.getChildren().add(label);
+		this(0,0,name);
 	}
 
 	public ExternalNewickNode(int x, int y, String name) {
 		super(x, y);
 		Label label = new Label(name);
-		label.setTranslateX(x + 10);
-		label.setTranslateY(y - 5);
+		label.setTranslateX(10);
+		label.setTranslateY(-8);
 		this.getChildren().add(label);
 	}
 

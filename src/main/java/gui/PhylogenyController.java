@@ -18,7 +18,7 @@ import parsers.NewickTreeParser;
 
 public class PhylogenyController implements Initializable, SetScreen {
 	
-	private static final int SPACING = 20;
+	private static final int SPACING = 5;
 	private static final int SCALE = 1;
 	
 	private ScreenManager screenManager;
@@ -34,7 +34,8 @@ public class PhylogenyController implements Initializable, SetScreen {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		tree = NewickTreeParser.parse("(A:100,(B:75,(E:75,F:100,G:25):25,C:50):25,(D:25,Z:50,Y:25):25);");
+		tree = NewickTreeParser.parse("((B:75,(E:75,F:100,G:25):25,C:50):25,(D:25,Z:50,Y:25):25,A:100);");
+//		tree = NewickTreeParser.parse("((A:100,B:75):25,C:50,D:25);");
 
 		NewickNode node = getDrawableTree(tree);
 		node.setTranslateX(100);
@@ -55,49 +56,80 @@ public class PhylogenyController implements Initializable, SetScreen {
 
 	}
 	
-
 	public NewickNode getDrawableTree(NewickTree tree) {
-		if(tree.isLeaf()) {
-			return new ExternalNewickNode(tree.getName());
-		}
-		
-		NewickTree current = tree;
-		Stack<NewickTree> stack = new Stack<>();
-		
-		int currentX = 0;
 		int currentY = 0;
 		
-		while(!current.isLeaf()) {
-			stack.push(current);
-			currentX += current.getDistance();
-			current = current.getChildren().get(0);
-		}
-		
-		NewickTree parent = stack.pop();
+		NewickNode root = new InternalNewickNode();
 		
 		double fromY = currentY;
+		double toY = 0;
 		
-		NewickNode parentNode = new InternalNewickNode();
-
-		for(NewickTree child : parent.getChildren()) {
-			NewickNode childNode = getDrawableTree(child);
-//			System.out.println(child.getName() + " " + currentX + "," + child.getDistance());
-			childNode.setTranslateX(child.getDistance()*SCALE);
-			childNode.setTranslateY(currentY);
-
-			parentNode.getChildren().add(childNode);
-			parentNode.getChildren().add(new NewickEdge(parentNode,childNode));
+		for(NewickTree child : tree.getChildren()) {
+			NewickNode childNode = null;
+			if(child.isLeaf()) {
+				childNode = new ExternalNewickNode(child.getName());
+			}
+			else {
+				childNode = getDrawableTree(child);
+			}
+			NewickEdge edge = new NewickEdge(root,childNode);
+			root.getChildren().add(edge);
+			root.getChildren().add(childNode);
 			
-			currentY += SPACING + 2*childNode.getRootNodeOffset().get();
+			childNode.setTranslateX(SCALE*child.getDistance());
+			childNode.setTranslateY(currentY);
+			toY = currentY;
+			
+			System.out.println(childNode.boundsInLocalProperty().get().getHeight());
+			currentY += SPACING + childNode.boundsInLocalProperty().get().getHeight();
 		}
-		
-		double toY = currentY - SPACING;
-		
-		double offset = (fromY+toY)/2;
-		parentNode.shiftRootNode(offset);
-		
-		return parentNode;
+//		root.shiftRootNode((fromY+toY)/2);
+		return root;
 	}
+	
+
+//	public NewickNode getDrawableTree(NewickTree tree) {
+//		if(tree.isLeaf()) {
+//			return new ExternalNewickNode(tree.getName());
+//		}
+//		
+//		NewickTree current = tree;
+//		Stack<NewickTree> stack = new Stack<>();
+//		
+//		int currentX = 0;
+//		int currentY = 0;
+//		
+//		while(!current.isLeaf()) {
+//			stack.push(current);
+//			currentX += current.getDistance();
+//			current = current.getChildren().get(0);
+//		}
+//		
+//		NewickTree parent = stack.pop();
+//		
+//		double fromY = currentY;
+//		
+//		NewickNode parentNode = new InternalNewickNode();
+//
+//		for(NewickTree child : parent.getChildren()) {
+//			NewickNode childNode = getDrawableTree(child);
+////			System.out.println(child.getName() + " " + currentX + "," + child.getDistance());
+//			childNode.setTranslateX(child.getDistance()*SCALE);
+//			childNode.setTranslateY(currentY);
+//
+//			parentNode.getChildren().add(childNode);
+//			parentNode.getChildren().add(new NewickEdge(parentNode,childNode));
+//			
+//			currentY += SPACING + 2*childNode.getRootNodeOffset().get();
+//		}
+//		
+//		double toY = currentY - SPACING;
+//		
+//		double offset = (fromY+toY)/2;
+//		parentNode.shiftRootNode(offset);
+//		
+//		return parentNode;
+//	}
 	
 	@Override
 	public void setScreenDriver(ScreenManager screenPage) {

@@ -1,8 +1,6 @@
 package gui.phylogeny;
 
-import javafx.scene.Group;
 import javafx.scene.shape.HLineTo;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.VLineTo;
@@ -26,8 +24,6 @@ public class NewickEdge extends Path {
 		VLineTo vertical = new VLineTo();
 		this.getElements().add(vertical);
 		
-//		horizontal.xProperty().bindBidirectional(dst.translateXProperty());
-//		vertical.yProperty().bindBidirectional(dst.translateXProperty());
 	}
 	
 }
