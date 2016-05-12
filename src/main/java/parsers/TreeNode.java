@@ -231,8 +231,7 @@ public class TreeNode {
 
 		try {
 			close();
-		} 
-		finally {
+		} finally {
 			super.finalize();
 			// System.out.println("finally clean treeNodes");
 		}

@@ -134,8 +134,7 @@ public class Tree {
 	protected void finalize() throws Throwable {
 		try {
 			close();
-		}
-		finally {
+		} finally {
 			super.finalize();     
 		}
 	}
@@ -460,9 +459,9 @@ public class Tree {
 		LinkedList<TreeNode> leaves = new LinkedList<TreeNode>();
 		TreeNode currNode = node.leftmostLeaf;
 		while (currNode != node.rightmostLeaf) {
-			if (!currNode.isLeaf()) { // internal node?
+			if (!currNode.isLeaf()) {
 				currNode = currNode.leftmostLeaf;
-			} // descend to minimal leaf
+			}
 			leaves.add(currNode);
 			currNode = currNode.preorderNext;
 		}

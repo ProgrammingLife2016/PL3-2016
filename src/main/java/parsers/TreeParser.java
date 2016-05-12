@@ -174,13 +174,13 @@ public class TreeParser {
 	 * @return Tree parsed from the stream.
 	 */
 	public Tree tokenize(long fileLength, String streamName) {
-		final char openBracket = '(', 
-				closeBracket = ')', 
-				childSeparator = ',', 
-				treeTerminator = lineTerminator,
-				quote = '\'', 
-				doubleQuote = '"', 
-				infoSeparator = ':';
+		final char openBracket = '('; 
+		final char closeBracket = ')';
+		final char childSeparator = ','; 
+		final char treeTerminator = lineTerminator;
+		final char quote = '\'';
+		final char doubleQuote = '"'; 
+		final char infoSeparator = ':';
 		int progress = 0;
 		rootNode = new TreeNode();
 		Tree tree = new Tree();
@@ -290,8 +290,7 @@ public class TreeParser {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			TreeParser tp = new TreeParser(reader);
 			Tree tree = tp.tokenize(file.length(), file.getName());
-		} 
-		catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			System.out.println("Couldn't find file: " + fileName);
 		}
 		System.out.println("Parsed in " + ((System.currentTimeMillis() - start) / 1000.0) + " s");
