@@ -110,14 +110,6 @@ public class GraphSegment extends StackPane {
 	public int[] getSegmentChildren() {
 		return this.children;
 	}
-
-	public boolean isDrawn() {
-		return drawn;
-	}
-
-	public void setDrawn(boolean drawn) {
-		this.drawn = drawn;
-	}
 	
 	public double getRadius() {
 		return this.image.getRadius();
