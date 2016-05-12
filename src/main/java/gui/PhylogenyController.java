@@ -1,5 +1,7 @@
 package gui;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Stack;
@@ -17,6 +19,7 @@ import parsers.NewickTreeParser;
 public class PhylogenyController implements Initializable, SetScreen {
 	
 	private static final int SPACING = 20;
+	private static final int SCALE = 1;
 	
 	private ScreenManager screenManager;
 	@FXML AnchorPane pane;
@@ -31,7 +34,7 @@ public class PhylogenyController implements Initializable, SetScreen {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		tree = NewickTreeParser.parse("(A:100,B:75,C:50,D:25);");
+		tree = NewickTreeParser.parse("(A:100,(B:75,(E:75,F:100,G:25):25,C:50):25,(D:25,Z:50,Y:25):25);");
 
 		NewickNode node = getDrawableTree(tree);
 		node.setTranslateX(100);
@@ -79,19 +82,19 @@ public class PhylogenyController implements Initializable, SetScreen {
 		for(NewickTree child : parent.getChildren()) {
 			NewickNode childNode = getDrawableTree(child);
 //			System.out.println(child.getName() + " " + currentX + "," + child.getDistance());
-			childNode.setTranslateX(child.getDistance());
+			childNode.setTranslateX(child.getDistance()*SCALE);
 			childNode.setTranslateY(currentY);
 
 			parentNode.getChildren().add(childNode);
 			parentNode.getChildren().add(new NewickEdge(parentNode,childNode));
 			
-			currentY += SPACING;// + 2*childNode.getRootNodeOffset().get();
+			currentY += SPACING + 2*childNode.getRootNodeOffset().get();
 		}
 		
 		double toY = currentY - SPACING;
 		
 		double offset = (fromY+toY)/2;
-//		parentNode.shiftRootNode(offset);
+		parentNode.shiftRootNode(offset);
 		
 		return parentNode;
 	}

@@ -8,7 +8,6 @@ import javafx.scene.shape.Rectangle;
 public abstract class NewickNode extends Group {
 	
 	private static final int SIZE = 10;
-	private Group outerGroup;
 
 	private Rectangle node = new Rectangle(0 - SIZE / 2, 0 - SIZE / 2, SIZE, SIZE);
 	
@@ -21,7 +20,6 @@ public abstract class NewickNode extends Group {
 	}
 	
 	public NewickNode(int x, int y) {
-		outerGroup = new Group(node);
 		rootNodeOffset.bind(node.translateYProperty());
 		this.translateXProperty().addListener((observable, oldValue, newValue) -> {
 			System.out.println("TranslateXProperty: " + newValue);
@@ -39,9 +37,9 @@ public abstract class NewickNode extends Group {
 			System.out.println("RootNodeOffset: " + newValue);
 		});
 		
-		outerGroup.setTranslateX(x);
-		outerGroup.setTranslateY(y);
-		this.getChildren().add(outerGroup);
+		this.setTranslateX(x);
+		this.setTranslateY(y);
+		this.getChildren().add(node);
 	}
 	
 	/**
