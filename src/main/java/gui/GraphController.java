@@ -107,10 +107,8 @@ public class GraphController implements Initializable {
 				linkpointer++;
 				childindex++;
 			}
-			System.out.println("Putting segment: " + i);
 			segments.put(i, segment);
 		}
-		System.out.println("TOTAL SEGMENTS: " + to.get(to.size()-1));
 	}
 	
 	/**
