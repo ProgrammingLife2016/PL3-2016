@@ -2,6 +2,7 @@ package coordinates;
 
 
 import db.DatabaseReader;
+import gui.SplashController;
 
 import java.util.ArrayList;
 
@@ -77,11 +78,11 @@ public class CoordinateDetermination {
 		coordinates = new Coordinate[noOfSegments];
 		cweights = new int[noOfSegments];
 		calcStartCoords();
-		System.out.println("Calculating segment coordinates");
+		SplashController.progressString.set("Calculating segment coordinates");
 
 		for (int i = 1; i <= noOfSegments; i++) {
 			if (i % (noOfSegments / 10) == 0) {
-				System.out.println((i * 100 / noOfSegments) + 1 + "% Calculated");
+				SplashController.progressString.set((i * 100 / noOfSegments) + 1 + "% Calculated");
 			}
 			int alreadyDrawn = 0;
 			int leftToDraw = countGenomesInSeg(i);
@@ -106,7 +107,7 @@ public class CoordinateDetermination {
 		ArrayList<Integer> segWeights = new ArrayList<Integer>();
 		ArrayList<Integer> firstSegments = dbr.getFirstOfAllGenomes();
 		
-		System.out.println("Calculating start coordinates");
+		SplashController.progressString.set("Calculating start coordinates");
 		for (int i = 1; i <= firstSegments.size(); i++) {
 			int segId = firstSegments.get(i - 1);
 			int index = segIds.indexOf(segId);
@@ -165,8 +166,7 @@ public class CoordinateDetermination {
 		links = dbr.getLinks();
 		counts = dbr.getLinkWeights();
 		segmentWeights = dbr.countAllGenomesInSeg();
-		
-		System.out.println(fromIDs.size());
+		SplashController.progressString.set("From ID's size is: " + fromIDs.size());
 	}
 	
 	public int countGenomesInLink(int from, int to) {
