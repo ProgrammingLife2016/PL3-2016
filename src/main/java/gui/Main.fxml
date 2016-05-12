@@ -16,5 +16,10 @@
         <fx:include fx:id="graphTab" source="GraphLevel.fxml"/>
       </content>
     </Tab>
+    <Tab text="Phylogenetic Tree">
+      <content>
+        <fx:include fx:id="phyloTab" source="PhylogenyView.fxml"/>
+      </content>
+    </Tab>
   </tabs>
 </TabPane>

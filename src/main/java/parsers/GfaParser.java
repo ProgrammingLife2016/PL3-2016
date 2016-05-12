@@ -1,5 +1,6 @@
-package db;
+package parsers;
 
+import db.DatabaseManager;
 import db.tables.GenomeSegmentLinkTable;
 import db.tables.GenomeTable;
 import db.tables.LinkTable;
@@ -17,7 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 
 public class GfaParser {
 	

@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import parsers.GfaException;
+import parsers.GfaParser;
+
 /**
  * @author hugokooijman
  *

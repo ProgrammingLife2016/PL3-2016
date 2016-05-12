@@ -6,6 +6,7 @@ package coordinates;
  * Simple coordinate system for storing a segment's coordinates.
  */
 public class Coordinate {
+
 	private int xc;
 	private int yc;
 	

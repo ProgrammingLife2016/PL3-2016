@@ -1,16 +1,19 @@
 package gui;
 
 import java.io.File;
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import newick.NewickTree;
 import db.DatabaseManager;
-import db.GfaException;
-import db.GfaParser;
+import parsers.GfaException;
+import parsers.GfaParser;
+import parsers.NewickTreeParser;
 
 /**
  * This launcher starts up our program.
@@ -19,15 +22,22 @@ import db.GfaParser;
 public class Launcher extends Application {
 	public static DatabaseManager dbm;
 	public static Stage stage;
+	public static NewickTree nwkTree = null;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
 		Launcher.stage = stage;
 		final String filename = "TB10";
-    	final String gfaPath = System.getProperty("user.dir") + "/Data/" + filename
-    			+ "/" + filename + ".gfa";
+		final String gfaPath = System.getProperty("user.dir") + "/Data/" + filename + "/" + filename + ".gfa";
 		final String dbPath = System.getProperty("user.dir") + "/db/" + filename;
+		final String nwkPath = System.getProperty("user.dir") + "/Data/" + filename + "/" + "340tree.rooted.TKK.nwk";
 		final File database = new File(dbPath + ".mv.db");
+	
+		try {
+			nwkTree = NewickTreeParser.parse(new File(nwkPath));
+		} catch (IOException e) {
+			System.err.println("File: " + nwkPath + " not found");
+		}
 		
 		/**
 		 * Loads up splash screen and display it.

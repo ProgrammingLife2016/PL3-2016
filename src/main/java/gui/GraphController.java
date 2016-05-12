@@ -26,7 +26,6 @@ import java.util.ResourceBundle;
  * which is defined in the GraphLevel.fxml file. This will result in a visual representation
  * of all segments that are loaded into it.
  */
-@SuppressWarnings("restriction")
 public class GraphController implements Initializable {
 	
 	@FXML private GridPane pane;
