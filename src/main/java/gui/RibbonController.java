@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.LineTo;
@@ -39,14 +40,15 @@ public class RibbonController implements Initializable {
 		@Override
 		public void handle(ScrollEvent event) {
 			event.consume();
-			
+
 			// Ctrl down: zoom in/out
-	    	if (event.isControlDown()) {
-	    		double deltaY = event.getDeltaY();
-	    		
-	            double delta = 1.2;
-	            double scale = innerGroup.getScaleY();
-	            
+			if (event.isControlDown()) {
+				
+				double deltaY = event.getDeltaY();
+
+				double delta = 1.2;
+				double scale = innerGroup.getScaleY();
+
 				if (deltaY < 0) {
 					scale /= Math.pow(delta, -event.getDeltaY() / 20);
 					// Cut off the scale if it is bigger than the minimum
@@ -58,17 +60,17 @@ public class RibbonController implements Initializable {
 					// allowed scale
 					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
-				
-				double zoom = scale / MAX_SCALE;
-	            System.out.println("Zoom percentage: " + zoom);
-	            innerGroup.setScaleY( scale);
-	    		return;
-	    	}
-	    	
-	    	// Ctrl not down: scroll left/right (horizontally) or up/down (vertically)
-	    	double deltaY = event.getDeltaY();
-	    	double deltaX = event.getDeltaX();
-	    	
+
+				innerGroup.setScaleY(scale);
+				innerGroup.setScaleX(scale);
+				return;
+			}
+
+			// Ctrl not down: scroll left/right (horizontally) or up/down
+			// (vertically)
+			double deltaY = event.getDeltaY();
+			double deltaX = event.getDeltaX();
+
 			if (deltaY < 0) {
 				scrollPane.setHvalue(Math.min(1, scrollPane.getHvalue() + 0.0007));
 			} else if (deltaY > 0) {
@@ -79,7 +81,42 @@ public class RibbonController implements Initializable {
 			} else if (deltaX > 0) {
 				scrollPane.setVvalue(Math.max(0, scrollPane.getVvalue() - 0.05));
 			}
-	    }
+		}
+	};
+	
+	//Handler for zooming in/out with the keyboard
+	private final EventHandler<KeyEvent> keyEventHandler = new EventHandler<KeyEvent>() {
+		
+		@Override
+		public void handle(KeyEvent event) {
+			String character = event.getCharacter();
+			if (!event.isControlDown()) {
+				return;
+			}
+
+			double delta = 1.2;
+			double scale = innerGroup.getScaleY();
+
+			// Zoom in when ctrl and the "+" or "+/=" key is pressed.
+			if (character.equals("+") || character.equals("=")) {
+				scale *= delta;
+
+				// Cut off the scale if it is bigger than the maximum
+				// allowed scale
+				scale = scale > MAX_SCALE ? MAX_SCALE : scale;
+			} else if (character.equals("-")) {
+				scale /= delta;
+				// Cut off the scale if it is bigger than the minimum
+				// allowed scale
+				scale = scale < MIN_SCALE ? MIN_SCALE : scale;
+			} else {
+				return;
+			}
+
+			innerGroup.setScaleY(scale);
+			innerGroup.setScaleX(scale);
+			return;
+		}
 	};
     
 	
@@ -99,6 +136,7 @@ public class RibbonController implements Initializable {
 		scrollPane.setContent(outerGroup);
 		
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
+		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
 		
 		// Resize the scrollpane along with the window.
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
