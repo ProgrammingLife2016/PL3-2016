@@ -1,9 +1,9 @@
 package coordinates;
 
+import java.util.ArrayList;
+
 import db.DatabaseReader;
 import gui.SplashController;
-
-import java.util.ArrayList;
 
 /**
  * @author Rob Kapel

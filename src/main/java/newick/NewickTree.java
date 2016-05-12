@@ -47,7 +47,7 @@ public class NewickTree {
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("(");
-		for(NewickTree tree : children) {
+		for (NewickTree tree : children) {
 			sb.append(tree.toString() + ",");
 		}
 		sb.setLength(sb.length() - 1);

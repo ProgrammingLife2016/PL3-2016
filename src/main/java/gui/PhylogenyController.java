@@ -72,7 +72,7 @@ public class PhylogenyController implements Initializable {
 			root.getChildren().add(edge);
 			root.getChildren().add(childNode);
 			
-			childNode.setTranslateX(SCALE*child.getDistance());
+			childNode.setTranslateX(SCALE * child.getDistance());
 			childNode.setTranslateY(currentY);
 			
 			currentY += SPACING + childNode.boundsInLocalProperty().get().getHeight();
