@@ -5,7 +5,6 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.Initializable;
 
-// Travis? Hello?
 /**
  * @author Björn Ho
  */
