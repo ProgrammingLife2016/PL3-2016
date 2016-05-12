@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.Initializable;
 
+// Travis? Hello?
 /**
  * @author Björn Ho
  */
@@ -17,13 +18,8 @@ public class MainController implements Initializable {
 	// @FXML private TabPane tabPane;
 
 	/**
-<<<<<<< HEAD
-	 * Right now this MainController is empty but perhaps 
-	 * there will be additions later on. Keeping it for now.
-=======
 	 * Right now this MainController is empty but perhaps there will be 
 	 * additions later on. Keeping it for now.
->>>>>>> refs/remotes/origin/master
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
