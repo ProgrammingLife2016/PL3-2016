@@ -1,9 +1,13 @@
 package gui;
 
 import db.DatabaseManager;
-
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.GridPane;
 import javafx.fxml.Initializable;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -25,14 +29,15 @@ import java.util.ResourceBundle;
 @SuppressWarnings("restriction")
 public class GraphController implements Initializable {
 	
-	/**
-	 * Group in fxml file to which GraphSegments will be added.
-	 */
-	@FXML Group graphpane;
+	@FXML private GridPane pane;
+	@FXML private ScrollPane scrollPane;
 	
-	/**
-	 * DatabaseManager for reading out required data.
-	 */
+	private Group innerGroup;
+	private Group outerGroup;
+	
+    private static final double MAX_SCALE = 100.0d;
+    private static final double MIN_SCALE = .1d;
+    
 	private DatabaseManager dbm;
 	
 	/**
@@ -48,6 +53,90 @@ public class GraphController implements Initializable {
 	private ArrayList<Integer> graphxcoords;
 	private ArrayList<Integer> graphycoords;
 	private ArrayList<String> segmentdna;
+	
+	// Handles the scrollwheel actions
+	private final EventHandler<ScrollEvent> scrollEventHandler = new EventHandler<ScrollEvent>() {
+		@Override
+		public void handle(ScrollEvent event) {
+			event.consume();
+
+			// Ctrl down: zoom in/out
+			if (event.isControlDown()) {
+				
+				double deltaY = event.getDeltaY();
+
+				double delta = 1.2;
+				double scale = innerGroup.getScaleY();
+
+				if (deltaY < 0) {
+					scale /= Math.pow(delta, -event.getDeltaY() / 20);
+					// Cut off the scale if it is bigger than the minimum
+					// allowed scale
+					scale = scale < MIN_SCALE ? MIN_SCALE : scale;
+				} else if (deltaY > 0) {
+					scale *= Math.pow(delta, event.getDeltaY() / 20);
+					// Cut off the scale if it is bigger than the maximum
+					// allowed scale
+					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
+				}
+
+				innerGroup.setScaleY(scale);
+				innerGroup.setScaleX(scale);
+				return;
+			}
+
+			// Ctrl not down: scroll left/right (horizontally) or up/down
+			// (vertically)
+			double deltaY = event.getDeltaY();
+			double deltaX = event.getDeltaX();
+
+			if (deltaY < 0) {
+				scrollPane.setHvalue(Math.min(1, scrollPane.getHvalue() + 0.0007));
+			} else if (deltaY > 0) {
+				scrollPane.setHvalue(Math.max(0, scrollPane.getHvalue() - 0.0007));
+			}
+			if (deltaX < 0) {
+				scrollPane.setVvalue(Math.min(1, scrollPane.getVvalue() + 0.05));
+			} else if (deltaX > 0) {
+				scrollPane.setVvalue(Math.max(0, scrollPane.getVvalue() - 0.05));
+			}
+		}
+	};
+	
+	//Handler for zooming in/out with the keyboard
+	private final EventHandler<KeyEvent> keyEventHandler = new EventHandler<KeyEvent>() {
+		
+		@Override
+		public void handle(KeyEvent event) {
+			String character = event.getCharacter();
+			if (!event.isControlDown()) {
+				return;
+			}
+
+			double delta = 1.2;
+			double scale = innerGroup.getScaleY();
+
+			// Zoom in when ctrl and the "+" or "+/=" key is pressed.
+			if (character.equals("+") || character.equals("=")) {
+				scale *= delta;
+
+				// Cut off the scale if it is bigger than the maximum
+				// allowed scale
+				scale = scale > MAX_SCALE ? MAX_SCALE : scale;
+			} else if (character.equals("-")) {
+				scale /= delta;
+				// Cut off the scale if it is bigger than the minimum
+				// allowed scale
+				scale = scale < MIN_SCALE ? MIN_SCALE : scale;
+			} else {
+				return;
+			}
+
+			innerGroup.setScaleY(scale);
+			innerGroup.setScaleX(scale);
+			return;
+		}
+	};
 
 	/**
 	 * Initialize fxml file.
@@ -57,11 +146,24 @@ public class GraphController implements Initializable {
 		this.dbm = Launcher.dbm;
 		loadSegmentData();
 		constructSegmentMap();
-		drawGraph();
+		
+		// Inner group and outer group according to the ScrollPane JavaDoc.
+		innerGroup = getGraph();
+		outerGroup = new Group(innerGroup);
+		scrollPane.setContent(outerGroup);
+		
+		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
+		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
+		
+		// Resize the scrollpane along with the window.
+		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
+		    scrollPane.setPrefWidth(newValue.getWidth());
+		    scrollPane.setPrefHeight(newValue.getHeight());
+		});
 	}
 	
 	/**
-	 * Load in all necessary information from the datbase.
+	 * Load in all necessary information from the database.
 	 */
 	private void loadSegmentData() {
 		from = dbm.getDbReader().getAllFromId();
@@ -112,12 +214,15 @@ public class GraphController implements Initializable {
 	}
 	
 	/**
-	 * Uses the created hash map of segments to draw a visual representation of the segments,
-	 * such as where they are located, how they are related and what their DNA strand is.
+	 * Uses the created hash map of segments to create a drawable Group
+	 * containing a visual representation of the segments, such as where they
+	 * are located, how they are related and what their DNA strand is.
 	 */
-	public void drawGraph() {
-		drawGraphEdges();
-		drawGraphSegments();
+	public Group getGraph() {
+		Group res = new Group();
+		res.getChildren().add(getGraphEdges());
+		res.getChildren().add(getGraphSegments());
+		return res;
 	}
 	
 	/**
@@ -138,9 +243,10 @@ public class GraphController implements Initializable {
 	}
 	
 	/**
-	 * Draws edges between all the segment coordinates.
+	 * Returns a group containing the edges between all the segment coordinates.
 	 */
-	private void drawGraphEdges() {
+	private Group getGraphEdges() {
+		Group res = new Group();
 		for (int i = 0; i < from.size(); i++) {
 			int fromId = from.get(i);
 			int toId = to.get(i);
@@ -151,17 +257,20 @@ public class GraphController implements Initializable {
 					tosegment.getLayoutX() + tosegment.getRadius(),
 					tosegment.getLayoutY() + tosegment.getRadius());
 	        path.setStrokeWidth(1);
-	        graphpane.getChildren().add(path);
+	        res.getChildren().add(path);
 		}
+		return res;
 	}
 	
 	/**
-	 * Draws all GraphSegments on the segment coordinates.
+	 * Returns a group containing all GraphSegments on the segment coordinates.
 	 */
-	private void drawGraphSegments() {
+	private Group getGraphSegments() {
+		Group res = new Group();
 		for (int i = 1; i <= segments.size(); i++) {
-			graphpane.getChildren().add(segments.get(i));
+			res.getChildren().add(segments.get(i));
 		}
+		return res;
 	}
 	
 	/**
