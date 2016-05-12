@@ -58,9 +58,8 @@ public class DatabaseProcessor {
 	 */
 	public void updateDblinkcount(int fromId, int toId, int count ) {
 		try {
-			int currentCount = dbr.getLinkcount(fromId, toId);
-			this.db.executeUpdate("UPDATE LINKS SET COUNT = " + (currentCount + count) 
-					+ " WHERE FROMID = " + fromId + " AND TOID = " + toId);
+			//int currentCount = dbr.getLinkcount(fromId, toId);
+			this.db.executeUpdate("INSERT INTO LINKS VALUES (" + fromId + " , " + toId + " , " + count + ")");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -89,6 +88,11 @@ public class DatabaseProcessor {
 			System.out.println(i + "genome(s) analyzed");
 		}
 		System.out.println("Storing link data");
+		try {
+			this.db.executeUpdate("DELETE FROM LINKS");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		for (int i = 0; i < from.size(); i++) {
 			if ( (i + 1) % (from.size() / 10) == 0) {
 				System.out.println((i * 100 / from.size() + 1) + "% Stored");

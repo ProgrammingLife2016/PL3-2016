@@ -38,6 +38,23 @@ public class DatabaseReader {
 		}
 	}
 	
+	public ArrayList<Integer> countAllGenomesInSeg() {
+		try {
+			ArrayList<Integer> segments = new ArrayList<Integer>();
+			ResultSet rs = this.db.executeQuery("SELECT SEGMENTID, COUNT(GENOMEID)"
+					+ "FROM GENOMESEGMENTLINK GROUP BY SEGMENTID");
+			while(rs.next()) {
+				segments.add(rs.getInt(2));
+			}
+			return segments;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
+	
 	/**
 	 * Returns the number of genomes in the database, or -1 if an error occurs
 	 * 
@@ -46,6 +63,17 @@ public class DatabaseReader {
 	public int countGenomes() {
 		try {
 			ResultSet rs = this.db.executeQuery("SELECT COUNT(ID) FROM GENOMES");
+			rs.next();
+			return rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	public int countSegments() {
+		try {
+			ResultSet rs = this.db.executeQuery("SELECT COUNT(ID) FROM SEGMENTS");
 			rs.next();
 			return rs.getInt(1);
 		} catch (SQLException e) {
@@ -115,6 +143,21 @@ public class DatabaseReader {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public ArrayList<Integer> getFirstOfAllGenomes() {
+		ArrayList<Integer> segmentList = new ArrayList<Integer>();
+		try {
+			for (int i = 1; i <= this.countGenomes(); i++) {
+				ResultSet rs = db.executeQuery("SELECT SEGMENTID FROM GENOMESEGMENTLINK WHERE GENOMEID = " + i + " LIMIT 1");
+				rs.next();
+				segmentList.add(rs.getInt(1));
+			}
+			return segmentList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
@@ -216,6 +259,43 @@ public class DatabaseReader {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public ArrayList<ArrayList<Integer>> getLinks() {
+
+		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
+		for (int i = 0; i <= this.countSegments(); i++) {
+			linkList.add(new ArrayList<Integer>());
+		}
+		
+		ArrayList<Integer> fromIDs = this.getAllFromId();
+		ArrayList<Integer> toIDs = this.getAllToId();
+		
+		for (int i = 1; i <= fromIDs.size(); i++) {
+			int fromId = fromIDs.get(i - 1);
+			int toId = toIDs.get(i - 1);
+			linkList.get(fromId - 1).add(toId);
+		}
+		return linkList;
+	}
+	
+	public ArrayList<ArrayList<Integer>> getLinkWeights() {
+
+		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
+		for (int i = 0; i <= this.countSegments(); i++) {
+			linkList.add(new ArrayList<Integer>());
+		}
+		
+		ArrayList<Integer> fromIDs = this.getAllFromId();
+		ArrayList<Integer> weights = this.getAllCounts();
+		
+		
+		for (int i = 1; i <= fromIDs.size(); i++) {
+			int fromId = fromIDs.get(i - 1);
+			int toId = weights.get(i - 1);
+			linkList.get(fromId - 1).add(toId);
+		}
+		return linkList;
 	}
 	
 	/**
