@@ -5,13 +5,23 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.VLineTo;
 
+/**
+ * Class to represent a Path between two NewickNodes.
+ */
 public class NewickEdge extends Path {
-
-	public NewickEdge(NewickNode src, NewickNode dst) {
+	
+	/**
+	 * Create a Path from the current position to the position of the
+	 * destination node. A vertical and horizontal segment are used to create a
+	 * Line containing a 90 degree angle.
+	 * 
+	 * @param dst Destination node.
+	 */
+	public NewickEdge(NewickNode dst) {
 		MoveTo moveTo = new MoveTo();
 		
 		moveTo.xProperty().bind(dst.translateXProperty());
-		moveTo.yProperty().bind(dst.translateYProperty().add(dst.getRootNodeOffset()));
+		moveTo.yProperty().bind(dst.translateYProperty());
 		this.getElements().add(moveTo);
 
 		// Add a horizontal line from the current position to the x-coordinate
@@ -23,7 +33,5 @@ public class NewickEdge extends Path {
 		// the destination.
 		VLineTo vertical = new VLineTo();
 		this.getElements().add(vertical);
-		
 	}
-	
 }
