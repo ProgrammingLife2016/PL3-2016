@@ -118,14 +118,6 @@ public class GraphSegment extends StackPane {
 	public void setDrawn(boolean drawn) {
 		this.drawn = drawn;
 	}
-
-	public char[] getDnacontent() {
-		return dnacontent;
-	}
-
-	public void setDnacontent(char[] dnacontent) {
-		this.dnacontent = dnacontent;
-	}
 	
 	public double getRadius() {
 		return this.image.getRadius();
