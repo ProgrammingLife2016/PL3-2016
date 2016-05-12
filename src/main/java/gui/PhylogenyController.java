@@ -2,13 +2,14 @@ package gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import gui.phylogeny.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
+
+import gui.phylogeny.NewickEdge;
+import gui.phylogeny.NewickNode;
 import newick.NewickTree;
 
 /**
@@ -60,12 +61,11 @@ public class PhylogenyController implements Initializable {
 		
 		NewickNode root = new NewickNode();
 		
-		for(NewickTree child : tree.getChildren()) {
+		for (NewickTree child : tree.getChildren()) {
 			NewickNode childNode = null;
-			if(child.isLeaf()) {
+			if (child.isLeaf()) {
 				childNode = new NewickNode(child.getName());
-			}
-			else {
+			} else {
 				childNode = getDrawableTree(child);
 			}
 			NewickEdge edge = new NewickEdge(childNode);

@@ -101,7 +101,8 @@ public class NewickTreeParser {
 		System.out.println(parse("(A:10,(B:3,C:9):12)").toString());
 		try {
 			String res = parse(
-					new File("/home/daniel/Projects/TU/Y2/TI2806_Context_PL/PL3-2016/Data/TB10/340tree.rooted.TKK.nwk"))
+					new File("/home/daniel/Projects/TU/Y2/TI2806_Context_PL/"
+			+ "PL3-2016/Data/TB10/340tree.rooted.TKK.nwk"))
 							.toString();
 			System.out.println(res);
 		} catch (IOException e) {

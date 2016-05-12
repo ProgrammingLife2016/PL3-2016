@@ -81,7 +81,8 @@ public class CoordinateDetermination {
 
 		for (int i = 1; i <= noOfSegments; i++) {
 			if (i % (noOfSegments / 10) == 0) {
-				SplashController.progressString.set((i * 100 / noOfSegments) + 1 + "% Calculated");
+				SplashController.progressString.set((i * 100 / noOfSegments) 
+						+ 1 + "% Calculated");
 			}
 			int alreadyDrawn = 0;
 			int leftToDraw = countGenomesInSeg(i);
@@ -176,5 +177,5 @@ public class CoordinateDetermination {
 	public int countGenomesInSeg(int segmentId) {
 		return segmentWeights.get(segmentId - 1);
 	}
-	
+
 }

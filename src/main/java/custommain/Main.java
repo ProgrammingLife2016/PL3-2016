@@ -1,9 +1,8 @@
 package custommain;
 
+import db.DatabaseManager;
 import parsers.GfaException;
 import parsers.GfaParser;
-
-import db.*;
 
 public abstract class Main {
 	

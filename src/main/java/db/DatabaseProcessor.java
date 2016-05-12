@@ -36,7 +36,8 @@ public class DatabaseProcessor {
 		SplashController.progressString.set("Saving segment coordinates");
 		for (int i = 1; i <= coordinates.length; i++) {
 			if (i % (coordinates.length / 10) == 0) {
-				SplashController.progressString.set((i * 100 / coordinates.length + 1) + "% Stored");
+				SplashController.progressString.
+					set((i * 100 / coordinates.length + 1) + "% Stored");
 			}
 			try {
 				this.db.executeUpdate("UPDATE SEGMENTS SET "
@@ -80,7 +81,8 @@ public class DatabaseProcessor {
 		SplashController.progressString.set("Retrieving link data");
 		for (int i = 0; i < from.size(); i++) {
 			if ( (i + 1) % (from.size() / 10) == 0) {
-				SplashController.progressString.set((i * 100 / from.size() + 1) + "% Retrieved");
+				SplashController.progressString.
+				set((i * 100 / from.size() + 1) + "% Retrieved");
 			}
 			hashmap.put(noOfSegments * (from.get(i) - 1) + to.get(i) - 1, 0);
 		}
