@@ -122,15 +122,4 @@ public class GraphSegment extends StackPane {
 	public double getRadius() {
 		return this.image.getRadius();
 	}
-	
-//	
-//	public GraphSeg() {
-//		// TODO Auto-generated constructor stub
-//	}
-//
-//	public GraphSeg(Node... arg0) {
-//		super(arg0);
-//		// TODO Auto-generated constructor stub
-//	}
-
 }
