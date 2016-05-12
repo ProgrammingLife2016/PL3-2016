@@ -23,7 +23,7 @@ public class Launcher extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 
-		String filename = "TB10";
+		String filename = "TB328";
     	String gfaPath = System.getProperty("user.dir") + "/Data/" + filename
     			+ "/" + filename + ".gfa";
 		String dbPath = System.getProperty("user.dir") + "/db/" + filename;
