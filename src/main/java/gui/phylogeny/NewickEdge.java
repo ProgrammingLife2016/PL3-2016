@@ -17,14 +17,27 @@ public class NewickEdge extends Group {
 	public NewickEdge(NewickNode src, NewickNode dst) {
 		
 		vertical.startXProperty().bind(src.translateXProperty());
-		vertical.startYProperty().bind( src.translateYProperty().add(src.getRootNodeOffset()) );
+		vertical.startYProperty().bind( src.translateYProperty() );
 		vertical.endXProperty().bind(src.translateXProperty());
-		vertical.endYProperty().bind(dst.translateYProperty().add(dst.getRootNodeOffset()) );
+		vertical.endYProperty().bind(dst.translateYProperty() );
 		
 		horizontal.startXProperty().bind(src.translateXProperty());
-		horizontal.startYProperty().bind(dst.translateYProperty().add(dst.getRootNodeOffset()));
+		horizontal.startYProperty().bind(dst.translateYProperty());
 		horizontal.endXProperty().bind(dst.translateXProperty());
-		horizontal.endYProperty().bind(dst.translateYProperty().add(dst.getRootNodeOffset()));
+		horizontal.endYProperty().bind(dst.translateYProperty());
+		
+		src.translateXProperty().addListener((observable,oldValue,newValue) -> {
+			System.out.println("src TranslateXProperty: " + newValue);
+		});
+		src.translateYProperty().addListener((observable,oldValue,newValue) -> {
+			System.out.println("src TranslateYProperty: " + newValue);
+		});
+		dst.translateXProperty().addListener((observable,oldValue,newValue) -> {
+			System.out.println("dst TranslateXProperty: " + newValue);
+		});
+		dst.translateYProperty().addListener((observable,oldValue,newValue) -> {
+			System.out.println("dst TranslateYProperty: " + newValue);
+		});
 		
 //		vertical.startXProperty().bindBidirectional(src.translateXProperty());
 //		vertical.startYProperty().bindBidirectional(src.translateYProperty());

@@ -1,8 +1,6 @@
 package gui;
 
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
@@ -13,7 +11,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Path;
 import newick.NewickTree;
 import parsers.NewickTreeParser;
 
@@ -34,11 +31,13 @@ public class PhylogenyController implements Initializable, SetScreen {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		tree = NewickTreeParser.parse("(A:100,(B:100,C:50):100);");
+		tree = NewickTreeParser.parse("(A:100,B:75,C:50,D:25);");
 
 		NewickNode node = getDrawableTree(tree);
-		node.setLayoutX(100);
-		node.setLayoutY(100);	
+		node.setTranslateX(100);
+		node.setTranslateY(100);
+//		node.setLayoutX(100);
+//		node.setLayoutY(100);
 		
 		Group root = new Group();
         Scene scene = new Scene(root, 800, 600);
@@ -79,7 +78,7 @@ public class PhylogenyController implements Initializable, SetScreen {
 
 		for(NewickTree child : parent.getChildren()) {
 			NewickNode childNode = getDrawableTree(child);
-			System.out.println(child.getName() + " " + currentX + "," + child.getDistance());
+//			System.out.println(child.getName() + " " + currentX + "," + child.getDistance());
 			childNode.setTranslateX(child.getDistance());
 			childNode.setTranslateY(currentY);
 
@@ -92,8 +91,7 @@ public class PhylogenyController implements Initializable, SetScreen {
 		double toY = currentY - SPACING;
 		
 		double offset = (fromY+toY)/2;
-		parentNode.shiftRootNode(offset);
-		parentNode.setTranslateY(-offset);
+//		parentNode.shiftRootNode(offset);
 		
 		return parentNode;
 	}
