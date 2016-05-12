@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.ScrollPane?>
+
+<ScrollPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="367.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.GraphController">
+  <content>
+  	<Group fx:id="graphpane" />
+  </content>
+</ScrollPane>
