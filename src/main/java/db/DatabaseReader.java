@@ -38,12 +38,17 @@ public class DatabaseReader {
 		}
 	}
 	
+	/**
+	 * Returns the number of genomes for each segment of the database
+	 * @return an ArrayList of the number of genomes for each segment of the database
+	 */
+	
 	public ArrayList<Integer> countAllGenomesInSeg() {
 		try {
 			ArrayList<Integer> segments = new ArrayList<Integer>();
 			ResultSet rs = this.db.executeQuery("SELECT SEGMENTID, COUNT(GENOMEID)"
 					+ "FROM GENOMESEGMENTLINK GROUP BY SEGMENTID");
-			while(rs.next()) {
+			while (rs.next()) {
 				segments.add(rs.getInt(2));
 			}
 			return segments;
@@ -70,6 +75,11 @@ public class DatabaseReader {
 			return -1;
 		}
 	}
+	
+	/**
+	 * Returns the amount of segments in the database
+	 * @return the amount of segments in the database
+	 */
 	
 	public int countSegments() {
 		try {
@@ -145,11 +155,17 @@ public class DatabaseReader {
 		return null;
 	}
 	
+	/**
+	 * Returns the first segment id of each genome in the database
+	 * @return the first segment id of each genome in the database
+	 */
+	
 	public ArrayList<Integer> getFirstOfAllGenomes() {
 		ArrayList<Integer> segmentList = new ArrayList<Integer>();
 		try {
 			for (int i = 1; i <= this.countGenomes(); i++) {
-				ResultSet rs = db.executeQuery("SELECT SEGMENTID FROM GENOMESEGMENTLINK WHERE GENOMEID = " + i + " LIMIT 1");
+				ResultSet rs = db.executeQuery("SELECT SEGMENTID FROM GENOMESEGMENTLINK "
+						+ "WHERE GENOMEID = " + i + " LIMIT 1");
 				rs.next();
 				segmentList.add(rs.getInt(1));
 			}
@@ -261,6 +277,13 @@ public class DatabaseReader {
 		return null;
 	}
 	
+	/**
+	 * Returns all links in the dataset. For each segment, an arraylist is created in which
+	 * they can store the segments they link to. All these arraylists are then put into
+	 * an arraylist of arraylists.
+	 * @return Per segment an arraylist of where the respective segments links to.
+	 */
+	
 	public ArrayList<ArrayList<Integer>> getLinks() {
 
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
@@ -278,6 +301,13 @@ public class DatabaseReader {
 		}
 		return linkList;
 	}
+	
+	/**
+	 * Returns the number of genomes through a link for each link. For each segment, an arraylist 
+	 * is created in which they can store per segment how many genomes use that link. All these 
+	 * arraylists are then put into an arraylist of arraylists.
+	 * @return for each link how many genomes pass through.
+	 */
 	
 	public ArrayList<ArrayList<Integer>> getLinkWeights() {
 

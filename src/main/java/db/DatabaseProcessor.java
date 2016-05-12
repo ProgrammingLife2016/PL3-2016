@@ -59,7 +59,8 @@ public class DatabaseProcessor {
 	public void updateDblinkcount(int fromId, int toId, int count ) {
 		try {
 			//int currentCount = dbr.getLinkcount(fromId, toId);
-			this.db.executeUpdate("INSERT INTO LINKS VALUES (" + fromId + " , " + toId + " , " + count + ")");
+			this.db.executeUpdate("INSERT INTO LINKS VALUES "
+					+ "(" + fromId + " , " + toId + " , " + count + ")");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
