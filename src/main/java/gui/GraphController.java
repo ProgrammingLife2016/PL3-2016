@@ -1,22 +1,22 @@
 package gui;
 
-import db.DatabaseManager;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.ResourceBundle;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
-import javafx.fxml.Initializable;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import db.DatabaseManager;
 
 /**
  * @author hugokooijman
@@ -53,29 +53,25 @@ public class GraphController implements Initializable {
 	private ArrayList<Integer> graphycoords;
 	private ArrayList<String> segmentdna;
 	
-	// Handles the scrollwheel actions
+	/**
+	 * Handles the scroll wheel event handler for zooming in and zooming out.
+	 */
 	private final EventHandler<ScrollEvent> scrollEventHandler = new EventHandler<ScrollEvent>() {
 		@Override
 		public void handle(ScrollEvent event) {
 			event.consume();
 
-			// Ctrl down: zoom in/out
 			if (event.isControlDown()) {
-				
+	
 				double deltaY = event.getDeltaY();
-
 				double delta = 1.2;
 				double scale = innerGroup.getScaleY();
 
 				if (deltaY < 0) {
 					scale /= Math.pow(delta, -event.getDeltaY() / 20);
-					// Cut off the scale if it is bigger than the minimum
-					// allowed scale
 					scale = scale < MIN_SCALE ? MIN_SCALE : scale;
 				} else if (deltaY > 0) {
 					scale *= Math.pow(delta, event.getDeltaY() / 20);
-					// Cut off the scale if it is bigger than the maximum
-					// allowed scale
 					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
 
@@ -84,8 +80,6 @@ public class GraphController implements Initializable {
 				return;
 			}
 
-			// Ctrl not down: scroll left/right (horizontally) or up/down
-			// (vertically)
 			double deltaY = event.getDeltaY();
 			double deltaX = event.getDeltaX();
 
@@ -102,7 +96,9 @@ public class GraphController implements Initializable {
 		}
 	};
 	
-	//Handler for zooming in/out with the keyboard
+	/**
+	 * Event handler for zooming in and out using the keyboard instead of the scroll wheel.
+	 */
 	private final EventHandler<KeyEvent> keyEventHandler = new EventHandler<KeyEvent>() {
 		
 		@Override
@@ -146,7 +142,6 @@ public class GraphController implements Initializable {
 		loadSegmentData();
 		constructSegmentMap();
 		
-		// Inner group and outer group according to the ScrollPane JavaDoc.
 		innerGroup = getGraph();
 		outerGroup = new Group(innerGroup);
 		scrollPane.setContent(outerGroup);
@@ -154,7 +149,6 @@ public class GraphController implements Initializable {
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
 		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
 		
-		// Resize the scrollpane along with the window.
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
 		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
@@ -165,16 +159,14 @@ public class GraphController implements Initializable {
 	 * Load in all necessary information from the database.
 	 */
 	private void loadSegmentData() {
+		
 		from = dbm.getDbReader().getAllFromId();
 		to = dbm.getDbReader().getAllToId();
 		graphxcoords = scaleRibbonToGraphCoordsX(dbm.getDbReader().getAllXCoord());
 		graphycoords = scaleRibbonToGraphCoordsY(dbm.getDbReader().getAllYCoord());
-		
-		//The loadfactor of a standard java hash map is 0.75. By setting the hash map size
-		//this way, less memory is wasted by the hashmap, for not doubling storage capacity.
 		segments = new HashMap<Integer, GraphSegment>((int) Math.ceil(to.size() / 0.75));
-		
 		segmentdna = new ArrayList<String>();
+		
 		for (int i = 1; i <= to.get(to.size() - 1); i++) {
 			segmentdna.add(dbm.getDbReader().getContent(i));
 		}
@@ -187,11 +179,9 @@ public class GraphController implements Initializable {
 	public void constructSegmentMap() {
 		int linkpointer = 1;
 		
-		//Loop over all segment id's.
 		for (int i = 1; i <= to.get(to.size() - 1); i++) {
 			int childcount = 0;
 			
-			//Figure out amount of childs of segment.
 			while (linkpointer <= from.size() && i == from.get(linkpointer - 1)) {
 				childcount++;
 				linkpointer++;

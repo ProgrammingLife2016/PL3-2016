@@ -42,15 +42,15 @@ public class NewickTree {
 	}
 	
 	public String toString() {
-		if(isLeaf()) {
+		if (isLeaf()) {
 			return name + ":" + distance;
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("(");
-		for(NewickTree tree : children) {
+		for (NewickTree tree : children) {
 			sb.append(tree.toString() + ",");
 		}
-		sb.setLength(sb.length()-1);
+		sb.setLength(sb.length() - 1);
 		sb.append(")");
 		return sb.toString();
 	}

@@ -49,6 +49,7 @@ public class SplashController implements Initializable{
 	 * to the task so the task can update it later on.
 	 * Note that this task runs on a new thread and NOT the JavaFX application thread.
 	 */
+	@SuppressWarnings("restriction")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
@@ -68,9 +69,10 @@ public class SplashController implements Initializable{
 	 * updateMessage and updateProgress perform the updates on the FX application thread.
 	 * @return Task		a Task to start.
 	 */
-    public Task<Void> listenerTask() {
+    @SuppressWarnings("restriction")
+	public Task<Void> listenerTask() {
         final Task<Void> listenerTask = new Task<Void>() {
-        	@Override
+			@Override
             public Void call() throws InterruptedException {
         		progressString.addListener(new ChangeListener<String>() {
   			    @Override
@@ -98,6 +100,7 @@ public class SplashController implements Initializable{
     /**
      * Performs the animation of fading out and when finished it calls launchMain.
      */
+	@SuppressWarnings("restriction")
 	private void fadeOutSplash() {
 		Platform.runLater(new Runnable(){
 			@Override
@@ -120,6 +123,7 @@ public class SplashController implements Initializable{
 	 * Loads up Main.fxml on the Java FX Application thread.
 	 * This shows up our main scene of our program.
 	 */
+	@SuppressWarnings("restriction")
 	private void launchMain() {
 		Platform.runLater(new Runnable(){
 			@Override

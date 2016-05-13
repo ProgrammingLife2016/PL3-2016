@@ -1,9 +1,9 @@
 package parsers;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.BufferedReader;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -50,42 +50,26 @@ public class NewickTreeParser {
 		while (tokenizer.hasMoreTokens()) {
 			String currentToken = tokenizer.nextToken();
 
-			// Enter a new Tree
 			if ("(".equals(currentToken)) {
 				NewickTree newChild = new NewickTree();
 				current.addChild(newChild);
 				stack.push(current);
 				current = newChild;
-			}
-
-			// Add the distance
-			else if (":".equals(currentToken)) {
+			} else if (":".equals(currentToken)) {
 				String distanceToken = tokenizer.nextToken();
 				double distance = Double.parseDouble(distanceToken);
 				current.setDistance(distance);
-			}
-
-			// Add the next child to the current parent node
-			else if (",".equals(currentToken)) {
+			} else if (",".equals(currentToken)) {
 				current = stack.peek();
 				NewickTree newChild = new NewickTree();
 				current.addChild(newChild);
 				current = newChild;
 
-			}
-
-			// Retreive the finished parent node
-			else if (")".equals(currentToken)) {
+			} else if (")".equals(currentToken)) {
 				current = stack.pop();
-			}
-
-			// Stop parsing
-			else if (";".equals(currentToken)) {
+			} else if (";".equals(currentToken)) {
 				break;
-			}
-
-			// Add the name to the current node.
-			else {
+			} else {
 				current.setName(currentToken);
 			}
 		}
@@ -101,7 +85,8 @@ public class NewickTreeParser {
 		System.out.println(parse("(A:10,(B:3,C:9):12)").toString());
 		try {
 			String res = parse(
-					new File("/home/daniel/Projects/TU/Y2/TI2806_Context_PL/PL3-2016/Data/TB10/340tree.rooted.TKK.nwk"))
+					new File("/home/daniel/Projects/TU/Y2/TI2806_Context_PL/"
+			+ "PL3-2016/Data/TB10/340tree.rooted.TKK.nwk"))
 							.toString();
 			System.out.println(res);
 		} catch (IOException e) {

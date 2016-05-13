@@ -2,13 +2,14 @@ package gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import gui.phylogeny.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
+
+import gui.phylogeny.NewickEdge;
+import gui.phylogeny.NewickNode;
 import newick.NewickTree;
 
 /**
@@ -23,6 +24,10 @@ public class PhylogenyController implements Initializable {
 	@FXML ScrollPane scrollPane;
 	private Group root;
 
+	/**
+	 * Initializes the phylogeny tree. Creating the basis for the
+	 * phylogenetic tree to be created.
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -60,19 +65,18 @@ public class PhylogenyController implements Initializable {
 		
 		NewickNode root = new NewickNode();
 		
-		for(NewickTree child : tree.getChildren()) {
+		for (NewickTree child : tree.getChildren()) {
 			NewickNode childNode = null;
-			if(child.isLeaf()) {
+			if (child.isLeaf()) {
 				childNode = new NewickNode(child.getName());
-			}
-			else {
+			} else {
 				childNode = getDrawableTree(child);
 			}
 			NewickEdge edge = new NewickEdge(childNode);
 			root.getChildren().add(edge);
 			root.getChildren().add(childNode);
 			
-			childNode.setTranslateX(SCALE*child.getDistance());
+			childNode.setTranslateX(SCALE * child.getDistance());
 			childNode.setTranslateY(currentY);
 			
 			currentY += SPACING + childNode.boundsInLocalProperty().get().getHeight();

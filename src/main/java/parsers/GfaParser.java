@@ -1,5 +1,13 @@
 package parsers;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import db.DatabaseManager;
 import db.tables.GenomeSegmentLinkTable;
 import db.tables.GenomeTable;
@@ -10,14 +18,6 @@ import db.tuples.GenomeSegmentLinkTuple;
 import db.tuples.GenomeTuple;
 import db.tuples.LinkTuple;
 import db.tuples.SegmentTuple;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class GfaParser {
 	

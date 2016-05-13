@@ -1,10 +1,9 @@
 package coordinates;
 
+import java.util.ArrayList;
 
 import db.DatabaseReader;
 import gui.SplashController;
-
-import java.util.ArrayList;
 
 /**
  * @author Rob Kapel
@@ -63,6 +62,10 @@ public class CoordinateDetermination {
 	 */
 	protected DatabaseReader dbr;
 	
+	/**
+	 * Takes in a DatabaseReader and determines the coordinates.
+	 * @param dbr - the DatabaseReader
+	 */
 	public CoordinateDetermination(DatabaseReader dbr) {
 		this.dbr = dbr;
 		getData();
@@ -82,7 +85,8 @@ public class CoordinateDetermination {
 
 		for (int i = 1; i <= noOfSegments; i++) {
 			if (i % (noOfSegments / 10) == 0) {
-				SplashController.progressString.set((i * 100 / noOfSegments) + 1 + "% Calculated");
+				SplashController.progressString.set((i * 100 / noOfSegments) 
+						+ 1 + "% Calculated");
 			}
 			int alreadyDrawn = 0;
 			int leftToDraw = countGenomesInSeg(i);
@@ -102,6 +106,10 @@ public class CoordinateDetermination {
 		return coordinates;
 	}
 	
+	/**
+	 * Calculates the beginning coordinates of the segments. This method
+	 * gets the data from the database.
+	 */
 	private void calcStartCoords() {
 		ArrayList<Integer> segIds = new ArrayList<Integer>();
 		ArrayList<Integer> segWeights = new ArrayList<Integer>();
@@ -155,11 +163,18 @@ public class CoordinateDetermination {
 	}
 	
 	
-	@SuppressWarnings("unused")
+	/**
+	 * Gets the id of all nodes that are going to the given node.
+	 * @param fromId - the given node.
+	 * @return
+	 */
 	private ArrayList<Integer> getTo(int fromId) {
 		return dbr.getToIDs(fromId);
 	}
-
+	
+	/**
+	 * Runs the queries on the database to get the required data.
+	 */
 	private void getData() {
 		fromIDs = dbr.getAllFromId();
 		toIDs = dbr.getAllToId();
@@ -169,13 +184,24 @@ public class CoordinateDetermination {
 		SplashController.progressString.set("From ID's size is: " + fromIDs.size());
 	}
 	
+	/**
+	 * Counts the number of genomes in the link between the two given nodes.
+	 * @param from
+	 * @param to
+	 * @return
+	 */
 	public int countGenomesInLink(int from, int to) {
 		int linkTo = links.get(from - 1).indexOf(to);
 		return counts.get(from - 1).get(linkTo);
 	}
 	
+	/**
+	 * Counts the number of genomes that run through a given segment.
+	 * @param segmentId
+	 * @return
+	 */
 	public int countGenomesInSeg(int segmentId) {
 		return segmentWeights.get(segmentId - 1);
 	}
-	
+
 }
