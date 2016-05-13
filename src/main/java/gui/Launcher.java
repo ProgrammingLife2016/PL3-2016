@@ -27,6 +27,7 @@ public class Launcher extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		Launcher.stage = stage;
+		stage.setTitle("DNA Lab");
 		final String filename = "TB10";
 		final String gfaPath = System.getProperty("user.dir") 
 				+ "/Data/" + filename + "/" + filename + ".gfa";
