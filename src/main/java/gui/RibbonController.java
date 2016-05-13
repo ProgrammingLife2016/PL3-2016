@@ -35,29 +35,25 @@ public class RibbonController implements Initializable {
     
 	private DatabaseManager dbm;
     
-	// Handles the scrollwheel actions
+	/**
+	 * Handles the scroll wheel event for the ribbon view.
+	 */
 	private final EventHandler<ScrollEvent> scrollEventHandler = new EventHandler<ScrollEvent>() {
 		@Override
 		public void handle(ScrollEvent event) {
 			event.consume();
 
-			// Ctrl down: zoom in/out
 			if (event.isControlDown()) {
 				
 				double deltaY = event.getDeltaY();
-
 				double delta = 1.2;
 				double scale = innerGroup.getScaleY();
 
 				if (deltaY < 0) {
 					scale /= Math.pow(delta, -event.getDeltaY() / 20);
-					// Cut off the scale if it is bigger than the minimum
-					// allowed scale
 					scale = scale < MIN_SCALE ? MIN_SCALE : scale;
 				} else if (deltaY > 0) {
 					scale *= Math.pow(delta, event.getDeltaY() / 20);
-					// Cut off the scale if it is bigger than the maximum
-					// allowed scale
 					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
 
@@ -66,8 +62,6 @@ public class RibbonController implements Initializable {
 				return;
 			}
 
-			// Ctrl not down: scroll left/right (horizontally) or up/down
-			// (vertically)
 			double deltaY = event.getDeltaY();
 			double deltaX = event.getDeltaX();
 
@@ -84,7 +78,9 @@ public class RibbonController implements Initializable {
 		}
 	};
 	
-	//Handler for zooming in/out with the keyboard
+	/**
+	 * Event handler for keyboard events with the ribbon view.
+	 */
 	private final EventHandler<KeyEvent> keyEventHandler = new EventHandler<KeyEvent>() {
 		
 		@Override
@@ -97,17 +93,12 @@ public class RibbonController implements Initializable {
 			double delta = 1.2;
 			double scale = innerGroup.getScaleY();
 
-			// Zoom in when ctrl and the "+" or "+/=" key is pressed.
 			if (character.equals("+") || character.equals("=")) {
 				scale *= delta;
 
-				// Cut off the scale if it is bigger than the maximum
-				// allowed scale
 				scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 			} else if (character.equals("-")) {
 				scale /= delta;
-				// Cut off the scale if it is bigger than the minimum
-				// allowed scale
 				scale = scale < MIN_SCALE ? MIN_SCALE : scale;
 			} else {
 				return;

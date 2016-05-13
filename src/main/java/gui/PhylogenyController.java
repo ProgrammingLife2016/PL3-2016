@@ -24,6 +24,10 @@ public class PhylogenyController implements Initializable {
 	@FXML ScrollPane scrollPane;
 	private Group root;
 
+	/**
+	 * Initializes the phylogeny tree. Creating the basis for the
+	 * phylogenetic tree to be created.
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
