@@ -22,3 +22,7 @@ target/
 .eclipse-pmd
 .DS_STORE
 .checkstyle
+
+# Data and db folders
+Data/
+db/
