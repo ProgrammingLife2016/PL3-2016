@@ -1,9 +1,11 @@
 package gui;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import gui.toolbar.ImportGfa;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,8 +40,8 @@ public class MainController implements Initializable {
 		 fileExplorer.getExtensionFilters().addAll(new ExtensionFilter("gfa files", "*.gfa"));
 		 File file = fileExplorer.showOpenDialog(verticalBox.getScene().getWindow());
 		 if (file != null) {
-             //openFile(file);
-			 System.out.println(file.getName());
+			 ImportGfa importer = new ImportGfa(Launcher.stage, file.getAbsolutePath(), file.getName(), verticalBox);
+			 importer.startImport();
          }
 	 }
 }
