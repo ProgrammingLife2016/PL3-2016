@@ -16,10 +16,7 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#importNew" text="Import new .gfa file" />
-                  <Menu mnemonicParsing="false" text="Open recent .gfa file">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                    </items>
+                  <Menu fx:id="recentMenu" mnemonicParsing="false" text="Open recent .gfa file">
                   </Menu>
                   <Menu mnemonicParsing="false" text="Load existing database">
                     <items>

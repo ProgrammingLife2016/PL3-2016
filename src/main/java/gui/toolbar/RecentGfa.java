@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Scanner;
 
 
@@ -53,5 +54,22 @@ public class RecentGfa {
 				e.printStackTrace();
 			}
 			  return false;		  
+	}
+	
+	public HashMap<String, String> readRecent() {
+		HashMap<String, String> recentMap = new HashMap<String, String>();
+		File file = new File(System.getProperty("user.dir") + "/recentgfa/recent.txt");
+		try {
+			Scanner sc = new Scanner(file);
+			while(sc.hasNextLine()) {
+				recentMap.put(sc.next(), sc.next());
+			}
+			sc.close();
+			return recentMap;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return recentMap;
 	}
 }

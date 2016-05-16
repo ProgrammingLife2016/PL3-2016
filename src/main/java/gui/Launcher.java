@@ -49,7 +49,7 @@ public class Launcher extends Application {
 
 		RecentGfa rgfa = new RecentGfa();
 		rgfa.writeRecent(gfaPath, filename);
-		
+
 		
 		/**
 		 * Loads up splash screen and display it.
