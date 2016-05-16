@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 import newick.NewickTree;
 import db.DatabaseManager;
+import gui.toolbar.RecentGfa;
 import parsers.GfaException;
 import parsers.GfaParser;
 import parsers.NewickTreeParser;
@@ -44,6 +45,11 @@ public class Launcher extends Application {
 		} catch (IOException e) {
 			System.err.println("File: " + nwkPath + " not found");
 		}
+		
+
+		RecentGfa rgfa = new RecentGfa();
+		rgfa.writeRecent(gfaPath, filename);
+		
 		
 		/**
 		 * Loads up splash screen and display it.

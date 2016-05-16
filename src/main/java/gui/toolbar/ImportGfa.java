@@ -10,7 +10,6 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import parsers.GfaException;
 import parsers.GfaParser;
@@ -19,13 +18,11 @@ public class ImportGfa {
 	private Stage stage;
 	private final String gfaPath;
 	private final String fileName;
-	private final VBox verticalBox;
 	
-	public ImportGfa(Stage stage, String gfaPath, String fileName, VBox verticalBox) {
+	public ImportGfa(Stage stage, String gfaPath, String fileName) {
 		this.stage = stage;
 		this.gfaPath = gfaPath;
 		this.fileName = fileName;
-		this.verticalBox = verticalBox;
 	}
 	
 	public void startImport() {
@@ -36,10 +33,12 @@ public class ImportGfa {
 		/**
 		 * Loads up splash screen and display it.
 		 */
-		VBox splashScreen;
 		try {
-			splashScreen = FXMLLoader.load(getClass().getClassLoader().getResource("splashScreen.fxml"));
-	        verticalBox.getChildren().add(splashScreen);
+			Parent root;
+			root = FXMLLoader.load(getClass().getClassLoader().getResource("splashScreen.fxml"));
+			Scene scene = new Scene(root);
+	        stage.setScene(scene);
+	        stage.centerOnScreen();
 	        stage.show();
 	        
 		} catch (IOException e1) {

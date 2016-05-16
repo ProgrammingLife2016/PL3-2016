@@ -137,7 +137,6 @@ public class SplashController implements Initializable{
 			public void run() {
 				Parent root;
 				try {
-					System.out.println("RUNNING");
 					root = FXMLLoader.load(getClass().getClassLoader().getResource("Main.fxml"));
 			        Scene scene = new Scene(root);
 			        Launcher.stage.setScene(scene);

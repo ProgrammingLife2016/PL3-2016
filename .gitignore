@@ -23,6 +23,7 @@ target/
 .DS_STORE
 .checkstyle
 
-# Data and db folders
+# Data, db folder and recently opened gfa files
 Data/
 db/
+recentgfa

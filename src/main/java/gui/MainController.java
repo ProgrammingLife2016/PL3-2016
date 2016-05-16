@@ -35,12 +35,11 @@ public class MainController implements Initializable {
 	}
 	
 	 public void importNew(final ActionEvent e) {
-		 System.out.println("importing");
 		 final FileChooser fileExplorer = new FileChooser();
 		 fileExplorer.getExtensionFilters().addAll(new ExtensionFilter("gfa files", "*.gfa"));
 		 File file = fileExplorer.showOpenDialog(verticalBox.getScene().getWindow());
 		 if (file != null) {
-			 ImportGfa importer = new ImportGfa(Launcher.stage, file.getAbsolutePath(), file.getName(), verticalBox);
+			 ImportGfa importer = new ImportGfa(Launcher.stage, file.getAbsolutePath(), file.getName());
 			 importer.startImport();
          }
 	 }
