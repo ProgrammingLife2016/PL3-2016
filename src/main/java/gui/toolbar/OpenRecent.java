@@ -6,11 +6,12 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 
 
-public class RecentGfa {
+public class OpenRecent {
 	
 	public void writeRecent(String gfaPath, String fileName) {
 		File file = new File(System.getProperty("user.dir") + "/recentgfa/recent.txt");
@@ -56,12 +57,12 @@ public class RecentGfa {
 			  return false;		  
 	}
 	
-	public HashMap<String, String> readRecent() {
-		HashMap<String, String> recentMap = new HashMap<String, String>();
+	public LinkedHashMap<String, String> readRecent() {
+		LinkedHashMap<String, String> recentMap = new LinkedHashMap<String, String>();
 		File file = new File(System.getProperty("user.dir") + "/recentgfa/recent.txt");
 		try {
 			Scanner sc = new Scanner(file);
-			while(sc.hasNextLine()) {
+			while(sc.hasNext()) {
 				recentMap.put(sc.next(), sc.next());
 			}
 			sc.close();

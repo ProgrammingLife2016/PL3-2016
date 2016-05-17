@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 import newick.NewickTree;
 import db.DatabaseManager;
-import gui.toolbar.RecentGfa;
+import gui.toolbar.OpenRecent;
 import parsers.GfaException;
 import parsers.GfaParser;
 import parsers.NewickTreeParser;
@@ -47,7 +47,7 @@ public class Launcher extends Application {
 		}
 		
 
-		RecentGfa rgfa = new RecentGfa();
+		OpenRecent rgfa = new OpenRecent();
 		rgfa.writeRecent(gfaPath, filename);
 
 		

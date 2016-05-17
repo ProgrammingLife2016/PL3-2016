@@ -16,14 +16,14 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#importNew" text="Import new .gfa file" />
-                  <Menu fx:id="recentMenu" mnemonicParsing="false" text="Open recent .gfa file">
+                  <Menu fx:id="recentMenu" mnemonicParsing="false" text="Open recent">
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Load existing database">
+                  <Menu mnemonicParsing="false" text="Open existing">
                     <items>
                       <MenuItem mnemonicParsing="false" text="Action 1" />
                     </items>
                   </Menu>
-              <MenuItem mnemonicParsing="false" text="Quit" />
+              <MenuItem mnemonicParsing="false" onAction="#Quit" text="Quit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">

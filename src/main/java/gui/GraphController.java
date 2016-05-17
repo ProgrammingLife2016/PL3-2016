@@ -138,6 +138,16 @@ public class GraphController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		updateView();	
+		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
+		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
+		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
+		    scrollPane.setPrefWidth(newValue.getWidth());
+		    scrollPane.setPrefHeight(newValue.getHeight());
+		});
+	}
+	
+	public void updateView() {
 		this.dbm = Launcher.dbm;
 		loadSegmentData();
 		constructSegmentMap();
@@ -145,14 +155,6 @@ public class GraphController implements Initializable {
 		innerGroup = getGraph();
 		outerGroup = new Group(innerGroup);
 		scrollPane.setContent(outerGroup);
-		
-		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
-		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
-		
-		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
-		    scrollPane.setPrefWidth(newValue.getWidth());
-		    scrollPane.setPrefHeight(newValue.getHeight());
-		});
 	}
 	
 	/**
