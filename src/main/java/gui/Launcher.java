@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 import newick.NewickTree;
 import db.DatabaseManager;
-import gui.toolbar.OpenRecent;
+import gui.toolbar.Recent;
 import parsers.GfaException;
 import parsers.GfaParser;
 import parsers.NewickTreeParser;
@@ -46,7 +46,7 @@ public class Launcher extends Application {
 			System.err.println("File: " + nwkPath + " not found");
 		}
 		
-		OpenRecent rgfa = new OpenRecent();
+		Recent rgfa = new Recent();
 		rgfa.writeRecent(dbPath, filename);
 
 		

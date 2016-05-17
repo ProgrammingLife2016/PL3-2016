@@ -11,9 +11,11 @@ import java.util.LinkedHashMap;
 import java.util.ListIterator;
 import java.util.ResourceBundle;
 
+import org.apache.commons.io.FilenameUtils;
+
 import db.DatabaseManager;
-import gui.toolbar.ImportGfa;
-import gui.toolbar.OpenRecent;
+import gui.toolbar.Import;
+import gui.toolbar.Recent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -54,7 +56,7 @@ public class MainController implements Initializable {
 	}
 	
 	private void addRecentItems() {
-		OpenRecent rGfa = new OpenRecent();
+		Recent rGfa = new Recent();
 		LinkedHashMap<String, String> recentMap = rGfa.readRecent();
 		ArrayList<String> tmp = new ArrayList<String>();
 		
@@ -81,13 +83,17 @@ public class MainController implements Initializable {
 		 fileExplorer.getExtensionFilters().addAll(new ExtensionFilter("gfa files", "*.gfa"));
 		 File file = fileExplorer.showOpenDialog(verticalBox.getScene().getWindow());
 		 if (file != null) {
-			 ImportGfa importer = new ImportGfa(Launcher.stage, file.getAbsolutePath(), file.getName());
-			 importer.startImport();
+			 Recent recent = new Recent();
+			 System.out.println(FilenameUtils.removeExtension(file.getAbsolutePath()));
+			 System.out.println(file.getAbsolutePath());
+			 System.out.println(file.getName());
+			 //recent.writeRecent(file.getAbsolutePath(), file.getName());
+			 //Import importer = new Import(Launcher.stage, file.getAbsolutePath(), file.getName());
+			 //importer.startImport();
          }
 	 }
 	 
 	 private void openRecent(String dbPath) {
-		 
 		System.out.println(dbPath);
 		Launcher.dbm.closeDbConnection();
 		Launcher.dbm = new DatabaseManager(dbPath);

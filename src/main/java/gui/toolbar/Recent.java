@@ -11,10 +11,10 @@ import java.util.Scanner;
 
 
 
-public class OpenRecent {
+public class Recent {
 	
 	public void writeRecent(String dbPath, String fileName) {
-		File file = new File(System.getProperty("user.dir") + "/recentgfa/recent.txt");
+		File file = new File(System.getProperty("user.dir") + "/recent/recent.txt");
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
@@ -59,7 +59,7 @@ public class OpenRecent {
 	
 	public LinkedHashMap<String, String> readRecent() {
 		LinkedHashMap<String, String> recentMap = new LinkedHashMap<String, String>();
-		File file = new File(System.getProperty("user.dir") + "/recentgfa/recent.txt");
+		File file = new File(System.getProperty("user.dir") + "/recent/recent.txt");
 		try {
 			Scanner sc = new Scanner(file);
 			while(sc.hasNext()) {
