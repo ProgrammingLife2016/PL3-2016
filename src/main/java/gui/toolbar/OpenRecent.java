@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 public class OpenRecent {
 	
-	public void writeRecent(String gfaPath, String fileName) {
+	public void writeRecent(String dbPath, String fileName) {
 		File file = new File(System.getProperty("user.dir") + "/recentgfa/recent.txt");
 		if (!file.exists()) {
 			try {
@@ -24,13 +24,13 @@ public class OpenRecent {
 			}
 		}
 		
-		File gfaFile = new File(gfaPath);
-		if(!containsRecent(file, gfaFile.getAbsolutePath())) {
+		
+		if(!containsRecent(file, dbPath)) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file.getAbsoluteFile(), true));
 			writer.append(fileName);
 			writer.append(" ");
-			writer.append(gfaFile.getAbsolutePath());
+			writer.append(dbPath);
 			writer.newLine();
 			writer.close();
 		} catch (IOException e) {

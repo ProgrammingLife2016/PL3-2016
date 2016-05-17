@@ -35,7 +35,7 @@ public class Launcher extends Application {
 		final String gfaPath = System.getProperty("user.dir") 
 				+ "/Data/" + filename + "/" + filename + ".gfa";
 		final String dbPath = System.getProperty("user.dir") 
-				+ "/db/" + filename;
+				+ File.separator + "db" + File.separator + filename;
 		final String nwkPath = System.getProperty("user.dir") 
 				+ "/Data/" + filename + "/" + "340tree.rooted.TKK.nwk";
 		final File database = new File(dbPath + ".mv.db");
@@ -46,9 +46,8 @@ public class Launcher extends Application {
 			System.err.println("File: " + nwkPath + " not found");
 		}
 		
-
 		OpenRecent rgfa = new OpenRecent();
-		rgfa.writeRecent(gfaPath, filename);
+		rgfa.writeRecent(dbPath, filename);
 
 		
 		/**

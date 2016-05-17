@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.ListIterator;
 import java.util.ResourceBundle;
 
+import db.DatabaseManager;
 import gui.toolbar.ImportGfa;
 import gui.toolbar.OpenRecent;
 import javafx.event.ActionEvent;
@@ -36,6 +37,8 @@ public class MainController implements Initializable {
 	 */
 	// @FXML private GridPane ribbonTab;
 	// @FXML private TabPane tabPane;
+	
+	@FXML private GraphController graphTabController;
 	@FXML private RibbonController ribbonTabController;
 	@FXML private VBox verticalBox;
 	@FXML private Menu recentMenu;
@@ -65,13 +68,14 @@ public class MainController implements Initializable {
 			item.setText(name);
 			item.setOnAction(new EventHandler<ActionEvent>() {
 			    @Override public void handle(ActionEvent e) {
-			        System.out.println(recentMap.get(name));
+			        openRecent(recentMap.get(name));
 			    }
 			});
 			recentMenu.getItems().add(item);
 		}
 	}
 	
+	 // public because fxml cannot access it otherwise.
 	 public void importNew(final ActionEvent e) {
 		 final FileChooser fileExplorer = new FileChooser();
 		 fileExplorer.getExtensionFilters().addAll(new ExtensionFilter("gfa files", "*.gfa"));
@@ -82,8 +86,16 @@ public class MainController implements Initializable {
          }
 	 }
 	 
+	 private void openRecent(String dbPath) {
+		 
+		System.out.println(dbPath);
+		Launcher.dbm.closeDbConnection();
+		Launcher.dbm = new DatabaseManager(dbPath);
+		ribbonTabController.updateView();
+		graphTabController.updateView();
+	 }
+	 
 	 public void Quit(final ActionEvent e) throws IOException {
-		 ribbonTabController.updateView();
 		 System.exit(0);
 	 }
 }

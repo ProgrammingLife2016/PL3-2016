@@ -35,8 +35,6 @@ public class RibbonController implements Initializable {
     
 	private DatabaseManager dbm;
 	
-	
-	public int test = 0;
     
 	/**
 	 * Handles the scroll wheel event for the ribbon view.
@@ -134,7 +132,6 @@ public class RibbonController implements Initializable {
 	}
 	
 	public void updateView() {
-		test = 1;
 		this.dbm = Launcher.dbm;
 		// Inner group and outer group according to the ScrollPane JavaDoc.
 		innerGroup = createRibbons();
