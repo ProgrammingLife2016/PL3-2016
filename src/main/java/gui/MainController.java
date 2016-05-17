@@ -79,17 +79,18 @@ public class MainController implements Initializable {
 	
 	 // public because fxml cannot access it otherwise.
 	 public void importNew(final ActionEvent e) {
+
 		 final FileChooser fileExplorer = new FileChooser();
 		 fileExplorer.getExtensionFilters().addAll(new ExtensionFilter("gfa files", "*.gfa"));
 		 File file = fileExplorer.showOpenDialog(verticalBox.getScene().getWindow());
 		 if (file != null) {
 			 Recent recent = new Recent();
-			 System.out.println(FilenameUtils.removeExtension(file.getAbsolutePath()));
-			 System.out.println(file.getAbsolutePath());
-			 System.out.println(file.getName());
-			 //recent.writeRecent(file.getAbsolutePath(), file.getName());
-			 //Import importer = new Import(Launcher.stage, file.getAbsolutePath(), file.getName());
-			 //importer.startImport();
+			 String fileName = FilenameUtils.removeExtension(file.getName());
+				final String dbPath = System.getProperty("user.dir") 
+						+ File.separator + "db" + File.separator + fileName;
+			 recent.writeRecent(dbPath, fileName);
+			 Import importer = new Import(Launcher.stage, file.getAbsolutePath(), fileName);
+			 importer.startImport();
          }
 	 }
 	 

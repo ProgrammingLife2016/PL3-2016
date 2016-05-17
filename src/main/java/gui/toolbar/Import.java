@@ -28,7 +28,6 @@ public class Import {
 	public void startImport() {
 		final String dbPath = System.getProperty("user.dir") 
 				+ "/db/" + fileName;
-		final File database = new File(dbPath + ".mv.db");
 		
 		/**
 		 * Loads up splash screen and display it.
