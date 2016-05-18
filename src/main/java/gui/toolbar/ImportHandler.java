@@ -14,12 +14,12 @@ import javafx.stage.Stage;
 import parsers.GfaException;
 import parsers.GfaParser;
 
-public class Import {
+public class ImportHandler {
 	private Stage stage;
 	private final String gfaPath;
 	private final String fileName;
 	
-	public Import(Stage stage, String gfaPath, String fileName) {
+	public ImportHandler(Stage stage, String gfaPath, String fileName) {
 		this.stage = stage;
 		this.gfaPath = gfaPath;
 		this.fileName = fileName;

@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 
 
-public class Recent {
+public class RecentHandler {
 	
 	final int max_recent = 3;
 
@@ -64,7 +64,7 @@ public class Recent {
 		return file.exists();
 	}
 	
-	public LinkedHashMap<String, String> readRecent() {
+	public LinkedHashMap<String, String> getRecent() {
 		LinkedHashMap<String, String> recentMap = new LinkedHashMap<String, String>();
 		File file = new File(System.getProperty("user.dir") + "/recent/recent.txt");
 		try {

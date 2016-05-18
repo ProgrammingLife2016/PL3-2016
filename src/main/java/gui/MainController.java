@@ -14,8 +14,9 @@ import java.util.ResourceBundle;
 import org.apache.commons.io.FilenameUtils;
 
 import db.DatabaseManager;
-import gui.toolbar.Import;
-import gui.toolbar.Recent;
+import gui.toolbar.ExistingHandler;
+import gui.toolbar.ImportHandler;
+import gui.toolbar.RecentHandler;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -44,6 +45,7 @@ public class MainController implements Initializable {
 	@FXML private RibbonController ribbonTabController;
 	@FXML private VBox verticalBox;
 	@FXML private Menu recentMenu;
+	@FXML private Menu existingMenu;
 
 	/**
 	 * Right now this MainController is empty but perhaps there will be 
@@ -51,22 +53,24 @@ public class MainController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		addRecentItems();
+		RecentHandler recentHandler = new RecentHandler();
+		ExistingHandler existHandler = new ExistingHandler();
+		LinkedHashMap<String, String> recentMap = recentHandler.getRecent();
+		HashMap<String, String> existingMap = existHandler.buildExistingMap();
+		addItems(recentMap, recentMenu);
+		addItems(existingMap, existingMenu);
 	}
 	
-	private void addRecentItems() {
-		Recent rGfa = new Recent();
-		LinkedHashMap<String, String> recentMap = rGfa.readRecent();
-		
-		for(String name : recentMap.keySet()) {
+	private void addItems(HashMap<String, String> map, Menu menu) {
+		for(String name : map.keySet()) {
 			MenuItem item = new MenuItem();
 			item.setText(name);
 			item.setOnAction(new EventHandler<ActionEvent>() {
 			    @Override public void handle(ActionEvent e) {
-			        openRecent(recentMap.get(name), name);
+			        openRecent(map.get(name), name);
 			    }
 			});
-			recentMenu.getItems().add(item);
+			menu.getItems().add(item);
 		}
 	}
 	
@@ -77,12 +81,12 @@ public class MainController implements Initializable {
 		 fileExplorer.getExtensionFilters().addAll(new ExtensionFilter("gfa files", "*.gfa"));
 		 File file = fileExplorer.showOpenDialog(verticalBox.getScene().getWindow());
 		 if (file != null) {
-			 Recent recent = new Recent();
+			 RecentHandler recent = new RecentHandler();
 			 String fileName = FilenameUtils.removeExtension(file.getName());
 				final String dbPath = System.getProperty("user.dir") 
 						+ File.separator + "db" + File.separator + fileName;
 			 recent.buildRecent(dbPath, fileName);
-			 Import importer = new Import(Launcher.stage, file.getAbsolutePath(), fileName);
+			 ImportHandler importer = new ImportHandler(Launcher.stage, file.getAbsolutePath(), fileName);
 			 importer.startImport();
          }
 	 }
@@ -90,10 +94,16 @@ public class MainController implements Initializable {
 	 private void openRecent(String dbPath, String name) {
 		Launcher.dbm.closeDbConnection();
 		Launcher.dbm = new DatabaseManager(dbPath);
-		Recent recent = new Recent();
-		recent.buildRecent(dbPath, name);
+		
+		RecentHandler recentHandler = new RecentHandler();
+		recentHandler.buildRecent(dbPath, name);
 		recentMenu.getItems().clear();
-		addRecentItems();
+		addItems(recentHandler.getRecent(), recentMenu);
+		
+		ExistingHandler existHandler = new ExistingHandler();
+		existingMenu.getItems().clear();
+		addItems(existHandler.buildExistingMap(), existingMenu);
+		
 		ribbonTabController.updateView();
 		graphTabController.updateView();
 	 }
