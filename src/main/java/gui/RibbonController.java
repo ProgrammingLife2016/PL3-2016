@@ -12,6 +12,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -153,32 +154,12 @@ public class RibbonController implements Initializable {
 		for (int i = 0; i < from.size(); i++) {
 			int fromId = from.get(i);
 			int toId = to.get(i);
-			Path path = createPath(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
+			Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 					xcoords.get(toId - 1), ycoords.get(toId - 1));
-	        path.setStrokeWidth(0.1 + 0.1 * counts.get(i));
-	        res.getChildren().add(path);
+	        line.setStrokeWidth(0.02 + 0.02 * counts.get(i));
+	        res.getChildren().add(line);
 		}
 		return res;
 	}
-	
-	/**
-	 * Creates a path from (fromX,fromY) to (toX,toY).
-	 * 
-	 * @param fromX
-	 *            X coordinate of the starting point.
-	 * @param fromY
-	 *            Y coordinate of the starting point.
-	 * @param toX
-	 *            X coordinate of the destination point.
-	 * @param toY
-	 *            Y coordinate of the destination point.
-	 * @return A path from (fromX,fromY) to (toX,toY).
-	 */
-	private Path createPath(int fromX, int fromY, int toX, int toY) {
-		MoveTo moveTo = new MoveTo(XSCALE * fromX, YSCALE * fromY);
-		LineTo lineTo = new LineTo(XSCALE * toX, YSCALE * toY);
-		Path path = new Path();
-		path.getElements().addAll(moveTo, lineTo);
-		return path;
-	}
+
 }
