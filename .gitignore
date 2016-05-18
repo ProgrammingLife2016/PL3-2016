@@ -26,4 +26,4 @@ target/
 # Data, db folder and recently opened gfa files
 Data/
 db/
-recentgfa
+recent/

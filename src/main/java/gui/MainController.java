@@ -63,7 +63,7 @@ public class MainController implements Initializable {
 			item.setText(name);
 			item.setOnAction(new EventHandler<ActionEvent>() {
 			    @Override public void handle(ActionEvent e) {
-			        openRecent(recentMap.get(name));
+			        openRecent(recentMap.get(name), name);
 			    }
 			});
 			recentMenu.getItems().add(item);
@@ -87,10 +87,13 @@ public class MainController implements Initializable {
          }
 	 }
 	 
-	 private void openRecent(String dbPath) {
-		System.out.println(dbPath);
+	 private void openRecent(String dbPath, String name) {
 		Launcher.dbm.closeDbConnection();
 		Launcher.dbm = new DatabaseManager(dbPath);
+		Recent recent = new Recent();
+		recent.buildRecent(dbPath, name);
+		recentMenu.getItems().clear();
+		addRecentItems();
 		ribbonTabController.updateView();
 		graphTabController.updateView();
 	 }
