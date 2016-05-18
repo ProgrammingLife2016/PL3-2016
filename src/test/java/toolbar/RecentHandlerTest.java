@@ -17,8 +17,10 @@ public class RecentHandlerTest {
 	
 	@BeforeClass
 	public static void cleanUp() {
-		for(File file: new File(directory).listFiles()) {
-			file.delete();
+		if(new File(directory).listFiles().length > 0) {
+			for(File file: new File(directory).listFiles()) {
+				file.delete();
+			}
 		}
 	}
 	
