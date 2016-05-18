@@ -11,10 +11,10 @@ import javafx.stage.Stage;
 
 import newick.NewickTree;
 import db.DatabaseManager;
-import gui.toolbar.RecentHandler;
 import parsers.GfaException;
 import parsers.GfaParser;
 import parsers.NewickTreeParser;
+import toolbar.RecentHandler;
 
 /**
  * This launcher starts up our program.

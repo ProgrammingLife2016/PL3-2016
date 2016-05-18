@@ -1,4 +1,4 @@
-package gui.toolbar;
+package gui;
 
 import java.io.IOException;
 
@@ -11,8 +11,6 @@ import javafx.stage.Stage;
 import parsers.GfaException;
 import parsers.GfaParser;
 import db.DatabaseManager;
-import gui.Launcher;
-import gui.SplashController;
 
 /**
  * Class used to handle importing a new .gfa file.

@@ -1,4 +1,4 @@
-package gui.toolbar;
+package toolbar;
 
 import java.io.File;
 import java.io.FilenameFilter;

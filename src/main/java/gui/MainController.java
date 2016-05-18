@@ -16,11 +16,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 import db.DatabaseManager;
-import gui.toolbar.ExistingHandler;
-import gui.toolbar.ImportHandler;
-import gui.toolbar.RecentHandler;
-
 import org.apache.commons.io.FilenameUtils;
+import toolbar.ExistingHandler;
+import toolbar.RecentHandler;
+
+
+
 
 /**
  * @author Björn Ho
