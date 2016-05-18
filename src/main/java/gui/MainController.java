@@ -51,20 +51,14 @@ public class MainController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		//addRecentItems();
+		addRecentItems();
 	}
 	
 	private void addRecentItems() {
 		Recent rGfa = new Recent();
 		LinkedHashMap<String, String> recentMap = rGfa.readRecent();
-		ArrayList<String> tmp = new ArrayList<String>();
 		
-		for (String name : recentMap.keySet()) {
-			tmp.add(name);
-		}
-		
-		for (int i = tmp.size() - 1; i >= 0; i--) {
-			final String name = tmp.get(i);
+		for(String name : recentMap.keySet()) {
 			MenuItem item = new MenuItem();
 			item.setText(name);
 			item.setOnAction(new EventHandler<ActionEvent>() {

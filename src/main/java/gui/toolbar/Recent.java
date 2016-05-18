@@ -17,7 +17,6 @@ public class Recent {
 	final int max_recent = 3;
 
 	public void buildRecent(String dbPath, String fileName) {
-		System.out.println("called");
 		File file = new File(System.getProperty("user.dir") + "/recent/recent.txt");
 		if (!file.exists()) {
 			try {
@@ -43,7 +42,7 @@ public class Recent {
 		    	String line;
 		    	int lineCount = 0;
 		    	while((line = br.readLine()) != null && lineCount < max_recent - 1) {
-		    		if(!line.contains(dbPath)) {
+		    		if(!line.contains(dbPath) && fileExists(line)) {
 		    		bw.append(line);
 		    		bw.newLine();
 		    		lineCount++;
@@ -57,6 +56,12 @@ public class Recent {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+	}
+	
+	public boolean fileExists(String line) {
+		String[] lineSplit= line.split(" ");
+		File file = new File(lineSplit[1] + ".mv.db");
+		return file.exists();
 	}
 	
 	public LinkedHashMap<String, String> readRecent() {
