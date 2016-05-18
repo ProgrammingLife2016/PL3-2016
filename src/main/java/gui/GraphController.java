@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -93,6 +94,7 @@ public class GraphController implements Initializable {
 			} else if (deltaX > 0) {
 				scrollPane.setVvalue(Math.max(0, scrollPane.getVvalue() - 0.05));
 			}
+			
 		}
 	};
 	
@@ -148,6 +150,8 @@ public class GraphController implements Initializable {
 		
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
 		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
+		
+		scrollPane.setVvalue(0.5);
 		
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
 		    scrollPane.setPrefWidth(newValue.getWidth());
