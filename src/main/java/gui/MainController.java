@@ -1,14 +1,8 @@
 package gui;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.ListIterator;
 import java.util.ResourceBundle;
 
 import org.apache.commons.io.FilenameUtils;
@@ -20,12 +14,9 @@ import gui.toolbar.RecentHandler;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -41,42 +32,57 @@ public class MainController implements Initializable {
 	// @FXML private GridPane ribbonTab;
 	// @FXML private TabPane tabPane;
 	
+	/**
+	 * Access to the controllers to update the view when changing files.
+	 */
 	@FXML private GraphController graphTabController;
 	@FXML private RibbonController ribbonTabController;
+	
+	/**
+	 * Access to the scene window.
+	 */
 	@FXML private VBox verticalBox;
+	
+	/**
+	 * Access to the menus of the toolbar, to add new sub menus.
+	 */
 	@FXML private Menu recentMenu;
 	@FXML private Menu existingMenu;
 
 	/**
-	 * Right now this MainController is empty but perhaps there will be 
-	 * additions later on. Keeping it for now.
+	 * Adds the recent and existing items into the toolbar menus.
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		RecentHandler recentHandler = new RecentHandler();
-		ExistingHandler existHandler = new ExistingHandler();
-		LinkedHashMap<String, String> recentMap = recentHandler.getRecent();
-		HashMap<String, String> existingMap = existHandler.buildExistingMap();
-		addItems(recentMap, recentMenu);
-		addItems(existingMap, existingMenu);
+		addItems(new RecentHandler().getRecent(), recentMenu);
+		addItems(new ExistingHandler().buildExistingMap(), existingMenu);
 	}
 	
+	/**
+	 * Used to add recent items into the toolbar menus. When clicked, it will fire the event handler
+	 * to open the specified item.
+	 * @param map		A hashmap which contains the file name as key and the directory as value.
+	 * @param menu		The menu in which these items get added into.
+	 */
 	private void addItems(HashMap<String, String> map, Menu menu) {
 		for(String name : map.keySet()) {
 			MenuItem item = new MenuItem();
 			item.setText(name);
 			item.setOnAction(new EventHandler<ActionEvent>() {
 			    @Override public void handle(ActionEvent e) {
-			        openRecent(map.get(name), name);
+			        openExisting(map.get(name), name);
 			    }
 			});
 			menu.getItems().add(item);
 		}
 	}
 	
-	 // public because fxml cannot access it otherwise.
+	/**
+	 * Used to import a new .gfa file. It will open up a file explorer to browse to your file.
+	 * It will build the recently opened file submenu and the existing submenu accordingly.
+	 * @param e		An Event representing some type of action
+	 */
 	 public void importNew(final ActionEvent e) {
-
 		 final FileChooser fileExplorer = new FileChooser();
 		 fileExplorer.getExtensionFilters().addAll(new ExtensionFilter("gfa files", "*.gfa"));
 		 File file = fileExplorer.showOpenDialog(verticalBox.getScene().getWindow());
@@ -88,27 +94,54 @@ public class MainController implements Initializable {
 			 recent.buildRecent(dbPath, fileName);
 			 ImportHandler importer = new ImportHandler(Launcher.stage, file.getAbsolutePath(), fileName);
 			 importer.startImport();
+			 updateExisting();
          }
 	 }
 	 
-	 private void openRecent(String dbPath, String name) {
+	 /**
+	  * Used to open an existing database. It will first close the existing database
+	  * connection. After that it will update the recently opened menu order.
+	  * Finally it will update the views to display the graphs correctly.
+	  * @param dbPath
+	  * @param name
+	  */
+	 private void openExisting(String dbPath, String name) {
 		Launcher.dbm.closeDbConnection();
 		Launcher.dbm = new DatabaseManager(dbPath);
-		
-		RecentHandler recentHandler = new RecentHandler();
-		recentHandler.buildRecent(dbPath, name);
-		recentMenu.getItems().clear();
-		addItems(recentHandler.getRecent(), recentMenu);
-		
-		ExistingHandler existHandler = new ExistingHandler();
-		existingMenu.getItems().clear();
-		addItems(existHandler.buildExistingMap(), existingMenu);
-		
+		updateRecent(dbPath, name);
 		ribbonTabController.updateView();
 		graphTabController.updateView();
 	 }
 	 
-	 public void Quit(final ActionEvent e) throws IOException {
+	 /**
+	  * Used to update the recent menu in the toolbar. It will first build it and 
+	  * then add the result to the menu on the toolbar.
+	  * @param dbPath		path to these database
+	  * @param name			name of the file
+	  */
+	 private void updateRecent(String dbPath, String name) {
+			RecentHandler recentHandler = new RecentHandler();
+			recentHandler.buildRecent(dbPath, name);
+			recentMenu.getItems().clear();
+			addItems(recentHandler.getRecent(), recentMenu);
+	 }
+	 
+	 /**
+	  * Used to update the existing menu in the toolbar. It will first build it and 
+	  * then add the result to the menu on the toolbar.
+	  */
+	 private void updateExisting() {
+			ExistingHandler existHandler = new ExistingHandler();
+			existingMenu.getItems().clear();
+			addItems(existHandler.buildExistingMap(), existingMenu);
+	 }
+	 
+	 /**
+	  * This executes whenever quit has been activated from
+	  * the toolbar. It quits the program.
+	  * @param e		An Event representing some type of action
+	  */
+	 public void Quit(final ActionEvent e) {
 		 System.exit(0);
 	 }
 }

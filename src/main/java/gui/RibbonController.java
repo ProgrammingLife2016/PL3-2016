@@ -131,6 +131,10 @@ public class RibbonController implements Initializable {
 		});
 	}
 	
+	/**
+	 * Updates the view. Used when changing database files so the graph
+	 * will have to adjust to the new file.
+	 */
 	public void updateView() {
 		this.dbm = Launcher.dbm;
 		// Inner group and outer group according to the ScrollPane JavaDoc.

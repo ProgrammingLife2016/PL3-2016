@@ -147,11 +147,14 @@ public class GraphController implements Initializable {
 		});
 	}
 	
+	/**
+	 * Updates the view. Used when changing database files so the graph
+	 * will have to adjust to the new file.
+	 */
 	public void updateView() {
 		this.dbm = Launcher.dbm;
 		loadSegmentData();
 		constructSegmentMap();
-		
 		innerGroup = getGraph();
 		outerGroup = new Group(innerGroup);
 		scrollPane.setContent(outerGroup);

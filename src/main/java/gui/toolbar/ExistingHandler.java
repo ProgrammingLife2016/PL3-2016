@@ -6,9 +6,19 @@ import java.util.HashMap;
 
 import org.apache.commons.io.FilenameUtils;
 
+/**
+ * Class to handle the existing database files
+ * @author Björn Ho
+ */
 public class ExistingHandler {
 	private final String dbPath = System.getProperty("user.dir") + File.separator + "db" + File.separator;
 	
+	/**
+	 * This is used to build an existing database map.
+	 * Remove extension is used to for compatibility reasons with
+	 * the database. The key is the file name and the value is the directory.
+	 * @return		returns the hashmap
+	 */
 	public HashMap<String, String> buildExistingMap() {
 		File[] files = makeFileArray();
 		HashMap<String, String> existingMap = new HashMap<String, String>();
@@ -21,6 +31,11 @@ public class ExistingHandler {
 		return existingMap;
 	}
 	
+	/**
+	 * It makes an array of files in the database directory
+	 * which end with .mv.db as file extension.
+	 * @return		Array of file type.
+	 */
 	public File[] makeFileArray() {
 		File[] files = new File(dbPath).listFiles(new FilenameFilter() { 
 				@Override 

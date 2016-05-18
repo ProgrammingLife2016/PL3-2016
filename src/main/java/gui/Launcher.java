@@ -53,7 +53,6 @@ public class Launcher extends Application {
 		/**
 		 * Loads up splash screen and display it.
 		 */
-		//Parent root = FXMLLoader.load(getClass().getResource("splashScreen.fxml"));
 		Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("splashScreen.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
