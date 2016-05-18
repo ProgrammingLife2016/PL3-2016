@@ -5,10 +5,8 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import newick.NewickTree;
@@ -53,7 +51,8 @@ public class Launcher extends Application {
 		/**
 		 * Loads up splash screen and display it.
 		 */
-		Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("splashScreen.fxml"));
+		Parent root = FXMLLoader.load(getClass().getClassLoader()
+				.getResource("splashScreen.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();

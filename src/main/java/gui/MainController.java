@@ -5,12 +5,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import org.apache.commons.io.FilenameUtils;
-
-import db.DatabaseManager;
-import gui.toolbar.ExistingHandler;
-import gui.toolbar.ImportHandler;
-import gui.toolbar.RecentHandler;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -20,6 +14,13 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+
+import db.DatabaseManager;
+import gui.toolbar.ExistingHandler;
+import gui.toolbar.ImportHandler;
+import gui.toolbar.RecentHandler;
+
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * @author Björn Ho
@@ -59,17 +60,17 @@ public class MainController implements Initializable {
 	}
 	
 	/**
-	 * Used to add recent items into the toolbar menus. When clicked, it will fire the event handler
-	 * to open the specified item.
-	 * @param map		A hashmap which contains the file name as key and the directory as value.
-	 * @param menu		The menu in which these items get added into.
+	 * Used to add recent items into the toolbar menus. When clicked, it will fire the 
+	 * event handler to open the specified item.
+	 * @param map	A hashmap which contains the file name as key and the directory as value.
+	 * @param menu	The menu in which these items get added into.
 	 */
 	private void addItems(HashMap<String, String> map, Menu menu) {
-		for(String name : map.keySet()) {
+		for (String name : map.keySet()) {
 			MenuItem item = new MenuItem();
 			item.setText(name);
 			item.setOnAction(new EventHandler<ActionEvent>() {
-			    @Override public void handle(ActionEvent e) {
+			    @Override public void handle(ActionEvent actionEvent) {
 			        openExisting(map.get(name), name);
 			    }
 			});
@@ -80,9 +81,9 @@ public class MainController implements Initializable {
 	/**
 	 * Used to import a new .gfa file. It will open up a file explorer to browse to your file.
 	 * It will build the recently opened file submenu and the existing submenu accordingly.
-	 * @param e		An Event representing some type of action
+	 * @param actionEvent	An Event representing some type of action
 	 */
-	 public void importNew(final ActionEvent e) {
+	 public void importNew(final ActionEvent actionEvent) {
 		 final FileChooser fileExplorer = new FileChooser();
 		 fileExplorer.getExtensionFilters().addAll(new ExtensionFilter("gfa files", "*.gfa"));
 		 File file = fileExplorer.showOpenDialog(verticalBox.getScene().getWindow());
@@ -92,7 +93,8 @@ public class MainController implements Initializable {
 				final String dbPath = System.getProperty("user.dir") 
 						+ File.separator + "db" + File.separator + fileName;
 			 recent.buildRecent(dbPath, fileName);
-			 ImportHandler importer = new ImportHandler(Launcher.stage, file.getAbsolutePath(), fileName);
+			 ImportHandler importer = new ImportHandler(
+					 Launcher.stage, file.getAbsolutePath(), fileName);
 			 importer.startImport();
 			 updateExisting();
          }
@@ -139,9 +141,9 @@ public class MainController implements Initializable {
 	 /**
 	  * This executes whenever quit has been activated from
 	  * the toolbar. It quits the program.
-	  * @param e		An Event representing some type of action
+	  * @param actionEvent	An Event representing some type of action
 	  */
-	 public void Quit(final ActionEvent e) {
+	 public void Quit(final ActionEvent actionEvent) {
 		 System.exit(0);
 	 }
 }

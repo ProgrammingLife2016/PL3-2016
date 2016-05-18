@@ -11,7 +11,8 @@ import org.apache.commons.io.FilenameUtils;
  * @author Björn Ho
  */
 public class ExistingHandler {
-	private final String dbPath = System.getProperty("user.dir") + File.separator + "db" + File.separator;
+	private final String dbPath = System.getProperty("user.dir") 
+			+ File.separator + "db" + File.separator;
 	
 	/**
 	 * This is used to build an existing database map.
@@ -25,7 +26,8 @@ public class ExistingHandler {
 		for (File file : files) {
 			if (file.isFile()) {
 	    	String temp = FilenameUtils.removeExtension(file.getName());
-	    	existingMap.put(FilenameUtils.removeExtension(temp), dbPath + FilenameUtils.removeExtension(temp));
+	    	existingMap.put(FilenameUtils.removeExtension(temp), 
+	    			dbPath + FilenameUtils.removeExtension(temp));
 			}
 		}
 		return existingMap;

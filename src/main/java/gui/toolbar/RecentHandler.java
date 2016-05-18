@@ -21,7 +21,7 @@ public class RecentHandler {
 	 * The maximum amount of recently opened files
 	 * shown when accessing the submenu.
 	 */
-	final int max_recent = 3;
+	final int maxRecent = 3;
 	
 	/**
 	 * It builds up the most recently opened files used for the toolbar
@@ -53,16 +53,17 @@ public class RecentHandler {
 	 */
 	public void writeRecent(File file, String dbPath, String fileName) {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file.getParent() + File.separator + "tmp.txt"));
+			BufferedWriter bw = new BufferedWriter(
+					new FileWriter(file.getParent() + File.separator + "tmp.txt"));
 		    bw.write(fileName);
 		    bw.append(" ");
 		    bw.append(dbPath);
 		    bw.newLine();
 		    String line;
 		    int lineCount = 0;
-		    while((line = br.readLine()) != null && lineCount < max_recent - 1) {
-		    	if(!line.contains(dbPath) && fileExists(line)) {
+		    BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
+		    while ((line = br.readLine()) != null && lineCount < maxRecent - 1) {
+		    	if (!line.contains(dbPath) && fileExists(line)) {
 		    	bw.append(line);
 		    	bw.newLine();
 		    	lineCount++;
@@ -85,7 +86,7 @@ public class RecentHandler {
 	 * @return		true if it exists and else false.
 	 */
 	public boolean fileExists(String line) {
-		String[] lineSplit= line.split(" ");
+		String[] lineSplit = line.split(" ");
 		File file = new File(lineSplit[1] + ".mv.db");
 		return file.exists();
 	}
@@ -102,7 +103,7 @@ public class RecentHandler {
 		File file = new File(System.getProperty("user.dir") + "/recent/recent.txt");
 		try {
 			Scanner sc = new Scanner(file);
-			while(sc.hasNext()) {
+			while (sc.hasNext()) {
 				recentMap.put(sc.next(), sc.next());
 			}
 			sc.close();

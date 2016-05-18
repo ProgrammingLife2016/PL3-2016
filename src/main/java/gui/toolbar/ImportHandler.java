@@ -2,16 +2,17 @@ package gui.toolbar;
 
 import java.io.IOException;
 
-import db.DatabaseManager;
-import gui.Launcher;
-import gui.SplashController;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import parsers.GfaException;
 import parsers.GfaParser;
+import db.DatabaseManager;
+import gui.Launcher;
+import gui.SplashController;
 
 /**
  * Class used to handle importing a new .gfa file.
