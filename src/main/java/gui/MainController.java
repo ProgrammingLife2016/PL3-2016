@@ -51,8 +51,7 @@ public class MainController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		addRecentItems();
-		
+		//addRecentItems();
 	}
 	
 	private void addRecentItems() {
@@ -88,7 +87,7 @@ public class MainController implements Initializable {
 			 String fileName = FilenameUtils.removeExtension(file.getName());
 				final String dbPath = System.getProperty("user.dir") 
 						+ File.separator + "db" + File.separator + fileName;
-			 recent.writeRecent(dbPath, fileName);
+			 recent.buildRecent(dbPath, fileName);
 			 Import importer = new Import(Launcher.stage, file.getAbsolutePath(), fileName);
 			 importer.startImport();
          }

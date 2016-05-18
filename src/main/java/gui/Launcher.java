@@ -47,7 +47,7 @@ public class Launcher extends Application {
 		}
 		
 		Recent rgfa = new Recent();
-		rgfa.writeRecent(dbPath, filename);
+		rgfa.buildRecent(dbPath, filename);
 
 		
 		/**

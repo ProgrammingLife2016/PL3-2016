@@ -1,11 +1,12 @@
 package gui.toolbar;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 
@@ -13,7 +14,10 @@ import java.util.Scanner;
 
 public class Recent {
 	
-	public void writeRecent(String dbPath, String fileName) {
+	final int max_recent = 3;
+
+	public void buildRecent(String dbPath, String fileName) {
+		System.out.println("called");
 		File file = new File(System.getProperty("user.dir") + "/recent/recent.txt");
 		if (!file.exists()) {
 			try {
@@ -23,38 +27,36 @@ public class Recent {
 				e.printStackTrace();
 			}
 		}
-		
-		
-		if(!containsRecent(file, dbPath)) {
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file.getAbsoluteFile(), true));
-			writer.append(fileName);
-			writer.append(" ");
-			writer.append(dbPath);
-			writer.newLine();
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		}
+			 writeRecent(file, dbPath, fileName);
+
 	}
 	
-	public boolean containsRecent(File file, String path) {
-			try {
-				Scanner sc = new Scanner(file);
-				while (sc.hasNextLine()) {
-			        String line = sc.nextLine();
-			        if(line.contains(path)) { 
-			            sc.close();
-			            return true;
-			        }
-			  }
-			  sc.close();
-			} catch (FileNotFoundException e) {
+	
+	public void writeRecent(File file, String dbPath, String fileName) {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file.getParent() + File.separator + "tmp.txt"));
+		    	bw.write(fileName);
+		    	bw.append(" ");
+		    	bw.append(dbPath);
+		    	bw.newLine();
+		    	String line;
+		    	int lineCount = 0;
+		    	while((line = br.readLine()) != null && lineCount < max_recent - 1) {
+		    		if(!line.contains(dbPath)) {
+		    		bw.append(line);
+		    		bw.newLine();
+		    		lineCount++;
+		    		}
+		    	}
+		    	br.close();
+		    	bw.close();
+		    	File newFile = new File(file.getParent() + File.separator + "tmp.txt");
+		        file.delete();
+		        newFile.renameTo(file);
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			  return false;		  
 	}
 	
 	public LinkedHashMap<String, String> readRecent() {
@@ -68,7 +70,6 @@ public class Recent {
 			sc.close();
 			return recentMap;
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return recentMap;
