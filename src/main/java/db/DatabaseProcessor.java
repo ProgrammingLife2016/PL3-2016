@@ -35,9 +35,9 @@ public class DatabaseProcessor {
 		Coordinate[] coordinates = coorddet.calcCoords();
 		SplashController.progressString.set("Saving segment coordinates");
 		for (int i = 1; i <= coordinates.length; i++) {
-			if (i % (coordinates.length / 10) == 0) {
+			if ( (i % coordinates.length) / 10 == 0) {
 				SplashController.progressString
-					.set((i * 100 / coordinates.length + 1) + "% Stored");
+					.set((i * 100 / coordinates.length) + "% Stored");
 			}
 			try {
 				this.db.executeUpdate("UPDATE SEGMENTS SET "
@@ -80,7 +80,7 @@ public class DatabaseProcessor {
 		noOfSegments = to.get(to.size() - 1);
 		SplashController.progressString.set("Retrieving link data");
 		for (int i = 0; i < from.size(); i++) {
-			if ( (i + 1) % (from.size() / 10) == 0) {
+			if ( ((i + 1) % from.size()) / 10 == 0) {
 				SplashController.progressString
 					.set((i * 100 / from.size() + 1) + "% Retrieved");
 			}
@@ -98,7 +98,7 @@ public class DatabaseProcessor {
 			e.printStackTrace();
 		}
 		for (int i = 0; i < from.size(); i++) {
-			if ( (i + 1) % (from.size() / 10) == 0) {
+			if ( ((i + 1) % from.size()) / 10 == 0) {
 				SplashController.progressString.set((i * 100 / from.size() + 1) + "% Stored");
 			}
 			updateDblinkcount(from.get(i), to.get(i), 

@@ -84,7 +84,7 @@ public class CoordinateDetermination {
 		SplashController.progressString.set("Calculating segment coordinates");
 
 		for (int i = 1; i <= noOfSegments; i++) {
-			if (i % (noOfSegments / 10) == 0) {
+			if ( (i % noOfSegments) / 10 == 0) {
 				SplashController.progressString.set((i * 100 / noOfSegments) 
 						+ 1 + "% Calculated");
 			}
