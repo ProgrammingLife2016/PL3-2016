@@ -13,7 +13,7 @@ import java.util.Scanner;
 /**
  * Class used to handle the recently opened files
  * in the toolbar.
- * @author Bjorn
+ * @author Björn Ho
  */
 public class RecentHandler {
 	

@@ -2,7 +2,9 @@ package toolbar;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
@@ -12,7 +14,7 @@ import org.junit.Test;
 
 /**
  * Tests to check if RecentHandler is working as intended
- * @author Bjorn
+ * @author Björn Ho
  */
 public class RecentHandlerTest {
 	static String directory= System.getProperty("user.dir") 
@@ -55,6 +57,20 @@ public class RecentHandlerTest {
 		File file = new File(directory + "TB500.mv.db");
 		file.createNewFile();
 		assertTrue(recent.fileExists("TB500" + " " + directory + "TB500"));
+		cleanUp();
+	}
+	
+	@Test
+	public void testGetRecent() throws IOException {
+		File file = new File(directory + "recent.txt");
+		file.createNewFile();
+		BufferedWriter bw = new BufferedWriter(
+				new FileWriter(directory + "recent.txt"));
+		bw.write("TBTest" + " " + "PathToFile");
+		bw.close();
+		RecentHandler recent = new RecentHandler();
+		assertEquals("PathToFile", 
+				recent.getRecent().get("TBTest"));
 		cleanUp();
 	}
 	

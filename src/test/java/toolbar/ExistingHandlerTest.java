@@ -10,7 +10,7 @@ import org.junit.Test;
 
 /**
  * Tests to check if ExistingHandler is working as intended
- * @author Bjorn
+ * @author Björn Ho
  */
 public class ExistingHandlerTest {
 	static String directory= System.getProperty("user.dir") 
