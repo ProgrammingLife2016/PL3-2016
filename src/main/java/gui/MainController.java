@@ -82,22 +82,29 @@ public class MainController implements Initializable {
 	/**
 	 * Used to import a new .gfa file. It will open up a file explorer to browse to your file.
 	 * It will build the recently opened file submenu and the existing submenu accordingly.
+	 * It also checks if the import is really new. If it is, then getting an existing database
+	 * should return null and it will start the import, else it will open it as an existing file.
 	 * @param actionEvent	An Event representing some type of action
 	 */
 	 public void importNew(final ActionEvent actionEvent) {
 		 final FileChooser fileExplorer = new FileChooser();
 		 fileExplorer.getExtensionFilters().addAll(new ExtensionFilter("gfa files", "*.gfa"));
 		 File file = fileExplorer.showOpenDialog(verticalBox.getScene().getWindow());
+
 		 if (file != null) {
 			 RecentHandler recent = new RecentHandler();
-			 String fileName = FilenameUtils.removeExtension(file.getName());
-				final String dbPath = System.getProperty("user.dir") 
+			 final String fileName = FilenameUtils.removeExtension(file.getName());
+			 final String dbPath = System.getProperty("user.dir") 
 						+ File.separator + "db" + File.separator + fileName;
-			 recent.buildRecent(dbPath, fileName);
-			 ImportHandler importer = new ImportHandler(
-					 Launcher.stage, file.getAbsolutePath(), fileName);
-			 importer.startImport();
-			 updateExisting();
+			 if (new ExistingHandler().buildExistingMap().get(fileName) == null) {
+				 recent.buildRecent(dbPath, fileName);
+				 ImportHandler importer = new ImportHandler(
+						 Launcher.stage, file.getAbsolutePath(), fileName);
+				 importer.startImport();
+				 updateExisting();
+			 } else {
+				 openExisting(dbPath, fileName);
+			 }	
          }
 	 }
 	 
