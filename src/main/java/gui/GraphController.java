@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,9 +13,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
+import javafx.scene.shape.Line;
 
 import db.DatabaseManager;
 
@@ -93,6 +92,7 @@ public class GraphController implements Initializable {
 			} else if (deltaX > 0) {
 				scrollPane.setVvalue(Math.max(0, scrollPane.getVvalue() - 0.05));
 			}
+			
 		}
 	};
 	
@@ -153,6 +153,9 @@ public class GraphController implements Initializable {
 		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
 		});
+		
+		scrollPane.setVvalue(0.5);
+		scrollPane.setHvalue(0);
 	}
 	
 	/**
@@ -215,23 +218,6 @@ public class GraphController implements Initializable {
 	}
 	
 	/**
-	 * Draws a line between 2 points of segments.
-	 * 
-	 * @param from
-	 * 			Segment from which path is drawn.
-	 * @param to
-	 * 			Segment to which path is drawn.	
-	 * @return A Path through which the lines goes.
-	 */
-	private Path drawPath(double fromX, double fromY, double toX, double toY) {
-		MoveTo moveto = new MoveTo(fromX, fromY);
-		LineTo lineto = new LineTo(toX , toY);
-		Path path = new Path();
-		path.getElements().addAll(moveto, lineto);
-		return path;
-	}
-	
-	/**
 	 * Returns a group containing the edges between all the segment coordinates.
 	 */
 	private Group getGraphEdges() {
@@ -241,12 +227,12 @@ public class GraphController implements Initializable {
 			int toId = to.get(i);
 			GraphSegment fromsegment = segments.get(fromId);
 			GraphSegment tosegment = segments.get(toId);
-			Path path = this.drawPath(fromsegment.getLayoutX() + fromsegment.getRadius(),
+			Line line = new Line(fromsegment.getLayoutX() + fromsegment.getRadius(),
 					fromsegment.getLayoutY() + fromsegment.getRadius(),
 					tosegment.getLayoutX() + tosegment.getRadius(),
 					tosegment.getLayoutY() + tosegment.getRadius());
-	        path.setStrokeWidth(1);
-	        res.getChildren().add(path);
+	        line.setStrokeWidth(1);
+	        res.getChildren().add(line);
 		}
 		return res;
 	}
