@@ -74,28 +74,51 @@ public class DatabaseProcessor {
 		int fromBubble = -1;
 		int toBubble = -1;
 		
+//		Stack<Integer> buffer = new Stack<>();
+//		buffer.push(bubbleStarts.get(0));
+//
+//		while (!buffer.isEmpty()) {
+//			int id = buffer.pop();
+////			visited[id - 1] = true;
+//			System.out.println(id);
+//			List<Integer> edges = links.get(id - 1);
+//			for (int to : edges) {
+//				System.out.println("to: " + to);
+//				if (!visited[to - 1]) {
+//					if (bubbleStarts.contains(to)) {
+//						System.out.println("New from: " + to);
+//						fromBubble = to;
+//					} else if (bubbleEnds.contains(to)) {
+//						System.out.println("Bubble: " + fromBubble + ", " + to);
+//						break;
+//					}
+////					
+//					buffer.push(to);
+//				}
+//			}
+//		}
+		
 		Stack<Integer> buffer = new Stack<>();
 		buffer.push(bubbleStarts.get(0));
-
-		while (!buffer.isEmpty()) {
+		
+		Stack<Integer> startIds = new Stack<>();
+		int count = 0;
+		while (!buffer.isEmpty() && count++ < 30) {
 			int id = buffer.pop();
-			visited[id - 1] = true;
-			System.out.println(id);
+//			System.out.println(id);
 			List<Integer> edges = links.get(id - 1);
+			if (edges.size() > 1) {
+				startIds.push(id);
+				System.out.println("Pushed " + id);
+			}
 			for (int to : edges) {
-				System.out.println("to: " + to);
-				if (!visited[to - 1]) {
-					if (bubbleStarts.contains(to)) {
-						System.out.println("New from: " + to);
-						fromBubble = to;
-					} else if (bubbleEnds.contains(to)) {
-						System.out.println("Bubble: " + fromBubble + ", " + to);
-						break;
-					}
-//					
-					buffer.push(to);
+				buffer.push(to);
+				if (bubbleEnds.contains(to) && startIds.size() > 0) {
+					System.out.println("Bubble: " + startIds.pop() + ", " + to);
+					break;
 				}
 			}
+			
 		}
 		
 	}

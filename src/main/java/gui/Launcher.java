@@ -29,7 +29,7 @@ public class Launcher extends Application {
 		Launcher.stage = stage;
 		stage.setTitle("DNA Lab");
 		
-		final String filename = "example";
+		final String filename = "bubbleTest";
 
 		final String gfaPath = System.getProperty("user.dir") 
 				+ "/Data/" + filename + "/" + filename + ".gfa";
