@@ -35,6 +35,8 @@ public class SplashController implements Initializable{
 	 */
 	public static SimpleIntegerProperty progressNum = new SimpleIntegerProperty(0);
 	public static SimpleStringProperty progressString = new SimpleStringProperty("");
+	private ChangeListener<String> stringListener;
+	private ChangeListener<Number> numberListener;
 	
 	/**
 	 * These enable the FXMLLoader to inject values defined in a FXML file
@@ -74,23 +76,26 @@ public class SplashController implements Initializable{
         final Task<Void> listenerTask = new Task<Void>() {
 			@Override
             public Void call() throws InterruptedException {
-        		progressString.addListener(new ChangeListener<String>() {
-  			    @Override
-  			    public void changed(ObservableValue<? extends String> ov, String oldVal,
-  			    String newVal) {
-  		            updateMessage(newVal);
-  			      }
-      		    });
-        		progressNum.addListener(new ChangeListener<Number>() {
-    			@Override
-    			public void changed(ObservableValue<? extends Number> ov, Number oldVal, 
-		    	Number newVal) {
-    				updateProgress(newVal.longValue(), 100);
-    				if ((int) newVal == 100) {
-    					fadeOutSplash();
-    				}
-    			}
-        	    });
+				stringListener = (new ChangeListener<String>() {
+	  			    @Override
+	  			    public void changed(ObservableValue<? extends String> ov, String oldVal,
+	  			    String newVal) {
+	  		            updateMessage(newVal);
+	  			      }
+	      		    });
+				numberListener = (new ChangeListener<Number>() {
+	    			@Override
+	    			public void changed(ObservableValue<? extends Number> ov, Number oldVal, 
+			    	Number newVal) {
+	    				updateProgress(newVal.longValue(), 100);
+	    				if ((int) newVal == 100) {
+	    					fadeOutSplash();
+	    				}
+	    			}
+	        	    });
+				
+        		progressString.addListener(stringListener);
+        		progressNum.addListener(numberListener);
         		return null;
             }
         };
@@ -108,6 +113,8 @@ public class SplashController implements Initializable{
 				progressBar.progressProperty().unbind();
 			    progressText.textProperty().unbind();
 				progressBar.setProgress(1);
+				progressString.removeListener(stringListener);
+				progressNum.removeListener(numberListener);
 			    FadeTransition fadeSplash = new FadeTransition(
 			    		Duration.seconds(1.0), verticalBox);
 			    fadeSplash.setFromValue(1.0);
@@ -130,9 +137,12 @@ public class SplashController implements Initializable{
 			public void run() {
 				Parent root;
 				try {
-					root = FXMLLoader.load(getClass().getResource("Main.fxml"));
+					root = FXMLLoader.load(
+							getClass().getClassLoader().getResource("Main.fxml"));
 			        Scene scene = new Scene(root);
 			        Launcher.stage.setScene(scene);
+			        Launcher.stage.setMaximized(false);
+			        Launcher.stage.setMaximized(true);
 			        Launcher.stage.show();
 				} catch (IOException e) {
 					e.printStackTrace();

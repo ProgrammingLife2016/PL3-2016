@@ -14,6 +14,7 @@ import db.DatabaseManager;
 import parsers.GfaException;
 import parsers.GfaParser;
 import parsers.NewickTreeParser;
+import toolbar.RecentHandler;
 
 /**
  * This launcher starts up our program.
@@ -32,7 +33,7 @@ public class Launcher extends Application {
 		final String gfaPath = System.getProperty("user.dir") 
 				+ "/Data/" + filename + "/" + filename + ".gfa";
 		final String dbPath = System.getProperty("user.dir") 
-				+ "/db/" + filename;
+				+ File.separator + "db" + File.separator + filename;
 		final String nwkPath = System.getProperty("user.dir") 
 				+ "/Data/" + filename + "/" + "340tree.rooted.TKK.nwk";
 		final File database = new File(dbPath + ".mv.db");
@@ -43,10 +44,15 @@ public class Launcher extends Application {
 			System.err.println("File: " + nwkPath + " not found");
 		}
 		
+		RecentHandler rgfa = new RecentHandler();
+		rgfa.buildRecent(dbPath, filename);
+
+		
 		/**
 		 * Loads up splash screen and display it.
 		 */
-		Parent root = FXMLLoader.load(getClass().getResource("splashScreen.fxml"));
+		Parent root = FXMLLoader.load(getClass().getClassLoader()
+				.getResource("splashScreen.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();

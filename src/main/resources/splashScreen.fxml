@@ -11,7 +11,7 @@
    <children>
       <ImageView fitHeight="500.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../img/splashScreen.png" />
+            <Image url="@img/splashScreen.png" />
          </image>
       </ImageView>
       <ProgressBar fx:id="progressBar" prefWidth="800.0" progress="0.0" />

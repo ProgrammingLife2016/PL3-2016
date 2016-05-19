@@ -138,17 +138,9 @@ public class GraphController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		this.dbm = Launcher.dbm;
-		loadSegmentData();
-		constructSegmentMap();
-		
-		innerGroup = getGraph();
-		outerGroup = new Group(innerGroup);
-		scrollPane.setContent(outerGroup);
-		
+		updateView();	
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
 		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
-		
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
 		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
@@ -156,6 +148,19 @@ public class GraphController implements Initializable {
 		
 		scrollPane.setVvalue(0.5);
 		scrollPane.setHvalue(0);
+	}
+	
+	/**
+	 * Updates the view. Used when changing database files so the graph
+	 * will have to adjust to the new file.
+	 */
+	public void updateView() {
+		this.dbm = Launcher.dbm;
+		loadSegmentData();
+		constructSegmentMap();
+		innerGroup = getGraph();
+		outerGroup = new Group(innerGroup);
+		scrollPane.setContent(outerGroup);
 	}
 	
 	/**

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox fx:id="verticalBox" alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainController">
+   <children>
+         <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#importNew" text="Import new .gfa file" />
+                  <Menu fx:id="recentMenu" mnemonicParsing="false" text="Open recent">
+                  </Menu>
+                  <Menu fx:id="existingMenu" mnemonicParsing="false" text="Open existing">
+                  </Menu>
+              <MenuItem mnemonicParsing="false" onAction="#Quit" text="Quit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+<TabPane fx:id="tabPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+  <tabs>
+    <Tab text="Ribbon view">
+      <content>
+      	<fx:include fx:id="ribbonTab" source="RibbonLevel.fxml" />
+      </content>
+    </Tab>
+    <Tab text="Graph view">
+      <content>
+        <fx:include fx:id="graphTab" source="GraphLevel.fxml"/>
+      </content>
+    </Tab>
+    <Tab text="Phylogenetic Tree">
+      <content>
+        <fx:include fx:id="phyloTab" source="PhylogenyView.fxml"/>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
+   </children>
+</VBox>

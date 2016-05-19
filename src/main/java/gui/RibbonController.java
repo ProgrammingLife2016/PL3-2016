@@ -32,6 +32,7 @@ public class RibbonController implements Initializable {
     private static final double MIN_SCALE = .1d;
     
 	private DatabaseManager dbm;
+	
     
 	/**
 	 * Handles the scroll wheel event for the ribbon view.
@@ -117,12 +118,7 @@ public class RibbonController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		this.dbm = Launcher.dbm;
-		
-		// Inner group and outer group according to the ScrollPane JavaDoc.
-		innerGroup = createRibbons();
-		outerGroup = new Group(innerGroup);
-		scrollPane.setContent(outerGroup);
+		updateView();
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
 		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
 		
@@ -131,7 +127,18 @@ public class RibbonController implements Initializable {
 		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
 		});
-
+	}
+	
+	/**
+	 * Updates the view. Used when changing database files so the graph
+	 * will have to adjust to the new file.
+	 */
+	public void updateView() {
+		this.dbm = Launcher.dbm;
+		// Inner group and outer group according to the ScrollPane JavaDoc.
+		innerGroup = createRibbons();
+		outerGroup = new Group(innerGroup);
+		scrollPane.setContent(outerGroup);
 	}
 
 	/**

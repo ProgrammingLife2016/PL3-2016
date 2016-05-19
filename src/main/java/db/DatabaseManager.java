@@ -1,17 +1,16 @@
 package db;
 
-import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import db.tables.Table;
 import db.tuples.Tuple;
 
 /**
  * Provides access methods to the database.
- *
  * @author Björn Ho, Daniël van den Berg
  */
 public class DatabaseManager {
