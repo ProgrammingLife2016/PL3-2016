@@ -170,7 +170,7 @@ public class GraphController implements Initializable {
 		segments = new HashMap<Integer, GraphSegment>((int) Math.ceil(to.size() / 0.75));
 		segmentdna = new ArrayList<String>();
 		
-		for (int i = 1; i <= to.get(to.size() - 1); i++) {
+		for (int i = 1; i <= dbm.getDbReader().countSegments(); i++) {
 			segmentdna.add(dbm.getDbReader().getContent(i));
 		}
 	}
@@ -182,7 +182,7 @@ public class GraphController implements Initializable {
 	public void constructSegmentMap() {
 		int linkpointer = 1;
 		
-		for (int i = 1; i <= to.get(to.size() - 1); i++) {
+		for (int i = 1; i <= dbm.getDbReader().countSegments(); i++) {
 			int childcount = 0;
 			
 			while (linkpointer <= from.size() && i == from.get(linkpointer - 1)) {
@@ -223,8 +223,11 @@ public class GraphController implements Initializable {
 	private Group getGraphEdges() {
 		Group res = new Group();
 		for (int i = 0; i < from.size(); i++) {
+			System.out.println(i);
 			int fromId = from.get(i);
+			System.out.println("FromID: " + fromId);
 			int toId = to.get(i);
+			System.out.println("ToID: " + toId);
 			GraphSegment fromsegment = segments.get(fromId);
 			GraphSegment tosegment = segments.get(toId);
 			Line line = new Line(fromsegment.getLayoutX() + fromsegment.getRadius(),
