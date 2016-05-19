@@ -232,10 +232,13 @@ public class GraphController implements Initializable {
 			int toId = to.get(i);
 			GraphSegment fromsegment = segments.get(fromId);
 			GraphSegment tosegment = segments.get(toId);
-			Line line = new Line(fromsegment.getLayoutX() + fromsegment.getRadius(),
-					fromsegment.getLayoutY() + fromsegment.getRadius(),
-					tosegment.getLayoutX() + tosegment.getRadius(),
-					tosegment.getLayoutY() + tosegment.getRadius());
+			double fromX = fromsegment.getLayoutX() + 2 * Math.log(fromsegment.getContentSize()) 
+				+ fromsegment.getRadius();
+			double toX = tosegment.getLayoutX() + 2 * Math.log(tosegment.getContentSize()) 
+				+ tosegment.getRadius();
+			
+			Line line = new Line(fromX, fromsegment.getLayoutY() + fromsegment.getRadius(),
+					toX, tosegment.getLayoutY() + tosegment.getRadius());
 	        line.setStrokeWidth(1);
 	        res.getChildren().add(line);
 		}
