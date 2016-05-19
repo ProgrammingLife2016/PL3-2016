@@ -223,11 +223,8 @@ public class GraphController implements Initializable {
 	private Group getGraphEdges() {
 		Group res = new Group();
 		for (int i = 0; i < from.size(); i++) {
-			System.out.println(i);
 			int fromId = from.get(i);
-			System.out.println("FromID: " + fromId);
 			int toId = to.get(i);
-			System.out.println("ToID: " + toId);
 			GraphSegment fromsegment = segments.get(fromId);
 			GraphSegment tosegment = segments.get(toId);
 			Line line = new Line(fromsegment.getLayoutX() + fromsegment.getRadius(),
