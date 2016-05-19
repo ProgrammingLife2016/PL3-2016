@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 import org.apache.commons.io.FilenameUtils;
