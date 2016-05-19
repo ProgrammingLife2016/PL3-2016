@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Björn Ho, Daniel van de Berg, Rob Kapel
@@ -153,6 +155,54 @@ public class DatabaseReader {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	/**
+	 * Returns all segment id's of segments that have multiple outgoing edges
+	 * and (most likely) are the start of a bubble.
+	 * 
+	 * @return all segment id's of segments that have multiple outgoing edges
+	 *         and (most likely) are the start of a bubble.
+	 */
+	public List<Integer> getBubbleStarts() {
+		try {
+			ResultSet rs = this.db.executeQuery(
+					"SELECT * FROM "
+					+ "(SELECT FROMID, COUNT(*) AS NO_OUT FROM LINKS GROUP BY FROMID) "
+					+ "WHERE NO_OUT>1");
+			List<Integer> res = new ArrayList<>();
+			while (rs.next()) {
+				res.add(rs.getInt(1));
+			}
+			return res;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * Returns all segment id's of segments that have multiple ingoing edges and
+	 * (most likely) are the end of a bubble.
+	 * 
+	 * @return all segment id's of segments that have multiple ingoing edges and
+	 *         (most likely) are the end of a bubble.
+	 */
+	public List<Integer> getBubbleEnds() {
+		try {
+			ResultSet rs = this.db.executeQuery(
+					"SELECT * FROM "
+					+ "(SELECT TOID, COUNT(*) AS NO_IN FROM LINKS GROUP BY TOID) "
+					+ "WHERE NO_IN>1;");
+			List<Integer> res = new ArrayList<>();
+			while (rs.next()) {
+				res.add(rs.getInt(1));
+			}
+			return res;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
