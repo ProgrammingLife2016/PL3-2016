@@ -2,7 +2,7 @@ package gui;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 
@@ -32,7 +32,7 @@ public class GraphSegment extends StackPane {
 	/**
 	 * Layout object of segment.
 	 */
-	private Circle image;
+	private Ellipse image;
 	
 	/**
 	 * Creates a new GraphSegment with some standard settings for layout.
@@ -54,7 +54,7 @@ public class GraphSegment extends StackPane {
 	    this.children = new int[childcount];
 	    this.dnacontent = dnacontent;
 		this.setLayout();
-		this.setLayoutCoords(xcoord, ycoord);
+		this.setLayoutCoords(xcoord + 1000, ycoord);
 		this.visualizeDnaContent();
 	}
 	
@@ -62,8 +62,9 @@ public class GraphSegment extends StackPane {
 	 * Sets some basic options for appearance of a segment.
 	 */
 	public void setLayout() {
-	    image = new Circle();
-	    image.setRadius(30);
+	    image = new Ellipse();
+	    image.setRadiusY(30);
+	    image.setRadiusX(30 + 2 * Math.log(dnacontent.length));
 	    image.setFill(Color.DODGERBLUE);
 	    image.setStroke(Color.BLACK);
 	    image.setStrokeType(StrokeType.INSIDE);
@@ -112,6 +113,10 @@ public class GraphSegment extends StackPane {
 	}
 	
 	public double getRadius() {
-		return this.image.getRadius();
+		return this.image.getRadiusY();
+	}
+	
+	public int getContentSize() {
+		return this.dnacontent.length;
 	}
 }
