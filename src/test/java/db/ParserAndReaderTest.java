@@ -45,11 +45,11 @@ public class ParserAndReaderTest {
 
 	}
 	
-	@AfterClass
-	public static void after() {
-		dbm.cleanDbDirectory();
-	}
-	
+//	@AfterClass
+//	public static void after() {
+//		dbm.cleanDbDirectory();
+//	}
+//	
 	/**
 	 * Test for method returning a list with each starting segment of a certain link.
 	 */
@@ -60,6 +60,7 @@ public class ParserAndReaderTest {
 		for (int i = 0; i < 11; i++) {
 			assertEquals(expectedids[i], (int)fromallids.get(i));
 		}
+		dbm.cleanDbDirectory();
 	}
 	
 	/**
@@ -71,6 +72,7 @@ public class ParserAndReaderTest {
 		for (int i = 0; i < 2; i++) {
 			assertEquals(expectedids[i], (int)toallids.get(i));
 		}
+		dbm.cleanDbDirectory();
 	}
 	
 	/**
@@ -83,6 +85,7 @@ public class ParserAndReaderTest {
 		for (int i = 0; i < 2; i++) {
 			assertEquals(expectedids[i], (int)fromids.get(i));
 		}
+		dbm.cleanDbDirectory();
 	}
 	
 	/**
@@ -95,6 +98,7 @@ public class ParserAndReaderTest {
 		for (int i = 0; i < 2; i++) {
 			assertEquals(expectedids[i], (int)toids.get(i));
 		}
+		dbm.cleanDbDirectory();
 	}
 	
 	/**
@@ -105,6 +109,7 @@ public class ParserAndReaderTest {
 		assertEquals(2, dbm.getDbReader().countGenomesInLink(1,2));
 		assertEquals(1, dbm.getDbReader().countGenomesInLink(2,4));
 		assertEquals(2, dbm.getDbReader().countGenomesInLink(8,9));
+		dbm.cleanDbDirectory();
 	}
 	
 	/**
@@ -115,6 +120,7 @@ public class ParserAndReaderTest {
 		assertEquals(4, dbm.getDbReader().countGenomesInSeg(1));
 		assertEquals(2, dbm.getDbReader().countGenomesInSeg(2));
 		assertEquals(2, dbm.getDbReader().countGenomesInSeg(8));
+		dbm.cleanDbDirectory();
 	}
 	
 	/**
@@ -126,6 +132,7 @@ public class ParserAndReaderTest {
 		for (int i = 1; i <= 9; i++) {
 			assertEquals(expectedcontent[i], dbm.getDbReader().getContent(i));
 		}
+		dbm.cleanDbDirectory();
 	}
 	
 	@Test
@@ -133,5 +140,6 @@ public class ParserAndReaderTest {
 		assertEquals(parser.getGenomes().size(), 4);
 		assertEquals(parser.getGenomes().toString(),
 				"{seq3.fasta=3, seq1.fasta=1, seq4.fasta=4, seq2.fasta=2}");
+		dbm.cleanDbDirectory();
 	}
 }
