@@ -18,49 +18,58 @@ public class ExistingHandlerTest {
 	
 	@BeforeClass
 	public static void cleanUp() {
-		for (File file: new File(directory).listFiles()) {
-			if (file != null) {
-				file.delete();
+			for (File file: new File(directory).listFiles()) {
+				if (file != null) {
+					if (!file.delete())
+						System.err.println("File was not deleted!");
+				}
 			}
-		}
 	}
 	
 	@Test
 	public void testMakeFileArray() throws IOException {
 		File file = new File(directory + "test.mv.db");
-		file.createNewFile();
+		if (!file.createNewFile())
+			System.err.println("File was not created!");
 		ExistingHandler exHandler = new ExistingHandler();
 		assertEquals(directory + "test.mv.db", exHandler.makeFileArray()[0].toString());
-		file.delete();
+		if (!file.delete())
+			System.err.println("File was not deleted!");
 	}
 	
 	@Test
 	public void testEmptyFileArray() throws IOException {
 		File file = new File(directory + "invalidType.txt");
-		file.createNewFile();
+		if (!file.createNewFile())
+			System.err.println("File was not created!");
 		ExistingHandler exHandler = new ExistingHandler();
 		assertEquals(0, exHandler.makeFileArray().length);
-		file.delete();
+		if (!file.delete())
+			System.err.println("File was not deleted!");
 	}
 	
 	@Test
 	public void testCorrectValue() throws IOException {
 		File file1 = new File(directory + "TB500.mv.db");
-		file1.createNewFile();
+		if (!file1.createNewFile())
+			System.err.println("File was not created!");
 		ExistingHandler exHandler = new ExistingHandler();
 		assertEquals(directory + "TB500", 
 				exHandler.buildExistingMap().get("TB500"));
-		file1.delete();
+		if (!file1.delete())
+			System.err.println("File was not deleted!");
 	}
 	
 	@Test
 	public void testCorrectKey() throws IOException {
 		File file1 = new File(directory + "TB999.mv.db");
-		file1.createNewFile();
+		if (!file1.createNewFile())
+			System.err.println("File was not created!");
 		ExistingHandler exHandler = new ExistingHandler();
 		assertEquals("TB999",
 				exHandler.buildExistingMap().keySet().iterator().next());
-		file1.delete();
+		if (!file1.delete())
+			System.err.println("File was not deleted!");
 	}
 	
 	@Test
