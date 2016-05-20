@@ -194,7 +194,8 @@ public class ReadParseTest {
 	 */
 	@Test
 	public void getContentTest() {
-		String[] expectedcontent = {"empty", "TC", "AGATCAAT", "CTTCGTGA", "AC", "TG", "GT", "T", "A", "AG"};
+		String[] expectedcontent = { "empty", "TC", "AGATCAAT", "CTTCGTGA", 
+				"AC", "TG", "GT", "T", "A", "AG" };
 		for (int i = 1; i <= 9; i++) {
 			assertEquals(expectedcontent[i], dbm.getDbReader().getContent(i));
 		}
@@ -202,7 +203,7 @@ public class ReadParseTest {
 	}
 	
 	@Test
-	public void GfaParsedContentTest() throws GfaException {
+	public void gfaParsedContentTest() throws GfaException {
 		assertEquals(parser.getGenomes().size(), 4);
 		assertEquals(parser.getGenomes().toString(),
 				"{seq3.fasta=3, seq1.fasta=1, seq4.fasta=4, seq2.fasta=2}");

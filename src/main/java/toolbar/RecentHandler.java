@@ -3,10 +3,12 @@ package toolbar;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 
@@ -61,7 +63,9 @@ public class RecentHandler {
 		    bw.newLine();
 		    String line;
 		    int lineCount = 0;
-		    BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(new FileInputStream(file.getAbsolutePath()), 
+							Charset.defaultCharset()));
 		    while ((line = br.readLine()) != null && lineCount < maxRecent - 1) {
 		    	if (!line.contains(dbPath) && fileExists(line)) {
 		    	bw.append(line);
@@ -106,7 +110,7 @@ public class RecentHandler {
 		LinkedHashMap<String, String> recentMap = new LinkedHashMap<String, String>();
 		File file = new File(System.getProperty("user.dir") + "/recent/recent.txt");
 		try {
-			Scanner sc = new Scanner(file);
+			Scanner sc = new Scanner(new FileInputStream(file), "UTF-8");
 			while (sc.hasNext()) {
 				recentMap.put(sc.next(), sc.next());
 			}
