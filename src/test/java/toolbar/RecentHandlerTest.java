@@ -16,21 +16,22 @@ import org.junit.Test;
  * @author Björn Ho
  */
 public class RecentHandlerTest {
-	static String directory= System.getProperty("user.dir") 
+	static String directory = System.getProperty("user.dir") 
 			+ File.separator + "recent" + File.separator;
 	
-	static String dbDir= System.getProperty("user.dir") 
+	static String dbDir = System.getProperty("user.dir") 
 			+ File.separator + "db" + File.separator;
 	
 	
 	@BeforeClass
 	public static void cleanUp() {
-		for(File file: new File(directory).listFiles()) {
-			if(!file.getName().equals(".gitignore"))
-			file.delete();
+		for (File file: new File(directory).listFiles()) {
+			if (!file.getName().equals(".gitignore")) {
+				file.delete();
+			}
 		}
 		
-		for(File file: new File(dbDir).listFiles()) {
+		for (File file: new File(dbDir).listFiles()) {
 			file.delete();
 		}
 	}

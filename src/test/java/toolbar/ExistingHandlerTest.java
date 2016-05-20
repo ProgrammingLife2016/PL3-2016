@@ -13,19 +13,21 @@ import org.junit.Test;
  * @author Björn Ho
  */
 public class ExistingHandlerTest {
-	static String directory= System.getProperty("user.dir") 
+	static String directory = System.getProperty("user.dir") 
 			+ File.separator + "db" + File.separator;
 	
 	@BeforeClass
 	public static void cleanUp() {
-		for(File file: new File(directory).listFiles()) {
-			file.delete();
+		for (File file: new File(directory).listFiles()) {
+			if (file != null) {
+				file.delete();
+			}
 		}
 	}
 	
 	@Test
 	public void testMakeFileArray() throws IOException {
-		File file= new File(directory + "test.mv.db");
+		File file = new File(directory + "test.mv.db");
 		file.createNewFile();
 		ExistingHandler exHandler = new ExistingHandler();
 		assertEquals(directory + "test.mv.db", exHandler.makeFileArray()[0].toString());

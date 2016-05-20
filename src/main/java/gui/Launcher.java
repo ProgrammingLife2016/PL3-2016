@@ -21,15 +21,15 @@ import toolbar.RecentHandler;
  * @author Björn Ho
  */
 public class Launcher extends Application {
-	public static DatabaseManager dbm;
-	public static Stage stage;
-	public static NewickTree nwkTree = null;
+	static DatabaseManager dbm;
+	static Stage stage;
+	static NewickTree nwkTree = null;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
 		Launcher.stage = stage;
 		stage.setTitle("DNA Lab");
-		final String filename = "TB328";
+		final String filename = "TB10";
 		final String gfaPath = System.getProperty("user.dir") 
 				+ "/Data/" + filename + "/" + filename + ".gfa";
 		final String dbPath = System.getProperty("user.dir") 

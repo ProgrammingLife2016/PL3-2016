@@ -114,19 +114,21 @@ public class DatabaseProcessor {
 	 * @return An updated HashMap where data about the genome we analyzed is also stored
 	 */
 	public HashMap<Integer, Integer> analyzeGenome(HashMap<Integer, Integer> map, int genomeId) {
-		try {
-			ResultSet rs = this.db.executeQuery("SELECT * "
-					+ "FROM GENOMESEGMENTLINK WHERE GENOMEID = " + genomeId);
-			rs.next();
-			int first = rs.getInt(1);
-			int second;
-			while (rs.next()) {
-				second = rs.getInt(1);
-				int currentcount = map.remove(noOfSegments * (first - 1) + second - 1);
-				map.put(noOfSegments * (first - 1) + second - 1, currentcount + 1);
-				first = second;
+		String query = "SELECT * "
+				+ "FROM GENOMESEGMENTLINK WHERE GENOMEID = " + genomeId;
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			if (rs.next()) {
+				int first = rs.getInt(1);
+				int second;
+				while (rs.next()) {
+					second = rs.getInt(1);
+					int currentcount = map.remove(noOfSegments * (first - 1) + second - 1);
+					map.put(noOfSegments * (first - 1) + second - 1, currentcount + 1);
+					first = second;
+				}
+				return map;
 			}
-			return map;
+			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return map;

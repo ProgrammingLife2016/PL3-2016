@@ -129,7 +129,6 @@ public class GraphController implements Initializable {
 
 			innerGroup.setScaleY(scale);
 			innerGroup.setScaleX(scale);
-			return;
 		}
 	};
 

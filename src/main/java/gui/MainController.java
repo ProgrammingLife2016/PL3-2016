@@ -151,7 +151,7 @@ public class MainController implements Initializable {
 	  * the toolbar. It quits the program.
 	  * @param actionEvent	An Event representing some type of action
 	  */
-	 public void Quit(final ActionEvent actionEvent) {
+	 public void quit(final ActionEvent actionEvent) {
 		 System.exit(0);
 	 }
 }
