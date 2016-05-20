@@ -1,15 +1,14 @@
 package db;
 
+import coordinates.Coordinate;
+import coordinates.CoordinateDetermination;
+import gui.SplashController;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import coordinates.Coordinate;
-import coordinates.CoordinateDetermination;
-import gui.SplashController;
-
 
 /**
  * @author Rob Kapel

@@ -1,13 +1,14 @@
 package db;
 
+import db.tables.Table;
+import db.tuples.Tuple;
+
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-
-import db.tables.Table;
-import db.tuples.Tuple;
 
 /**
  * Provides access methods to the database.
@@ -98,5 +99,18 @@ public class DatabaseManager {
 	
 	public DatabaseProcessor getDbProcessor() {
 		return this.dbProcessor;
+	}
+	
+	public void cleanDbDirectory() {
+		String dbPath = System.getProperty("user.dir") + File.separator + "db";
+		File dbdir = new File(dbPath);      
+	    String[] dbfiles;    
+	    if (dbdir.isDirectory()) {
+	    	dbfiles = dbdir.list();
+	    	for (int i = 0; i < dbfiles.length; i++) {
+	    		File myFile = new File(dbdir, dbfiles[i]); 
+	    		myFile.delete();
+	    	}
+	    }
 	}
 }
