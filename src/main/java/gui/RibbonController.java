@@ -26,8 +26,6 @@ public class RibbonController implements Initializable {
 	private Group innerGroup;
 	private Group outerGroup;
 	
-	private static final int YSCALE = 5;
-	private static final int XSCALE = 10;
     private static final double MAX_SCALE = 100.0d;
     private static final double MIN_SCALE = .1d;
     
@@ -105,7 +103,6 @@ public class RibbonController implements Initializable {
 
 			innerGroup.setScaleY(scale);
 			innerGroup.setScaleX(scale);
-			return;
 		}
 	};
     

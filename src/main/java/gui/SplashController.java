@@ -33,8 +33,10 @@ public class SplashController implements Initializable{
 	 * Both implement ObservableValue so they can be observed when changes
 	 * are made to those variables
 	 */
-	public static SimpleIntegerProperty progressNum = new SimpleIntegerProperty(0);
-	public static SimpleStringProperty progressString = new SimpleStringProperty("");
+	public static final SimpleIntegerProperty progressNum = 
+			new SimpleIntegerProperty(0);
+	public static final SimpleStringProperty progressString = 
+			new SimpleStringProperty("");
 	private ChangeListener<String> stringListener;
 	private ChangeListener<Number> numberListener;
 	
@@ -76,23 +78,23 @@ public class SplashController implements Initializable{
         final Task<Void> listenerTask = new Task<Void>() {
 			@Override
             public Void call() throws InterruptedException {
-				stringListener = (new ChangeListener<String>() {
-	  			    @Override
-	  			    public void changed(ObservableValue<? extends String> ov, String oldVal,
-	  			    String newVal) {
-	  		            updateMessage(newVal);
-	  			      }
-	      		    });
-				numberListener = (new ChangeListener<Number>() {
-	    			@Override
-	    			public void changed(ObservableValue<? extends Number> ov, Number oldVal, 
-			    	Number newVal) {
-	    				updateProgress(newVal.longValue(), 100);
-	    				if ((int) newVal == 100) {
-	    					fadeOutSplash();
-	    				}
-	    			}
-	        	    });
+				stringListener = new ChangeListener<String>() {
+					@Override
+					public void changed(ObservableValue<? extends String> ov, 
+							String oldVal, String newVal) {
+						updateMessage(newVal);
+					}
+				};
+				numberListener = new ChangeListener<Number>() {
+					@Override
+					public void changed(ObservableValue<? extends Number> ov, 
+							Number oldVal, Number newVal) {
+						updateProgress(newVal.longValue(), 100);
+						if ((int) newVal == 100) {
+							fadeOutSplash();
+						}
+					}
+				};
 				
         		progressString.addListener(stringListener);
         		progressNum.addListener(numberListener);

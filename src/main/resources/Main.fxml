@@ -20,7 +20,7 @@
                   </Menu>
                   <Menu fx:id="existingMenu" mnemonicParsing="false" text="Open existing">
                   </Menu>
-              <MenuItem mnemonicParsing="false" onAction="#Quit" text="Quit" />
+              <MenuItem mnemonicParsing="false" onAction="#quit" text="Quit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">

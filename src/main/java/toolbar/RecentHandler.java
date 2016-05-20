@@ -21,7 +21,7 @@ public class RecentHandler {
 	 * The maximum amount of recently opened files
 	 * shown when accessing the submenu.
 	 */
-	final int maxRecent = 3;
+	static final int maxRecent = 3;
 	
 	/**
 	 * It builds up the most recently opened files used for the toolbar
@@ -72,8 +72,12 @@ public class RecentHandler {
 		    br.close();
 		    bw.close();
 		    File newFile = new File(file.getParent() + File.separator + "tmp.txt");
-		    file.delete();
-		    newFile.renameTo(file);
+		    if (!file.delete()) {
+		    	System.err.println("File was not deleted!");
+		    }
+		    if (!newFile.renameTo(file)) {
+		    	System.err.println("File was not renamed!");
+		    }
 		} catch (IOException e) {
 				e.printStackTrace();
 		  }

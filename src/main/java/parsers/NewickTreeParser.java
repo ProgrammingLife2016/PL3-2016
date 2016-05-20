@@ -2,8 +2,10 @@ package parsers;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -27,9 +29,13 @@ public class NewickTreeParser {
 	 * @throws IOException
 	 */
 	public static NewickTree parse(File in) throws IOException {
-		try (BufferedReader reader = new BufferedReader(new FileReader(in))) {
+		try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(new FileInputStream(in), Charset.defaultCharset()))) {
 			String string = reader.readLine();
-			return parse(string);
+			if (string != null) {
+				return parse(string);
+			}
+			return null;
 		}
 	}
 	
@@ -74,23 +80,5 @@ public class NewickTreeParser {
 			}
 		}
 		return root;
-	}
-	
-	/**
-	 * For testing purposes only, will be removed.
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		System.out.println(parse("(A:10,(B:3,C:9):12)").toString());
-		try {
-			String res = parse(
-					new File("/home/daniel/Projects/TU/Y2/TI2806_Context_PL/"
-			+ "PL3-2016/Data/TB10/340tree.rooted.TKK.nwk"))
-							.toString();
-			System.out.println(res);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }

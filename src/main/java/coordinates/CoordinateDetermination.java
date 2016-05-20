@@ -16,51 +16,38 @@ public class CoordinateDetermination {
 	 * List with starting points of each link.
 	 * The segment Id's correspond to those in the "toIDs" list (in order).
 	 */
-	protected ArrayList<Integer> fromIDs;
-	
-	/**
-	 * List with ending points of each link.
-	 * The segment Id's correspond to those in the "fromIDs" list (in order).
-	 */
-	protected ArrayList<Integer> toIDs;
+	private ArrayList<Integer> fromIDs;
 	
 	/**
 	 * List for each link per segment.
 	 */
-	
-	protected ArrayList<ArrayList<Integer>> links;
+	private ArrayList<ArrayList<Integer>> links;
 	
 	/**
 	 * List for each weight per segment
 	 */
-	
-	protected ArrayList<ArrayList<Integer>> counts;
+	private ArrayList<ArrayList<Integer>> counts;
 	
 	/**
 	 * List of number of genomes through each segment
 	 */
 	
-	protected ArrayList<Integer> segmentWeights;
-	
-	/**
-	 * ?
-	 */
-	protected int[] noOfGpS;
+	private ArrayList<Integer> segmentWeights;
 	
 	/**
 	 * List with coordinates of each segment.
 	 */
-	protected Coordinate[] coordinates;
+	private Coordinate[] coordinates;
 	
 	/**
 	 * List with amount of genomes that travel through a certain link.
 	 */
-	protected int[] cweights;
+	private int[] cweights;
 	
 	/**
 	 * Database Object required to extract required data about segments and links.
 	 */
-	protected DatabaseReader dbr;
+	private DatabaseReader dbr;
 	
 	/**
 	 * Takes in a DatabaseReader and determines the coordinates.
@@ -162,22 +149,11 @@ public class CoordinateDetermination {
 		}
 	}
 	
-	
-	/**
-	 * Gets the id of all nodes that are going to the given node.
-	 * @param fromId - the given node.
-	 * @return
-	 */
-	private ArrayList<Integer> getTo(int fromId) {
-		return dbr.getToIDs(fromId);
-	}
-	
 	/**
 	 * Runs the queries on the database to get the required data.
 	 */
 	private void getData() {
 		fromIDs = dbr.getAllFromId();
-		toIDs = dbr.getAllToId();
 		links = dbr.getLinks();
 		counts = dbr.getLinkWeights();
 		segmentWeights = dbr.countAllGenomesInSeg();

@@ -16,22 +16,25 @@ import org.junit.Test;
  * @author Björn Ho
  */
 public class RecentHandlerTest {
-	static String directory= System.getProperty("user.dir") 
+	static String directory = System.getProperty("user.dir") 
 			+ File.separator + "recent" + File.separator;
 	
-	static String dbDir= System.getProperty("user.dir") 
+	static String dbDir = System.getProperty("user.dir") 
 			+ File.separator + "db" + File.separator;
 	
 	
 	@BeforeClass
 	public static void cleanUp() {
-		for(File file: new File(directory).listFiles()) {
-			if(!file.getName().equals(".gitignore"))
-			file.delete();
+		for (File file: new File(directory).listFiles()) {
+			if (!file.getName().equals(".gitignore")) {
+				if (!file.delete())
+					System.err.println("No file was deleted");
+			}
 		}
 		
-		for(File file: new File(dbDir).listFiles()) {
-			file.delete();
+		for (File file: new File(dbDir).listFiles()) {
+			if (!file.delete())
+				System.err.println("No file was deleted");
 		}
 	}
 	
@@ -54,7 +57,8 @@ public class RecentHandlerTest {
 	public void testFileExist() throws IOException {
 		RecentHandler recent = new RecentHandler();
 		File file = new File(directory + "TB500.mv.db");
-		file.createNewFile();
+		if (!file.createNewFile())
+			System.err.println("File was not created!");
 		assertTrue(recent.fileExists("TB500" + " " + directory + "TB500"));
 		cleanUp();
 	}
@@ -62,7 +66,8 @@ public class RecentHandlerTest {
 	@Test
 	public void testGetRecent() throws IOException {
 		File file = new File(directory + "recent.txt");
-		file.createNewFile();
+		if (!file.createNewFile())
+			System.err.println("File was not created!");
 		BufferedWriter bw = new BufferedWriter(
 				new FileWriter(directory + "recent.txt"));
 		bw.write("TBTest" + " " + "PathToFile");
@@ -76,11 +81,13 @@ public class RecentHandlerTest {
 	@Test
 	public void testWriteRecent() throws IOException {
 		File file = new File(directory + "recent.txt");
-		file.createNewFile();
+		if (!file.createNewFile())
+			System.err.println("File was not created!");
 		File file2 = new File(dbDir + "TB100.mv.db");
 		String temp = FilenameUtils.removeExtension(file2.getName());
 		String name = FilenameUtils.removeExtension(temp);
-		file2.createNewFile();
+		if (!file2.createNewFile())
+			System.err.println("File was not created!");
 		RecentHandler recent = new RecentHandler();
 		recent.writeRecent(file, dbDir + name, name);
 		assertEquals(dbDir + name, recent.getRecent().get(name));

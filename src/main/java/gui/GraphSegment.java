@@ -25,11 +25,6 @@ public class GraphSegment extends StackPane {
 	private char[] dnacontent;
 	
 	/**
-	 * Check if current segment had already been drawn.
-	 */
-	private boolean drawn = false;
-	
-	/**
 	 * Layout object of segment.
 	 */
 	private Ellipse image;
@@ -89,14 +84,14 @@ public class GraphSegment extends StackPane {
 	 * DNA strands with more than 5 nucleotides only have the first 5 nucleotides displayed.
 	 */
 	private void visualizeDnaContent() {
-		String dna = "";
+		StringBuilder sb = new StringBuilder();
 		for (int j = 0; j < this.dnacontent.length && j <= 4; j++) {
-			dna += "" +  this.dnacontent[j];
+			sb.append(this.dnacontent[j]);
 		}
 		if ( this.dnacontent.length > 5) {
-			dna += "...";
+			sb.append("...");
 		}
-		Text dnatext = new Text(dna);
+		Text dnatext = new Text(sb.toString());
 		this.getChildren().add(dnatext);
 	}
 	
