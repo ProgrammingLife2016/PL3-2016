@@ -29,7 +29,9 @@ public class Launcher extends Application {
 	public void start(Stage stage) throws Exception {
 		Launcher.stage = stage;
 		stage.setTitle("DNA Lab");
-		final String filename = "TB10";
+		
+		final String filename = "bubbleTest";
+
 		final String gfaPath = System.getProperty("user.dir") 
 				+ "/Data/" + filename + "/" + filename + ".gfa";
 		final String dbPath = System.getProperty("user.dir") 
@@ -79,6 +81,7 @@ public class Launcher extends Application {
         			dbm.getDbProcessor().calculateLinkCounts();
         			SplashController.progressNum.set(60);
         			dbm.getDbProcessor().updateCoordinates();
+        			dbm.getDbProcessor().collapseRibbons();
         			SplashController.progressNum.set(100);
         		} else {
         			dbm = new DatabaseManager(dbPath);

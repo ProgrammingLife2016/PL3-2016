@@ -4,7 +4,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 
 import coordinates.Coordinate;
 import coordinates.CoordinateDetermination;
@@ -48,6 +53,75 @@ public class DatabaseProcessor {
 			}
 		}
 	}
+	
+	public void collapseRibbons() {
+		List<Integer> bubbleStarts = dbr.getBubbleStarts();
+		List<Integer> bubbleEnds = dbr.getBubbleEnds();
+		ArrayList<ArrayList<Integer>> links = dbr.getLinks();
+		boolean[] visited = new boolean[dbr.countSegments()];
+		System.out.println("length " + visited.length);
+		int maxCount = 20;
+
+		for (int i = 0; i < bubbleStarts.size() && i < maxCount; i++) {
+			System.out.println("Start: " + bubbleStarts.get(i));
+		}
+		for (int i = 0; i < bubbleEnds.size() && i < maxCount; i++) {
+			System.out.println("End: " + bubbleEnds.get(i));
+		}
+		
+		
+		int fromBubble = -1;
+		int toBubble = -1;
+		
+//		Stack<Integer> buffer = new Stack<>();
+//		buffer.push(bubbleStarts.get(0));
+//
+//		while (!buffer.isEmpty()) {
+//			int id = buffer.pop();
+////			visited[id - 1] = true;
+//			System.out.println(id);
+//			List<Integer> edges = links.get(id - 1);
+//			for (int to : edges) {
+//				System.out.println("to: " + to);
+//				if (!visited[to - 1]) {
+//					if (bubbleStarts.contains(to)) {
+//						System.out.println("New from: " + to);
+//						fromBubble = to;
+//					} else if (bubbleEnds.contains(to)) {
+//						System.out.println("Bubble: " + fromBubble + ", " + to);
+//						break;
+//					}
+////					
+//					buffer.push(to);
+//				}
+//			}
+//		}
+		
+		Stack<Integer> buffer = new Stack<>();
+		buffer.push(bubbleStarts.get(0));
+		
+		Stack<Integer> startIds = new Stack<>();
+		int count = 0;
+		while (!buffer.isEmpty() && count++ < 30) {
+			int id = buffer.pop();
+//			System.out.println(id);
+			List<Integer> edges = links.get(id - 1);
+			if (edges.size() > 1) {
+				startIds.push(id);
+				System.out.println("Pushed " + id);
+			}
+			for (int to : edges) {
+				buffer.push(to);
+				if (bubbleEnds.contains(to) && startIds.size() > 0) {
+					System.out.println("Bubble: " + startIds.pop() + ", " + to);
+					break;
+				}
+			}
+			
+		}
+		
+	}
+	
 	
 	/**
 	 * Gets the current count of genomes through a specific link from 
