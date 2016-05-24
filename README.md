@@ -11,7 +11,7 @@ Members:
 *	Björn Ho
 *	Rob Kapel
 *	Hugo Kooijman
-*	Evan de Kruijf
+*	Evan de Kruif
 
 ### Group Documents:
 
