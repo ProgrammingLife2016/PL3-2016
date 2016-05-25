@@ -224,6 +224,18 @@ public class DatabaseReader {
 		return null;
 	}
 	
+	public int getMaxYCoord() {
+		String query = "SELECT MAX(YCOORD) FROM SEGMENTS";
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
 	/**
 	 * Returns all id's of the segments that have one or more ingoing links.
 	 * 

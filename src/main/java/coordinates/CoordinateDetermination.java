@@ -83,8 +83,8 @@ public class CoordinateDetermination {
 			
 			for (int j = 0; j < outgoingedges.size(); j++) {
 				leftToDraw = leftToDraw - countGenomesInLink(i, outgoingedges.get(j));
-				int xc = coords.getX() + 1;
-				int yc = coords.getY() - leftToDraw + alreadyDrawn;
+				int xc = coords.getX() + 100;
+				int yc = coords.getY() - 50 * leftToDraw + 50 * alreadyDrawn;
 				storeCoord(new Coordinate(xc,yc), outgoingedges.get(j),
 						countGenomesInLink(i, outgoingedges.get(j)));
 				alreadyDrawn += countGenomesInLink(i, outgoingedges.get(j));
@@ -118,7 +118,7 @@ public class CoordinateDetermination {
 		for (int i = 0; i < segIds.size(); i++) {
 			int index = segIds.get(i);
 			int weight = segWeights.get(i);
-			coordinates[index - 1] = new Coordinate(0, 2 * genomesDrawn + weight);
+			coordinates[index - 1] = new Coordinate(0, 100 * genomesDrawn + 50 * weight);
 			cweights[index - 1] = weight;
 			genomesDrawn += weight;
 		}

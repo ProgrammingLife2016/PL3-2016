@@ -66,17 +66,19 @@ public class GraphController implements Initializable {
 				double deltaY = event.getDeltaY();
 				double delta = 1.2;
 				double scale = innerGroup.getScaleX();
+				double barValue = scrollPane.getHvalue();
 
 				if (deltaY < 0) {
 					scale /= Math.pow(delta, -event.getDeltaY() / 20);
-//					scale = scale < MIN_SCALE ? MIN_SCALE : scale;
+					scale = scale < MIN_SCALE ? MIN_SCALE : scale;
 				} else if (deltaY > 0) {
 					scale *= Math.pow(delta, event.getDeltaY() / 20);
-//					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
+					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
 
 				//innerGroup.setScaleY(scale);
 				innerGroup.setScaleX(scale);
+				scrollPane.setHvalue(barValue);
 				int i = 0;
 
 				return;
@@ -110,7 +112,7 @@ public class GraphController implements Initializable {
 			if (!event.isControlDown()) {
 				return;
 			}
-
+			
 			double delta = 1.2;
 			double scale = innerGroup.getScaleY();
 
@@ -148,9 +150,13 @@ public class GraphController implements Initializable {
 		    scrollPane.setPrefHeight(newValue.getHeight());
 		});
 		
+		
+		
 		scrollPane.setHvalue(0);
 		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		innerGroup.setScaleY(0.5);
+		
+		double maxY = dbm.getDbReader().getMaxYCoord();
+		innerGroup.setScaleY(720.0 / maxY);
 	}
 	
 	/**
@@ -173,8 +179,8 @@ public class GraphController implements Initializable {
 		
 		from = dbm.getDbReader().getAllFromId();
 		to = dbm.getDbReader().getAllToId();
-		graphxcoords = scaleRibbonToGraphCoordsX(dbm.getDbReader().getAllXCoord());
-		graphycoords = scaleRibbonToGraphCoordsY(dbm.getDbReader().getAllYCoord());
+		graphxcoords = dbm.getDbReader().getAllXCoord();
+		graphycoords = dbm.getDbReader().getAllYCoord();
 		segments = new HashMap<Integer, GraphSegment>((int) Math.ceil(to.size() / 0.75));
 		segmentdna = new ArrayList<String>();
 		

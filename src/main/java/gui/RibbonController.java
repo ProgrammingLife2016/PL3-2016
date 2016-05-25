@@ -157,7 +157,7 @@ public class RibbonController implements Initializable {
 			int toId = to.get(i);
 			Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 					xcoords.get(toId - 1), ycoords.get(toId - 1));
-	        line.setStrokeWidth(0.02 + 0.02 * counts.get(i));
+	        line.setStrokeWidth(1 + counts.get(i));
 	        res.getChildren().add(line);
 		}
 		return res;
