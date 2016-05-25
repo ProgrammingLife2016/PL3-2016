@@ -44,7 +44,8 @@ public class RibbonController implements Initializable {
 				
 				double deltaY = event.getDeltaY();
 				double delta = 1.2;
-				double scale = innerGroup.getScaleY();
+				double scale = innerGroup.getScaleX();
+				double barValue = scrollPane.getHvalue();
 
 				if (deltaY < 0) {
 					scale /= Math.pow(delta, -event.getDeltaY() / 20);
@@ -54,8 +55,8 @@ public class RibbonController implements Initializable {
 					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
 
-				innerGroup.setScaleY(scale);
 				innerGroup.setScaleX(scale);
+				scrollPane.setHvalue(barValue);
 				return;
 			}
 
@@ -89,6 +90,7 @@ public class RibbonController implements Initializable {
 
 			double delta = 1.2;
 			double scale = innerGroup.getScaleY();
+			double barValue = scrollPane.getHvalue();
 
 			if (character.equals("+") || character.equals("=")) {
 				scale *= delta;
@@ -100,9 +102,9 @@ public class RibbonController implements Initializable {
 			} else {
 				return;
 			}
-
-			innerGroup.setScaleY(scale);
+			
 			innerGroup.setScaleX(scale);
+			scrollPane.setHvalue(barValue);
 		}
 	};
     
@@ -124,6 +126,14 @@ public class RibbonController implements Initializable {
 		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
 		});
+		
+		scrollPane.setHvalue(0);
+		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		
+		double maxY = dbm.getDbReader().getMaxYCoord();
+		innerGroup.setScaleY(720.0 / maxY);
+		
+		innerGroup.setScaleX(0.4);
 	}
 	
 	/**
