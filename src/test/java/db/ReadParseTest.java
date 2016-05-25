@@ -190,6 +190,19 @@ public class ReadParseTest {
 	}
 	
 	/**
+	 * Test for method returning a list with all outgoing segments from a certain segment.
+	 */
+	@Test
+	public void getToIDsTest() {
+		ArrayList<Integer> toids = dbm.getDbReader().getToIDs(1);
+		int[] expectedids = {2, 3};
+		for (int i = 0; i < 2; i++) {
+			assertEquals(expectedids[i], (int)toids.get(i));
+		}
+		dbm.cleanDbDirectory();
+	}
+	
+	/**
 	 * Test for method reading the content of a segment.
 	 */
 	@Test
@@ -202,6 +215,10 @@ public class ReadParseTest {
 		dbm.cleanDbDirectory();
 	}
 	
+	/**
+	 * Test if GfaParser correctly read the required content.
+	 * @throws GfaException
+	 */
 	@Test
 	public void gfaParsedContentTest() throws GfaException {
 		assertEquals(parser.getGenomes().size(), 4);
