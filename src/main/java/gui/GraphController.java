@@ -3,6 +3,7 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
 import javafx.event.EventHandler;
@@ -33,8 +34,8 @@ public class GraphController implements Initializable {
 	private Group innerGroup;
 	private Group outerGroup;
 	
-    private static final double MAX_SCALE = 100.0d;
-    private static final double MIN_SCALE = .1d;
+    private static final double MAX_SCALE = 10000.0d;
+    private static final double MIN_SCALE = .0001d;
     
 	private DatabaseManager dbm;
 	
@@ -64,18 +65,20 @@ public class GraphController implements Initializable {
 	
 				double deltaY = event.getDeltaY();
 				double delta = 1.2;
-				double scale = innerGroup.getScaleY();
+				double scale = innerGroup.getScaleX();
 
 				if (deltaY < 0) {
 					scale /= Math.pow(delta, -event.getDeltaY() / 20);
-					scale = scale < MIN_SCALE ? MIN_SCALE : scale;
+//					scale = scale < MIN_SCALE ? MIN_SCALE : scale;
 				} else if (deltaY > 0) {
 					scale *= Math.pow(delta, event.getDeltaY() / 20);
-					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
+//					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
 
-				innerGroup.setScaleY(scale);
+				//innerGroup.setScaleY(scale);
 				innerGroup.setScaleX(scale);
+				int i = 0;
+
 				return;
 			}
 
@@ -145,8 +148,9 @@ public class GraphController implements Initializable {
 		    scrollPane.setPrefHeight(newValue.getHeight());
 		});
 		
-		scrollPane.setVvalue(0.5);
 		scrollPane.setHvalue(0);
+		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		innerGroup.setScaleY(0.5);
 	}
 	
 	/**
