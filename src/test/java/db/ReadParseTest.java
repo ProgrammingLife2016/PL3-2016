@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -208,5 +209,10 @@ public class ReadParseTest {
 		assertEquals("{seq3.fasta=3, seq1.fasta=1, seq4.fasta=4, seq2.fasta=2}",
 				parser.getGenomes().toString());
 		dbm.cleanDbDirectory();
+	}
+	
+	@AfterClass
+	public static void after() throws GfaException {
+		dbm.closeDbConnection();
 	}
 }

@@ -2,6 +2,8 @@ package db;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,5 +43,10 @@ public class GfaExceptionTest {
 	public void gfaExceptionTest() throws GfaException {
 
 		parser.parse(gfaPath);
+	}
+	
+	@After
+	public void after() {
+		dbm.closeDbConnection();
 	}
 }
