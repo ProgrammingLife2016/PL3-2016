@@ -2,6 +2,7 @@ package gui;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.event.EventHandler;
@@ -146,19 +147,25 @@ public class RibbonController implements Initializable {
 	 */
 	public Group createRibbons() {
 		Group res = new Group();
-		ArrayList<Integer> from = dbm.getDbReader().getAllFromId();
-		ArrayList<Integer> to = dbm.getDbReader().getAllToId();
+		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks();
 		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
+		List<int[]> bubbles = dbm.getDbReader().getBubbles();
+		for (int[] bubble : bubbles) {
+			System.out.println("bubble: (" + bubble[0] + "," + bubble[1] + ")");
+		}
 		
-		for (int i = 0; i < from.size(); i++) {
-			int fromId = from.get(i);
-			int toId = to.get(i);
-			Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
-					xcoords.get(toId - 1), ycoords.get(toId - 1));
-	        line.setStrokeWidth(0.02 + 0.02 * counts.get(i));
-	        res.getChildren().add(line);
+		int countIdx = 0;
+		
+		for (int fromId = 1; fromId <= links.size(); fromId++) {
+			for (int toId : links.get(fromId - 1)) {
+				System.out.println(fromId + "," + toId);
+				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
+						xcoords.get(toId - 1), ycoords.get(toId - 1));
+		        line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
+		        res.getChildren().add(line);
+			}
 		}
 		return res;
 	}
