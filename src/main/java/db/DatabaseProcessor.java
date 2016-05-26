@@ -4,15 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
 
 import coordinates.Coordinate;
 import coordinates.CoordinateDetermination;
+import db.tuples.BubbleTuple;
 import gui.SplashController;
 
 /**
@@ -55,20 +51,9 @@ public class DatabaseProcessor {
 	}
 	
 	public void collapseRibbons() {
-//		List<Integer> bubbleStarts = dbr.getBubbleStarts();
-//		List<Integer> bubbleEnds = dbr.getBubbleEnds();
-//		boolean[] visited = new boolean[dbr.countSegments()];
-//		System.out.println("length " + visited.length);
-//		int maxCount = 20;
+
 		ArrayList<ArrayList<Integer>> links = dbr.getLinks();
-//
-//		for (int i = 0; i < bubbleStarts.size() && i < maxCount; i++) {
-//			System.out.println("Start: " + bubbleStarts.get(i));
-//		}
-//		for (int i = 0; i < bubbleEnds.size() && i < maxCount; i++) {
-//			System.out.println("End: " + bubbleEnds.get(i));
-//		}
-		
+		int count = 0;
 		for (int segmentId = 1; segmentId <= links.size(); segmentId++) {
 			ArrayList<Integer> outgoingEdges = links.get(segmentId - 1);
 			if (outgoingEdges.size() > 1) {
@@ -76,13 +61,26 @@ public class DatabaseProcessor {
 				int secondChildId = outgoingEdges.get(1);
 				ArrayList<Integer> firstChildEdges = links.get(firstChildId - 1);
 				ArrayList<Integer> secondChildEdges = links.get(secondChildId - 1);
-				System.out.println("segment " + segmentId + ":" + firstChildId + " " 
-						+ firstChildEdges + ", " + secondChildId + " " + secondChildEdges);
-//				System.out.println(firstChildEdges);
-//				System.out.println(secondChildEdges);
-				if (secondChildEdges.get(0) == firstChildEdges.get(0) || firstChildId == secondChildEdges.get(0) || secondChildId == firstChildEdges.get(0)) {
-					System.out.println("Bubble : (" + segmentId + "," 
-							+ firstChildEdges.get(0) + ")");
+//				System.out.println("segment " + segmentId + ":" + firstChildId + " " 
+//						+ firstChildEdges + ", " + secondChildId + " " + secondChildEdges);
+				int firstChildEdge;
+				int secondChildEdge;
+				try {
+					firstChildEdge = firstChildEdges.get(0);
+					secondChildEdge = secondChildEdges.get(0);
+				} catch (IndexOutOfBoundsException e) {
+					System.err.println("Index out of bounds, skipping segment: " + segmentId);
+					break;
+				}
+				if (secondChildEdge == firstChildEdge || firstChildId == secondChildEdge
+						|| secondChildId == firstChildEdge) {
+//					System.out.println("Bubble : (" + segmentId + "," + firstChildEdge + ")");
+					try {
+						// int currentCount = dbr.getLinkcount(fromId, toId);
+						this.db.executeUpdate(new BubbleTuple(segmentId,firstChildEdge).getInsertQuery());
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

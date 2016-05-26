@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import db.DatabaseManager;
+import db.tables.BubbleTable;
 import db.tables.GenomeSegmentLinkTable;
 import db.tables.GenomeTable;
 import db.tables.LinkTable;
@@ -67,6 +68,7 @@ public class GfaParser {
 		tables.add(new GenomeTable());
 		tables.add(new LinkTable());
 		tables.add(new GenomeSegmentLinkTable());
+		tables.add(new BubbleTable());
 		dbManager.createTables(tables);
 		
 		String line;
