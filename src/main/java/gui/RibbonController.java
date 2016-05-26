@@ -27,11 +27,10 @@ public class RibbonController implements Initializable {
 	private Group outerGroup;
 	
     private static final double MAX_SCALE = 100.0d;
-    private static final double MIN_SCALE = .1d;
+    private static final double MIN_SCALE = .01d;
     
 	private DatabaseManager dbm;
 	
-    
 	/**
 	 * Handles the scroll wheel event for the ribbon view.
 	 */
@@ -39,9 +38,7 @@ public class RibbonController implements Initializable {
 		@Override
 		public void handle(ScrollEvent event) {
 			event.consume();
-
 			if (event.isControlDown()) {
-				
 				double deltaY = event.getDeltaY();
 				double delta = 1.2;
 				double scale = innerGroup.getScaleX();
@@ -132,7 +129,6 @@ public class RibbonController implements Initializable {
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
-		
 		innerGroup.setScaleX(0.4);
 	}
 	

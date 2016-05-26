@@ -3,7 +3,6 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
 import javafx.event.EventHandler;
@@ -34,7 +33,7 @@ public class GraphController implements Initializable {
 	private Group innerGroup;
 	private Group outerGroup;
 	
-    private static final double MAX_SCALE = 100.0d;
+    private static final double MAX_SCALE = 3.0d;
     private static final double MIN_SCALE = .1d;
     
 	private DatabaseManager dbm;
@@ -60,9 +59,7 @@ public class GraphController implements Initializable {
 		@Override
 		public void handle(ScrollEvent event) {
 			event.consume();
-
 			if (event.isControlDown()) {
-	
 				double deltaY = event.getDeltaY();
 				double delta = 1.2;
 				double scale = innerGroup.getScaleX();
@@ -75,10 +72,8 @@ public class GraphController implements Initializable {
 					scale *= Math.pow(delta, event.getDeltaY() / 20);
 					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
-
 				innerGroup.setScaleX(scale);
 				scrollPane.setHvalue(barValue);
-
 				return;
 			}
 
@@ -129,7 +124,6 @@ public class GraphController implements Initializable {
 			} else {
 				return;
 			}
-
 			innerGroup.setScaleY(scale);
 			innerGroup.setScaleX(scale);
 		}
@@ -147,15 +141,11 @@ public class GraphController implements Initializable {
 		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
 		});
-		
-		
-		
 		scrollPane.setHvalue(0);
 		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
-		
 		innerGroup.setScaleX(0.4);
 	}
 	
