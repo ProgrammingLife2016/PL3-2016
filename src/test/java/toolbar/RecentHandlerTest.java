@@ -25,10 +25,12 @@ public class RecentHandlerTest {
 	
 	@BeforeClass
 	public static void cleanUp() {
-		for (File file: new File(directory).listFiles()) {
-			if (!file.getName().equals(".gitignore")) {
-				if (!file.delete()) {
-					System.err.println("No file was deleted");
+		if(new File(directory).listFiles() != null) {
+			for (File file: new File(directory).listFiles()) {
+				if (!file.getName().equals(".gitignore")) {
+					if (!file.delete()) {
+						System.err.println("No file was deleted");
+					}
 				}
 			}
 		}
