@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -42,6 +43,14 @@ public class ReadParseTest {
 		parser.parse(gfaPath);
 		dbm.getDbProcessor().calculateLinkCounts();
 		dbm.getDbProcessor().updateCoordinates();
+	}
+	
+	/**
+	 * Close database connection, or risk system crashes.
+	 */
+	@AfterClass
+	public static void cleanup() {
+		dbm.closeDbConnection();
 	}
 	
 	/**

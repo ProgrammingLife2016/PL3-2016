@@ -1,5 +1,6 @@
 package db;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,6 +32,14 @@ public class GfaExceptionTest {
 	public void before() {
 		dbm = new DatabaseManager(dbPath);
 		parser = new GfaParser(dbm);
+	}
+	
+	/**
+	 * Close database connection, or risk system crashes.
+	 */
+	@AfterClass
+	public static void cleanup() {
+		dbm.closeDbConnection();
 	}
 	
 	/**
