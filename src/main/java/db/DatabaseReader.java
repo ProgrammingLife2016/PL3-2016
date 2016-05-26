@@ -101,51 +101,6 @@ public class DatabaseReader {
 	}
 	
 	/**
-	 * Returns the number of genomes in the link between fromID and toID, given
-	 * that a link exists between the 2. Returns -1 if no link exists.
-	 * 
-	 * @param fromID
-	 *            Segment id.
-	 * @param toID
-	 *            Segment id.
-	 * @return The number of genomes in the link from fromID to toID, or -1 if
-	 *         the link does not exist.
-	 */
-	public int countGenomesInLink(int fromId, int toId) {
-		String query = "SELECT * FROM LINKS WHERE FROMID = " + fromId + " AND TOID = " + toId;
-		try (ResultSet rs = this.db.executeQuery(query)) {
-			if (rs.next()) {
-				return rs.getInt(3);
-			}
-			return -1;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return -1;
-		}
-	}
-	
-	/**
-	 * Return the amount of genomes through a certain link
-	 * 
-	 * @param fromID Start ID of the link
-	 * @param toID End ID of the link
-	 * @return the number of genomes through the link, or -1 if the link does not exist
-	 */
-	
-	public int getLinkcount(int fromId, int toId) {
-		String query = "SELECT * FROM LINKS WHERE FROMID = " + fromId + " AND TOID = " + toId;
-		try (ResultSet rs = this.db.executeQuery(query)) {
-			if (rs.next()) {
-				return rs.getInt(3);
-			}
-			return -1;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return -1;
-		}
-	}
-	
-	/**
 	 * Returns all id's of the segments that have one or more outgoing links.
 	 * them.
 	 * 
@@ -163,54 +118,6 @@ public class DatabaseReader {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	/**
-	 * Returns all segment id's of segments that have multiple outgoing edges
-	 * and (most likely) are the start of a bubble.
-	 * 
-	 * @return all segment id's of segments that have multiple outgoing edges
-	 *         and (most likely) are the start of a bubble.
-	 */
-	public List<Integer> getBubbleStarts() {
-		try {
-			ResultSet rs = this.db.executeQuery(
-					"SELECT * FROM "
-					+ "(SELECT FROMID, COUNT(*) AS NO_OUT FROM LINKS GROUP BY FROMID) "
-					+ "WHERE NO_OUT>1");
-			List<Integer> res = new ArrayList<>();
-			while (rs.next()) {
-				res.add(rs.getInt(1));
-			}
-			return res;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	/**
-	 * Returns all segment id's of segments that have multiple ingoing edges and
-	 * (most likely) are the end of a bubble.
-	 * 
-	 * @return all segment id's of segments that have multiple ingoing edges and
-	 *         (most likely) are the end of a bubble.
-	 */
-	public List<Integer> getBubbleEnds() {
-		try {
-			ResultSet rs = this.db.executeQuery(
-					"SELECT * FROM "
-					+ "(SELECT TOID, COUNT(*) AS NO_IN FROM LINKS GROUP BY TOID) "
-					+ "WHERE NO_IN>1;");
-			List<Integer> res = new ArrayList<>();
-			while (rs.next()) {
-				res.add(rs.getInt(1));
-			}
-			return res;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
 	}
 	
 	/**
