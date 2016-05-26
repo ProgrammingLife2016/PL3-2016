@@ -50,19 +50,23 @@ public class DatabaseProcessor {
 		}
 	}
 	
-	public void collapseRibbons() {
+	/**
+	 * Identifies the innermost bubbles (without inner bubbles) and inserts the
+	 * start and end segment id of each bubble that is found into the 'BUBBLES'
+	 * table.
+	 */
+	public void locateBubbles() {
 
 		ArrayList<ArrayList<Integer>> links = dbr.getLinks();
-		int count = 0;
 		for (int segmentId = 1; segmentId <= links.size(); segmentId++) {
 			ArrayList<Integer> outgoingEdges = links.get(segmentId - 1);
+			
 			if (outgoingEdges.size() > 1) {
 				int firstChildId = outgoingEdges.get(0);
 				int secondChildId = outgoingEdges.get(1);
 				ArrayList<Integer> firstChildEdges = links.get(firstChildId - 1);
 				ArrayList<Integer> secondChildEdges = links.get(secondChildId - 1);
-//				System.out.println("segment " + segmentId + ":" + firstChildId + " " 
-//						+ firstChildEdges + ", " + secondChildId + " " + secondChildEdges);
+				
 				int firstChildEdge;
 				int secondChildEdge;
 				try {
@@ -74,10 +78,9 @@ public class DatabaseProcessor {
 				}
 				if (secondChildEdge == firstChildEdge || firstChildId == secondChildEdge
 						|| secondChildId == firstChildEdge) {
-//					System.out.println("Bubble : (" + segmentId + "," + firstChildEdge + ")");
 					try {
-						// int currentCount = dbr.getLinkcount(fromId, toId);
-						this.db.executeUpdate(new BubbleTuple(segmentId,firstChildEdge).getInsertQuery());
+						this.db.executeUpdate(new BubbleTuple(segmentId, firstChildEdge)
+								.getInsertQuery());
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
