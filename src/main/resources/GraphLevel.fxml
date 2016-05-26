@@ -14,7 +14,7 @@
       <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
    </rowConstraints>
    <children>
-      <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" pannable="true" prefHeight="0.0" prefWidth="0.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" pannable="true" prefHeight="1028" prefWidth="720" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
       </ScrollPane>
 
    </children>

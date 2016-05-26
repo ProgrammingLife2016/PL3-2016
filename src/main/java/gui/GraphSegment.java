@@ -111,6 +111,10 @@ public class GraphSegment extends StackPane {
 		return this.image.getRadiusY();
 	}
 	
+	public void increaseRadius(double val) {
+		image.setRadiusY(getRadius() * val);
+	}
+	
 	public int getContentSize() {
 		return this.dnacontent.length;
 	}

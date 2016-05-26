@@ -18,12 +18,14 @@ public class ExistingHandlerTest {
 	
 	@BeforeClass
 	public static void cleanUp() {
+		if(new File(directory).listFiles() != null) {
 			for (File file: new File(directory).listFiles()) {
 				if (file != null) {
 					if (!file.delete())
 						System.err.println("File was not deleted!");
 				}
 			}
+		}
 	}
 	
 	@Test
