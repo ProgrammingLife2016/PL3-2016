@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,9 +24,11 @@ import db.DatabaseManager;
 public class RibbonController implements Initializable {
 	@FXML private GridPane pane;
 	@FXML private ScrollPane scrollPane;
+	private ScrollPane otherPane;
 	
 	private Group innerGroup;
 	private Group outerGroup;
+	private Group otherGroup;
 	
     private static final double MAX_SCALE = 100.0d;
     private static final double MIN_SCALE = .0035d;
@@ -42,7 +46,6 @@ public class RibbonController implements Initializable {
 				double deltaY = event.getDeltaY();
 				double delta = 1.2;
 				double scale = innerGroup.getScaleX();
-				double barValue = scrollPane.getHvalue();
 
 				if (deltaY < 0) {
 					scale /= Math.pow(delta, -event.getDeltaY() / 20);
@@ -51,9 +54,12 @@ public class RibbonController implements Initializable {
 					scale *= Math.pow(delta, event.getDeltaY() / 20);
 					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
+				double barValue = scrollPane.getHvalue();
 
 				innerGroup.setScaleX(scale);
+				otherGroup.setScaleX(scale);
 				scrollPane.setHvalue(barValue);
+				otherPane.setHvalue(barValue);
 				return;
 			}
 
@@ -87,7 +93,6 @@ public class RibbonController implements Initializable {
 
 			double delta = 1.2;
 			double scale = innerGroup.getScaleY();
-			double barValue = scrollPane.getHvalue();
 
 			if (character.equals("+") || character.equals("=")) {
 				scale *= delta;
@@ -100,8 +105,11 @@ public class RibbonController implements Initializable {
 				return;
 			}
 			
+			double barValue = scrollPane.getHvalue();
 			innerGroup.setScaleX(scale);
+			otherGroup.setScaleX(scale);
 			scrollPane.setHvalue(barValue);
+			otherPane.setHvalue(barValue);
 		}
 	};
     
@@ -126,6 +134,13 @@ public class RibbonController implements Initializable {
 		
 		scrollPane.setHvalue(0);
 		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, 
+					Number oldValue, Number newValue) {
+				otherPane.setHvalue(newValue.doubleValue());
+			}
+		});
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
@@ -167,6 +182,22 @@ public class RibbonController implements Initializable {
 	        res.getChildren().add(line);
 		}
 		return res;
+	}
+	
+	public ScrollPane getScrollPane() {
+		return scrollPane;
+	}
+	
+	public Group getInnerGroup() {
+		return innerGroup;
+	}
+	
+	public void setGraphPane(ScrollPane scroll) {
+		otherPane = scroll;
+	}
+	
+	public void setGraphGroup(Group group) {
+		otherGroup = group;
 	}
 
 }

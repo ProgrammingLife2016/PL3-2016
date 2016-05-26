@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,9 +31,11 @@ public class GraphController implements Initializable {
 	
 	@FXML private GridPane pane;
 	@FXML private ScrollPane scrollPane;
+	private ScrollPane otherPane;
 	
 	private Group innerGroup;
 	private Group outerGroup;
+	private Group otherGroup;
 	
     private static final double MAX_SCALE = 3.0d;
     private static final double MIN_SCALE = .0035d;
@@ -52,6 +56,7 @@ public class GraphController implements Initializable {
 	private ArrayList<Integer> graphycoords;
 	private ArrayList<String> segmentdna;
 	
+	
 	/**
 	 * Handles the scroll wheel event handler for zooming in and zooming out.
 	 */
@@ -63,7 +68,6 @@ public class GraphController implements Initializable {
 				double deltaY = event.getDeltaY();
 				double delta = 1.2;
 				double scale = innerGroup.getScaleX();
-				double barValue = scrollPane.getHvalue();
 
 				if (deltaY < 0) {
 					scale /= Math.pow(delta, -event.getDeltaY() / 20);
@@ -72,8 +76,12 @@ public class GraphController implements Initializable {
 					scale *= Math.pow(delta, event.getDeltaY() / 20);
 					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
+				
+				double barValue = scrollPane.getHvalue();
 				innerGroup.setScaleX(scale);
+				otherGroup.setScaleX(scale);
 				scrollPane.setHvalue(barValue);
+				otherPane.setHvalue(barValue);
 				return;
 			}
 
@@ -143,6 +151,13 @@ public class GraphController implements Initializable {
 		});
 		scrollPane.setHvalue(0);
 		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, 
+					Number oldValue, Number newValue) {
+				otherPane.setHvalue(newValue.doubleValue());
+			}
+		});
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
@@ -285,5 +300,21 @@ public class GraphController implements Initializable {
 			ycoords.add(i, newc);
 		}
 		return ycoords;
+	}
+	
+	public ScrollPane getScrollPane() {
+		return scrollPane;
+	}
+	
+	public Group getInnerGroup() {
+		return innerGroup;
+	}
+	
+	public void setRibbonPane(ScrollPane scroll) {
+		otherPane = scroll;
+	}
+	
+	public void setRibbonGroup(Group group) {
+		otherGroup = group;
 	}
 }
