@@ -157,7 +157,6 @@ public class PhylogenyController implements Initializable {
 		
 		for (NewickTree child : tree.getChildren()) {
 			
-			NewickNode childNode = null;
 			if (child.isLeaf() 
 					&& (genomeNames.contains(child.getName()) == false 
 					|| child.getName() == null)) {
@@ -234,6 +233,10 @@ public class PhylogenyController implements Initializable {
 			} else {
 				childNode = getDrawableTree(child);
 			}
+			if (child.getChildren().size() == 1) {
+				childNode.hideRectangle();
+			}
+			
 			NewickEdge edge = new NewickEdge(childNode);
 			root.getChildren().add(edge);
 			root.getChildren().add(childNode);
