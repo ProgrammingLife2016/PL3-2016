@@ -58,6 +58,10 @@ public class MainController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		addItems(new RecentHandler().getRecent(), recentMenu);
 		addItems(new ExistingHandler().buildExistingMap(), existingMenu);
+		graphTabController.setRibbonPane(ribbonTabController.getScrollPane());
+		graphTabController.setRibbonGroup(ribbonTabController.getInnerGroup());
+		ribbonTabController.setGraphPane(graphTabController.getScrollPane());
+		ribbonTabController.setGraphGroup(graphTabController.getInnerGroup());
 	}
 	
 	/**
