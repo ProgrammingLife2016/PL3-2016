@@ -34,7 +34,7 @@ public class GraphController implements Initializable {
 	private Group outerGroup;
 	
     private static final double MAX_SCALE = 3.0d;
-    private static final double MIN_SCALE = .1d;
+    private static final double MIN_SCALE = .0035d;
     
 	private DatabaseManager dbm;
 	

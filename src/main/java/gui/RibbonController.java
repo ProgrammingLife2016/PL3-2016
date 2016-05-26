@@ -27,7 +27,7 @@ public class RibbonController implements Initializable {
 	private Group outerGroup;
 	
     private static final double MAX_SCALE = 100.0d;
-    private static final double MIN_SCALE = .01d;
+    private static final double MIN_SCALE = .0035d;
     
 	private DatabaseManager dbm;
 	
