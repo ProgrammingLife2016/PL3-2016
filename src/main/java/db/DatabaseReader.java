@@ -374,6 +374,25 @@ public class DatabaseReader {
 	}
 	
 	/**
+	 * Returns the names of genomes in the database, or an empty arrayList if an error occurs
+	 * 
+	 * @return the names of genomes in the database, or an empty arrayList if an error occurs
+	 */
+	public ArrayList<String> getGenomeNames() {
+		String query = "SELECT DISTINCT NAME FROM GENOMES";
+		ArrayList<String> genomeNames = new ArrayList<String>();
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				genomeNames.add(rs.getString("NAME"));
+			}
+			return genomeNames;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return genomeNames;
+		}
+	}
+	
+	/**
 	 * Returns the contents of the segment with the given id, or null if no
 	 * segment with the given id exists.
 	 * 
