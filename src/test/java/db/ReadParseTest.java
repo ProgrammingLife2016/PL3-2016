@@ -60,9 +60,9 @@ public class ReadParseTest {
 	@Test
 	public void countAllGenomesInSegTest() {
 		ArrayList<Integer> genomecount = dbm.getDbReader().countAllGenomesInSeg();
-		assertEquals((int) genomecount.get(0), 4);
-		assertEquals((int) genomecount.get(2), 2);
-		assertEquals((int) genomecount.get(3), 1);
+		assertEquals(4, (int) genomecount.get(0));
+		assertEquals(2, (int) genomecount.get(2));
+		assertEquals(1, (int) genomecount.get(3));
 		dbm.cleanDbDirectory();
 	}
 	
@@ -71,7 +71,7 @@ public class ReadParseTest {
 	 */
 	@Test public void countGenomesTest() {
 		int genomecount = dbm.getDbReader().countGenomes();
-		assertEquals(genomecount, 4);
+		assertEquals(4, genomecount);
 		dbm.cleanDbDirectory();
 	}
 	
@@ -80,7 +80,7 @@ public class ReadParseTest {
 	 */
 	@Test public void countSegmentsTest() {
 		int segmentcount = dbm.getDbReader().countSegments();
-		assertEquals(segmentcount, 9);
+		assertEquals(9, segmentcount);
 		dbm.cleanDbDirectory();
 	}
 	
@@ -90,11 +90,11 @@ public class ReadParseTest {
 	@Test
 	public void countGenomesInLink() {
 		int genomelinkcount = dbm.getDbReader().countGenomesInLink(1, 2);
-		assertEquals(genomelinkcount, 2);
+		assertEquals(2, genomelinkcount);
 		genomelinkcount = dbm.getDbReader().countGenomesInLink(1, 3);
-		assertEquals(genomelinkcount, 2);
+		assertEquals(2, genomelinkcount);
 		genomelinkcount = dbm.getDbReader().countGenomesInLink(5, 7);
-		assertEquals(genomelinkcount, 1);
+		assertEquals(1, genomelinkcount);
 		dbm.cleanDbDirectory();
 	}
 	
@@ -104,11 +104,11 @@ public class ReadParseTest {
 	@Test
 	public void getLinkCountTest() {
 		int linkcount = dbm.getDbReader().getLinkcount(1, 2);
-		assertEquals(linkcount, 2);
+		assertEquals(2, linkcount);
 		linkcount = dbm.getDbReader().getLinkcount(1, 3);
-		assertEquals(linkcount, 2);
+		assertEquals(2, linkcount);
 		linkcount = dbm.getDbReader().getLinkcount(5, 7);
-		assertEquals(linkcount, 1);
+		assertEquals(1, linkcount);
 		dbm.cleanDbDirectory();
 	}
 	
@@ -118,10 +118,10 @@ public class ReadParseTest {
 	@Test
 	public void getFirstOfAllGenomesTest() {
 		ArrayList<Integer> segmentlist = dbm.getDbReader().getFirstOfAllGenomes();
-		assertEquals((int)segmentlist.get(0), 1);
-		assertEquals((int)segmentlist.get(1), 1);
-		assertEquals((int)segmentlist.get(2), 1);
-		assertEquals((int)segmentlist.get(3), 1);
+		assertEquals(1, (int)segmentlist.get(0));
+		assertEquals(1, (int)segmentlist.get(1));
+		assertEquals(1, (int)segmentlist.get(2));
+		assertEquals(1, (int)segmentlist.get(3));
 		dbm.cleanDbDirectory();
 	}
 	
@@ -131,11 +131,11 @@ public class ReadParseTest {
 	@Test
 	public void getAllXCoordTest() {
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
-		assertEquals((int)xcoords.get(0), 0);
-		assertEquals((int)xcoords.get(1), 1);
-		assertEquals((int)xcoords.get(2), 1);
-		assertEquals((int)xcoords.get(3), 2);
-		assertEquals((int)xcoords.get(4), 2);
+		assertEquals(0, (int)xcoords.get(0), 0);
+		assertEquals(100, (int)xcoords.get(1));
+		assertEquals(100, (int)xcoords.get(2));
+		assertEquals(200, (int)xcoords.get(3));
+		assertEquals(200, (int)xcoords.get(4));
 		dbm.cleanDbDirectory();
 	}
 	
@@ -145,11 +145,11 @@ public class ReadParseTest {
 	@Test
 	public void getAllYCoordTest() {
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllYCoord();
-		assertEquals((int)xcoords.get(0), 4);
-		assertEquals((int)xcoords.get(1), 2);
-		assertEquals((int)xcoords.get(2), 6);
-		assertEquals((int)xcoords.get(3), 1);
-		assertEquals((int)xcoords.get(4), 3);
+		assertEquals(200, (int)xcoords.get(0));
+		assertEquals(100, (int)xcoords.get(1));
+		assertEquals(300, (int)xcoords.get(2));
+		assertEquals(50, (int)xcoords.get(3));
+		assertEquals(150, (int)xcoords.get(4));
 		dbm.cleanDbDirectory();
 	}
 	
@@ -170,10 +170,10 @@ public class ReadParseTest {
 	@Test
 	public void getAllCounts() {
 		ArrayList<Integer> allcounts = dbm.getDbReader().getAllCounts();
-		assertEquals((int)allcounts.get(0), 2);
-		assertEquals((int)allcounts.get(1), 2);
-		assertEquals((int)allcounts.get(2), 1);
-		assertEquals((int)allcounts.get(3), 1);
+		assertEquals(2, (int)allcounts.get(0));
+		assertEquals(2, (int)allcounts.get(1));
+		assertEquals(1, (int)allcounts.get(2));
+		assertEquals(1, (int)allcounts.get(3));
 	}
 	
 	/**
@@ -204,9 +204,9 @@ public class ReadParseTest {
 	
 	@Test
 	public void gfaParsedContentTest() throws GfaException {
-		assertEquals(parser.getGenomes().size(), 4);
-		assertEquals(parser.getGenomes().toString(),
-				"{seq3.fasta=3, seq1.fasta=1, seq4.fasta=4, seq2.fasta=2}");
+		assertEquals(4, parser.getGenomes().size());
+		assertEquals("{seq3.fasta=3, seq1.fasta=1, seq4.fasta=4, seq2.fasta=2}",
+				parser.getGenomes().toString());
 		dbm.cleanDbDirectory();
 	}
 }
