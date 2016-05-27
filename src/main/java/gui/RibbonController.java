@@ -2,7 +2,9 @@ package gui;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.ResourceBundle;
 
 import javafx.event.EventHandler;
@@ -151,22 +153,49 @@ public class RibbonController implements Initializable {
 		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
-		List<int[]> bubbles = dbm.getDbReader().getBubbles();
+		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles());
 		for (int[] bubble : bubbles) {
 			System.out.println("bubble: (" + bubble[0] + "," + bubble[1] + ")");
 		}
 		
-		int countIdx = 0;
+		int countIdx = 0; // current index in the counts list.
+		
+		List<Integer> ignore = new LinkedList<>();
 		
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
-			for (int toId : links.get(fromId - 1)) {
-				System.out.println(fromId + "," + toId);
+			List<Integer> edges = links.get(fromId - 1);
+			
+			if (!bubbles.isEmpty() && fromId == bubbles.peek()[0]) {
+				int[] bubble = bubbles.poll();
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
-						xcoords.get(toId - 1), ycoords.get(toId - 1));
-		        line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
+						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
+				line.setStrokeWidth(0.2);
 		        res.getChildren().add(line);
+		        ignore.addAll(edges);
+			} else {
+				if (ignore.contains(fromId)) {
+					continue;
+					
+				}
+				for (int toId : edges) {
+					if (!bubbles.isEmpty() && toId == bubbles.peek()[1]) {
+						countIdx += edges.size();
+						break;
+					}
+
+					System.out.println(fromId + "," + toId);
+					Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
+							xcoords.get(toId - 1), ycoords.get(toId - 1));
+					line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
+					res.getChildren().add(line);
+				}
 			}
 		}
+		
+		for (int i : ignore) {
+			System.out.println("ignore: " + i);
+		}
+		
 		return res;
 	}
 
