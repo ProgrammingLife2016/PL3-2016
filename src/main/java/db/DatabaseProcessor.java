@@ -73,11 +73,10 @@ public class DatabaseProcessor {
 					firstChildEdge = firstChildEdges.get(0);
 					secondChildEdge = secondChildEdges.get(0);
 				} catch (IndexOutOfBoundsException e) {
-					System.err.println("Index out of bounds, skipping segment: " + segmentId);
+					System.out.println("Skipping segment: " + segmentId);
 					break;
 				}
-				if (secondChildEdge == firstChildEdge || firstChildId == secondChildEdge
-						|| secondChildId == firstChildEdge) {
+				if (secondChildEdge == firstChildEdge) {
 					try {
 						this.db.executeUpdate(new BubbleTuple(segmentId, firstChildEdge)
 								.getInsertQuery());
