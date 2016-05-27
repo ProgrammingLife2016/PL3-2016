@@ -28,6 +28,10 @@ public class NewickNode extends Group {
 		this.addLabel(name);
 	}
 	
+	public void hideRectangle() {
+		node.setVisible(false);
+	}
+	
 	private void addLabel(String text) {
 		Label label = new Label(text);
 		label.setTranslateX(10);
