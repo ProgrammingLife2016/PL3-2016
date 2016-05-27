@@ -26,13 +26,18 @@ public class RibbonController implements Initializable {
 	@FXML private GridPane pane;
 	@FXML private ScrollPane scrollPane;
 	
+	private DatabaseManager dbm = Launcher.dbm;
+	
 	private Group innerGroup;
 	private Group outerGroup;
+	private Group collapsedGroup = createCollapsedRibbons();
+	private Group normalGroup = createNormalRibbons();
 	
     private static final double MAX_SCALE = 100.0d;
     private static final double MIN_SCALE = .1d;
-    
-	private DatabaseManager dbm;
+    private static final double COLLAPSE = 10;
+	
+	private double prevScale = 1;
 	
     
 	/**
@@ -56,9 +61,21 @@ public class RibbonController implements Initializable {
 					scale *= Math.pow(delta, event.getDeltaY() / 20);
 					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
+				if (prevScale < COLLAPSE && scale >= COLLAPSE) {
+					System.out.println("switch to normal");
+					innerGroup.getChildren().clear();
+					innerGroup.getChildren().addAll(normalGroup.getChildren());
+				} else if (prevScale > COLLAPSE && scale <= COLLAPSE) {
+					System.out.println("switch to collapsed");
+					innerGroup.getChildren().clear();
+					innerGroup.getChildren().addAll(collapsedGroup.getChildren());
+				}
+				
+				System.out.println(prevScale + "->" + scale);
 
 				innerGroup.setScaleY(scale);
 				innerGroup.setScaleX(scale);
+				prevScale = scale;
 				return;
 			}
 
@@ -86,6 +103,7 @@ public class RibbonController implements Initializable {
 		@Override
 		public void handle(KeyEvent event) {
 			String character = event.getCharacter();
+			
 			if (!event.isControlDown()) {
 				return;
 			}
@@ -120,7 +138,7 @@ public class RibbonController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		updateView();
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
-		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
+		scrollPane.addEventFilter(KeyEvent.ANY, keyEventHandler);
 		
 		// Resize the scrollpane along with the window.
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
@@ -134,12 +152,12 @@ public class RibbonController implements Initializable {
 	 * will have to adjust to the new file.
 	 */
 	public void updateView() {
-		this.dbm = Launcher.dbm;
 		// Inner group and outer group according to the ScrollPane JavaDoc.
-		innerGroup = createRibbons();
+		innerGroup = collapsedGroup;
 		outerGroup = new Group(innerGroup);
 		scrollPane.setContent(outerGroup);
 	}
+	
 
 	/**
 	 * Creates all paths that make up the ribbons and returns a {@link Group}
@@ -147,16 +165,39 @@ public class RibbonController implements Initializable {
 	 * 
 	 * @return A group containing the ribbons.
 	 */
-	public Group createRibbons() {
+	public Group createNormalRibbons() {
+		Group res = new Group();
+		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks();
+		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
+		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
+		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
+
+		int countIdx = 0;
+		
+		for (int fromId = 1; fromId <= links.size(); fromId++) {
+			for (int toId : links.get(fromId - 1)) {
+				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
+						xcoords.get(toId - 1), ycoords.get(toId - 1));
+		        line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
+		        res.getChildren().add(line);
+			}
+		}
+		return res;
+	}
+	
+	/**
+	 * Creates all paths that make up the collapsed ribbons and returns a
+	 * {@link Group} containing those paths.
+	 * 
+	 * @return A group containing the ribbons.
+	 */
+	public Group createCollapsedRibbons() {
 		Group res = new Group();
 		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks();
 		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
 		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles());
-		for (int[] bubble : bubbles) {
-			System.out.println("bubble: (" + bubble[0] + "," + bubble[1] + ")");
-		}
 		
 		int countIdx = 0; // current index in the counts list.
 		
@@ -182,18 +223,12 @@ public class RibbonController implements Initializable {
 						countIdx += edges.size();
 						break;
 					}
-
-					System.out.println(fromId + "," + toId);
 					Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 							xcoords.get(toId - 1), ycoords.get(toId - 1));
 					line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
 					res.getChildren().add(line);
 				}
 			}
-		}
-		
-		for (int i : ignore) {
-			System.out.println("ignore: " + i);
 		}
 		
 		return res;
