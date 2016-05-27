@@ -70,6 +70,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.5.1</version>
 					<configuration>
 						<source>1.8</source>
 						<target>1.8</target>
@@ -150,6 +151,11 @@
 					<includeTests>true</includeTests>
 				</configuration>
 			</plugin>
+        		<plugin>
+            			<groupId>org.apache.maven.plugins</groupId>
+            			<artifactId>maven-jxr-plugin</artifactId>
+            			<version>2.3</version>
+        		</plugin>
 		</plugins>
 	</reporting>
 
