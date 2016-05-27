@@ -1,6 +1,6 @@
 package db;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,14 +35,6 @@ public class GfaExceptionTest {
 	}
 	
 	/**
-	 * Close database connection, or risk system crashes.
-	 */
-	@AfterClass
-	public static void cleanup() {
-		dbm.closeDbConnection();
-	}
-	
-	/**
 	 * GfaException is thrown when the .gfa file does not have the correct format.
 	 * @throws GfaException
 	 */
@@ -51,6 +43,9 @@ public class GfaExceptionTest {
 		parser.parse(gfaPath);
 	}
 	
+	/**
+	 * Close database connection, or risk system crashes.
+	 */
 	@After
 	public void after() {
 		dbm.closeDbConnection();
