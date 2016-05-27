@@ -6,7 +6,7 @@
 
 	<rule ref="rulesets/java/unusedcode.xml/UnusedPrivateField" />
 	<rule ref="rulesets/java/imports.xml/DuplicateImports" />
-	<rule ref="rulesets/java/basic.xml/UnnecessaryConversionTemporary" />
+	<rule ref="rulesets/java/unnecessary.xml/UnnecessaryConversionTemporary" />
 	<rule ref="rulesets/java/strings.xml" />
 	
 </ruleset>
