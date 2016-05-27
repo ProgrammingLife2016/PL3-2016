@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Björn Ho, Daniel van de Berg, Rob Kapel
@@ -99,47 +101,26 @@ public class DatabaseReader {
 	}
 	
 	/**
-	 * Returns the number of genomes in the link between fromID and toID, given
-	 * that a link exists between the 2. Returns -1 if no link exists.
+	 * Returns a list containing all bubbles. Each bubble is given as an int
+	 * array containing the start segment id at position 0 and the end segment
+	 * id at position 1.
 	 * 
-	 * @param fromID
-	 *            Segment id.
-	 * @param toID
-	 *            Segment id.
-	 * @return The number of genomes in the link from fromID to toID, or -1 if
-	 *         the link does not exist.
+	 * @return a list containing all bubbles, or null if the database could not
+	 *         be read.
 	 */
-	public int countGenomesInLink(int fromId, int toId) {
-		String query = "SELECT * FROM LINKS WHERE FROMID = " + fromId + " AND TOID = " + toId;
+	public List<int[]> getBubbles() {
+
+		List<int[]> bubbleList = new ArrayList<>();
+
+		String query = "SELECT * FROM BUBBLES";
 		try (ResultSet rs = this.db.executeQuery(query)) {
-			if (rs.next()) {
-				return rs.getInt(3);
-			}
-			return -1;
+			while (rs.next()) {
+				bubbleList.add(new int[]{rs.getInt(1),rs.getInt(2)});
+			 }
+			return bubbleList;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return -1;
-		}
-	}
-	
-	/**
-	 * Return the amount of genomes through a certain link
-	 * 
-	 * @param fromID Start ID of the link
-	 * @param toID End ID of the link
-	 * @return the number of genomes through the link, or -1 if the link does not exist
-	 */
-	
-	public int getLinkcount(int fromId, int toId) {
-		String query = "SELECT * FROM LINKS WHERE FROMID = " + fromId + " AND TOID = " + toId;
-		try (ResultSet rs = this.db.executeQuery(query)) {
-			if (rs.next()) {
-				return rs.getInt(3);
-			}
-			return -1;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return -1;
+			return null;
 		}
 	}
 	
@@ -300,22 +281,23 @@ public class DatabaseReader {
 	}
 	
 	/**
-	 * Returns all links in the dataset. For each segment, an arraylist is created in which
-	 * they can store the segments they link to. All these arraylists are then put into
-	 * an arraylist of arraylists.
-	 * @return Per segment an arraylist of where the respective segments links to.
+	 * Returns all links in the dataset. For each segment, an arraylist is
+	 * created in which they can store the segments they link to. All these
+	 * arraylists are then put into an arraylist of arraylists.
+	 * 
+	 * @return Per segment an arraylist of where the respective segments links
+	 *         to.
 	 */
-	
 	public ArrayList<ArrayList<Integer>> getLinks() {
 
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
 		for (int i = 0; i <= this.countSegments(); i++) {
 			linkList.add(new ArrayList<Integer>());
 		}
-		
+
 		ArrayList<Integer> fromIDs = this.getAllFromId();
 		ArrayList<Integer> toIDs = this.getAllToId();
-		
+
 		for (int i = 1; i <= fromIDs.size(); i++) {
 			int fromId = fromIDs.get(i - 1);
 			int toId = toIDs.get(i - 1);

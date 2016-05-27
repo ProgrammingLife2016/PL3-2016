@@ -2,6 +2,8 @@ package gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
@@ -29,7 +31,9 @@ public class Launcher extends Application {
 	public void start(Stage stage) throws Exception {
 		Launcher.stage = stage;
 		stage.setTitle("DNA Lab");
+		
 		final String filename = "TB10";
+
 		final String gfaPath = System.getProperty("user.dir") 
 				+ "/Data/" + filename + "/" + filename + ".gfa";
 		final String dbPath = System.getProperty("user.dir") 
@@ -79,6 +83,7 @@ public class Launcher extends Application {
         			dbm.getDbProcessor().calculateLinkCounts();
         			SplashController.progressNum.set(60);
         			dbm.getDbProcessor().updateCoordinates();
+        			dbm.getDbProcessor().locateBubbles();	
         			SplashController.progressNum.set(100);
         		} else {
         			dbm = new DatabaseManager(dbPath);

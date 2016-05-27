@@ -94,34 +94,6 @@ public class ReadParseTest {
 	}
 	
 	/**
-	 * Test for counting genomes in a link.
-	 */
-	@Test
-	public void countGenomesInLink() {
-		int genomelinkcount = dbm.getDbReader().countGenomesInLink(1, 2);
-		assertEquals(2, genomelinkcount);
-		genomelinkcount = dbm.getDbReader().countGenomesInLink(1, 3);
-		assertEquals(2, genomelinkcount);
-		genomelinkcount = dbm.getDbReader().countGenomesInLink(5, 7);
-		assertEquals(1, genomelinkcount);
-		dbm.cleanDbDirectory();
-	}
-	
-	/**
-	 * Test for counting links in a segment.
-	 */
-	@Test
-	public void getLinkCountTest() {
-		int linkcount = dbm.getDbReader().getLinkcount(1, 2);
-		assertEquals(2, linkcount);
-		linkcount = dbm.getDbReader().getLinkcount(1, 3);
-		assertEquals(2, linkcount);
-		linkcount = dbm.getDbReader().getLinkcount(5, 7);
-		assertEquals(1, linkcount);
-		dbm.cleanDbDirectory();
-	}
-	
-	/**
 	 * Test for determining first segment of a genome.
 	 */
 	@Test

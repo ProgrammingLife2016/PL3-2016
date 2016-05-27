@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import coordinates.Coordinate;
 import coordinates.CoordinateDetermination;
+import db.tuples.BubbleTuple;
 import gui.SplashController;
 
 /**
@@ -48,6 +49,45 @@ public class DatabaseProcessor {
 			}
 		}
 	}
+	
+	/**
+	 * Identifies the innermost bubbles (without inner bubbles) and inserts the
+	 * start and end segment id of each bubble that is found into the 'BUBBLES'
+	 * table.
+	 */
+	public void locateBubbles() {
+
+		ArrayList<ArrayList<Integer>> links = dbr.getLinks();
+		for (int segmentId = 1; segmentId <= links.size(); segmentId++) {
+			ArrayList<Integer> outgoingEdges = links.get(segmentId - 1);
+			
+			if (outgoingEdges.size() > 1) {
+				int firstChildId = outgoingEdges.get(0);
+				int secondChildId = outgoingEdges.get(1);
+				ArrayList<Integer> firstChildEdges = links.get(firstChildId - 1);
+				ArrayList<Integer> secondChildEdges = links.get(secondChildId - 1);
+				
+				int firstChildEdge;
+				int secondChildEdge;
+				try {
+					firstChildEdge = firstChildEdges.get(0);
+					secondChildEdge = secondChildEdges.get(0);
+				} catch (IndexOutOfBoundsException e) {
+					System.out.println("Skipping segment: " + segmentId);
+					break;
+				}
+				if (secondChildEdge == firstChildEdge) {
+					try {
+						this.db.executeUpdate(new BubbleTuple(segmentId, firstChildEdge)
+								.getInsertQuery());
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
 	
 	/**
 	 * Gets the current count of genomes through a specific link from 

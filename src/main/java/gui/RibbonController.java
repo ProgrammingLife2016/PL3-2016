@@ -2,6 +2,9 @@ package gui;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -26,14 +29,20 @@ public class RibbonController implements Initializable {
 	@FXML private ScrollPane scrollPane;
 	private ScrollPane otherPane;
 	
+	private DatabaseManager dbm = Launcher.dbm;
+	
 	private Group innerGroup;
 	private Group outerGroup;
 	private Group otherGroup;
+
+	private Group collapsedGroup = createCollapsedRibbons();
+	private Group normalGroup = createNormalRibbons();
 	
     private static final double MAX_SCALE = 100.0d;
     private static final double MIN_SCALE = .0035d;
-    
-	private DatabaseManager dbm;
+    private static final double COLLAPSE = 2;
+	
+	private double prevScale = 1;
 	
 	/**
 	 * Handles the scroll wheel event for the ribbon view.
@@ -54,12 +63,23 @@ public class RibbonController implements Initializable {
 					scale *= Math.pow(delta, event.getDeltaY() / 20);
 					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
+				if (prevScale < COLLAPSE && scale >= COLLAPSE) {
+					System.out.println("switch to normal");
+					innerGroup.getChildren().clear();
+					innerGroup.getChildren().addAll(normalGroup.getChildren());
+				} else if (prevScale > COLLAPSE && scale <= COLLAPSE) {
+					System.out.println("switch to collapsed");
+					innerGroup.getChildren().clear();
+					innerGroup.getChildren().addAll(collapsedGroup.getChildren());
+				}
+				
+				System.out.println(prevScale + "->" + scale);
 				double barValue = scrollPane.getHvalue();
-
 				innerGroup.setScaleX(scale);
 				otherGroup.setScaleX(scale);
 				scrollPane.setHvalue(barValue);
 				otherPane.setHvalue(barValue);
+				prevScale = scale;
 				return;
 			}
 
@@ -87,6 +107,7 @@ public class RibbonController implements Initializable {
 		@Override
 		public void handle(KeyEvent event) {
 			String character = event.getCharacter();
+			
 			if (!event.isControlDown()) {
 				return;
 			}
@@ -124,7 +145,7 @@ public class RibbonController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		updateView();
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
-		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
+		scrollPane.addEventFilter(KeyEvent.ANY, keyEventHandler);
 		
 		// Resize the scrollpane along with the window.
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
@@ -152,12 +173,12 @@ public class RibbonController implements Initializable {
 	 * will have to adjust to the new file.
 	 */
 	public void updateView() {
-		this.dbm = Launcher.dbm;
 		// Inner group and outer group according to the ScrollPane JavaDoc.
-		innerGroup = createRibbons();
+		innerGroup = collapsedGroup;
 		outerGroup = new Group(innerGroup);
 		scrollPane.setContent(outerGroup);
 	}
+	
 
 	/**
 	 * Creates all paths that make up the ribbons and returns a {@link Group}
@@ -165,22 +186,74 @@ public class RibbonController implements Initializable {
 	 * 
 	 * @return A group containing the ribbons.
 	 */
-	public Group createRibbons() {
+	public Group createNormalRibbons() {
 		Group res = new Group();
-		ArrayList<Integer> from = dbm.getDbReader().getAllFromId();
-		ArrayList<Integer> to = dbm.getDbReader().getAllToId();
+		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks();
 		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
+
+		int countIdx = 0;
 		
-		for (int i = 0; i < from.size(); i++) {
-			int fromId = from.get(i);
-			int toId = to.get(i);
-			Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
-					xcoords.get(toId - 1), ycoords.get(toId - 1));
-	        line.setStrokeWidth(1 + counts.get(i));
-	        res.getChildren().add(line);
+		for (int fromId = 1; fromId <= links.size(); fromId++) {
+			for (int toId : links.get(fromId - 1)) {
+				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
+						xcoords.get(toId - 1), ycoords.get(toId - 1));
+//		        line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
+				line.setStrokeWidth(1 + counts.get(countIdx++));
+		        res.getChildren().add(line);
+			}
 		}
+		return res;
+	}
+	
+	/**
+	 * Creates all paths that make up the collapsed ribbons and returns a
+	 * {@link Group} containing those paths.
+	 * 
+	 * @return A group containing the ribbons.
+	 */
+	public Group createCollapsedRibbons() {
+		Group res = new Group();
+		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks();
+		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
+		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
+		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
+		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles());
+		
+		int countIdx = 0; // current index in the counts list.
+		
+		List<Integer> ignore = new LinkedList<>();
+		
+		for (int fromId = 1; fromId <= links.size(); fromId++) {
+			List<Integer> edges = links.get(fromId - 1);
+			
+			if (!bubbles.isEmpty() && fromId == bubbles.peek()[0]) {
+				int[] bubble = bubbles.poll();
+				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
+						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
+				line.setStrokeWidth(0.2);
+		        res.getChildren().add(line);
+		        ignore.addAll(edges);
+			} else {
+				if (ignore.contains(fromId)) {
+					continue;
+					
+				}
+				for (int toId : edges) {
+					if (!bubbles.isEmpty() && toId == bubbles.peek()[1]) {
+						countIdx += edges.size();
+						break;
+					}
+					Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
+							xcoords.get(toId - 1), ycoords.get(toId - 1));
+//					line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
+					line.setStrokeWidth(1 + counts.get(countIdx++));
+					res.getChildren().add(line);
+				}
+			}
+		}
+		
 		return res;
 	}
 	
