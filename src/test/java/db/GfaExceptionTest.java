@@ -14,7 +14,7 @@ import parsers.GfaParser;
  */
 public class GfaExceptionTest {
 	
-	private static DatabaseManager dbm;
+	private DatabaseManager dbm;
 	private GfaParser parser;
 	
 	/**

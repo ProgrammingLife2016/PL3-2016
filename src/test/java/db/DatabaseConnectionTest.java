@@ -14,7 +14,7 @@ import org.junit.Test;
  */
 public class DatabaseConnectionTest {
 
-	private static DatabaseManager dbm;
+	private DatabaseManager dbm;
 	
 	/**
 	 * Location of test file.
