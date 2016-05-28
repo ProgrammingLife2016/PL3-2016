@@ -1,14 +1,9 @@
 Group 4:
--Collapses snips into squares.
--Collapses deletions into triangles.
+-Collapses snips into squares and deletions into triangles.
 -Has a separate scene on the right of the graph with a list of phylogenetic tree genomes.
 
-
 Group 5:
--They can show 2 subgraphs next to each other to show the differences. I think it’s better to show this in 1 graph and highlight the differences.
-
-
-
+-Uses 2 subgraphs next to each other to show the differences between two strands.
 
 Thomas:
 -Wants to select strains that have a certain property (such as drug resistance) and have them all highlighted.
@@ -16,7 +11,7 @@ Thomas:
 -Zooming is using the mouse wheel. If you have to zoom using the keyboard, he considers it as having no zoom function at all.
 -Use vertical space (Like, if a lot of genomes go through a top segment in a snip, move this top snip further upwards.
 -Colour the lines in the phylogenetic tree according to their lineage.
--Search function in phylo tree
+-Search function in phylo tree.
 -Keep track of context; “Where am I?”
--Semantic zooming is WAYYYYYY more important than loading in the 6k gfa file. If u can make a good app with 328 that’s already good. Without semantic zooming the entire app is useless.
--Top level view is entire graph!!
+-Semantic zooming is way more important than loading in the 6k gfa file. Without semantic zooming the entire app is useless.
+-Top level view is entire graph (!).
