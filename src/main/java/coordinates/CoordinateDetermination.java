@@ -90,7 +90,7 @@ public class CoordinateDetermination {
 				alreadyDrawn += countGenomesInLink(i, outgoingedges.get(j));
 			}
 		}
-		return coordinates;
+		return coordinates.clone();
 	}
 	
 	/**

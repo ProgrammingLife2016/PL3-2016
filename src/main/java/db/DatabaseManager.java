@@ -107,9 +107,14 @@ public class DatabaseManager {
 	    String[] dbfiles;    
 	    if (dbdir.isDirectory()) {
 	    	dbfiles = dbdir.list();
+	    	if	(dbfiles == null) {
+	    		return;
+	    	}
 	    	for (int i = 0; i < dbfiles.length; i++) {
-	    		File myFile = new File(dbdir, dbfiles[i]); 
-	    		myFile.delete();
+	    		File file = new File(dbdir, dbfiles[i]); 
+	    		if (!file.delete()) {
+	    			System.err.println("Could not delete file: " + file.getAbsolutePath());
+	    		}
 	    	}
 	    }
 	}

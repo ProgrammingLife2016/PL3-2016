@@ -5,9 +5,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
@@ -55,9 +56,10 @@ public class RecentHandler {
 	 */
 	public void writeRecent(File file, String dbPath, String fileName) {
 		try {
-			BufferedWriter bw = new BufferedWriter(
-					new FileWriter(file.getParent() + File.separator + "tmp.txt"));
-		    bw.write(fileName);
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(file.getParent() 
+							+ File.separator + "tmp.txt"), "UTF-8"));
+			bw.write(fileName);
 		    bw.append(" ");
 		    bw.append(dbPath);
 		    bw.newLine();

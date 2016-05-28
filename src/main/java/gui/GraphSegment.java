@@ -35,7 +35,7 @@ public class GraphSegment extends StackPane {
 	public GraphSegment(int segmentid, int childcount, char[] dnacontent) {
 	    this.segmentid = segmentid;
 	    this.children = new int[childcount];
-	    this.dnacontent = dnacontent;
+	    this.dnacontent = dnacontent.clone();
 		this.setLayout();
 		this.visualizeDnaContent();
 	}
@@ -45,12 +45,8 @@ public class GraphSegment extends StackPane {
 	 * layout coordinates.
 	 */
 	public GraphSegment(int segmentid, int childcount, char[] dnacontent, int xcoord, int ycoord) {
-	    this.segmentid = segmentid;
-	    this.children = new int[childcount];
-	    this.dnacontent = dnacontent;
-		this.setLayout();
+		this(segmentid, childcount, dnacontent);
 		this.setLayoutCoords(xcoord + 1000, ycoord);
-		this.visualizeDnaContent();
 	}
 	
 	/**
@@ -104,7 +100,7 @@ public class GraphSegment extends StackPane {
 	}
 	
 	public int[] getSegmentChildren() {
-		return this.children;
+		return this.children.clone();
 	}
 	
 	public double getRadius() {

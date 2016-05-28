@@ -4,8 +4,10 @@ import static org.junit.Assert.*;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 import org.apache.commons.io.FilenameUtils;
 import org.junit.BeforeClass;
@@ -25,19 +27,14 @@ public class RecentHandlerTest {
 	
 	@BeforeClass
 	public static void cleanUp() {
-		if(new File(directory).listFiles() != null) {
-			for (File file: new File(directory).listFiles()) {
+		File[] fileList = new File(directory).listFiles();
+		if(fileList != null) {
+			for (File file: fileList) {
 				if (!file.getName().equals(".gitignore")) {
 					if (!file.delete()) {
 						System.err.println("No file was deleted");
 					}
 				}
-			}
-		}
-		
-		for (File file: new File(dbDir).listFiles()) {
-			if (!file.delete()) {
-				System.err.println("No file was deleted");
 			}
 		}
 	}
@@ -75,7 +72,8 @@ public class RecentHandlerTest {
 			System.err.println("File was not created!");
 		}
 		BufferedWriter bw = new BufferedWriter(
-				new FileWriter(directory + "recent.txt"));
+				new OutputStreamWriter(
+						new FileOutputStream(directory + "recent.txt"), "UTF-8"));
 		bw.write("TBTest" + " " + "PathToFile");
 		bw.close();
 		RecentHandler recent = new RecentHandler();

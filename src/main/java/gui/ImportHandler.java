@@ -70,7 +70,7 @@ public class ImportHandler {
         Task<Void> task = new Task<Void>() {
             @Override 
             public Void call() throws Exception {
-        			Launcher.dbm = new DatabaseManager(dbPath);
+        			Launcher.setDbManager(new DatabaseManager(dbPath));
         			GfaParser parser = new GfaParser(Launcher.dbm);
         			SplashController.progressNum.set(10);
         			SplashController.progressString.set("Start Parsing");

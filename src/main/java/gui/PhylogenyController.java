@@ -151,8 +151,7 @@ public class PhylogenyController implements Initializable {
 		if (tree == null) {
 			return;
 		}
-		
-		NewickNode prunedTree = new NewickNode();
+
 		ArrayList<NewickTree> tobeRemoved = new ArrayList<NewickTree>();
 		
 		for (NewickTree child : tree.getChildren()) {

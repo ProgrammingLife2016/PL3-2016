@@ -2,7 +2,6 @@ package gui;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import javafx.application.Application;
 import javafx.concurrent.Task;
@@ -29,8 +28,7 @@ public class Launcher extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		Launcher.stage = stage;
-		stage.setTitle("DNA Lab");
+		Launcher.setStage(stage,"DNA Lab");
 		
 		final String filename = "TB10";
 
@@ -43,7 +41,8 @@ public class Launcher extends Application {
 		final File database = new File(dbPath + ".mv.db");
 	
 		try {
-			nwkTree = NewickTreeParser.parse(new File(nwkPath));
+			NewickTree tree = NewickTreeParser.parse(new File(nwkPath));
+			setNewickTree(tree);
 		} catch (IOException e) {
 			System.err.println("File: " + nwkPath + " not found");
 		}
@@ -70,7 +69,7 @@ public class Launcher extends Application {
             @Override 
             public Void call() throws Exception {
             	if (!database.exists()) {
-        			dbm = new DatabaseManager(dbPath);
+            		Launcher.setDbManager(new DatabaseManager(dbPath));
         			GfaParser parser = new GfaParser(dbm);
         			SplashController.progressNum.set(10);
         			SplashController.progressString.set("Start Parsing");
@@ -95,6 +94,19 @@ public class Launcher extends Application {
         new Thread(task).start();
 	}
 	
+	public static void setDbManager(DatabaseManager databaseManager) {
+		Launcher.dbm = databaseManager;
+	}
+
+	private static void setNewickTree(NewickTree tree) {
+		Launcher.nwkTree = tree;
+	}
+
+	private static void setStage(Stage stage, String title) {
+		Launcher.stage = stage;
+		Launcher.stage.setTitle(title);
+	}
+
 	/**
 	 * This method is ignored in a correct JavaFX program.
 	 * This is just a fallback for IDE's with limited or no support 
