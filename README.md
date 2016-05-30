@@ -1,8 +1,7 @@
 # PL3-2016 
 
-Current build status: [![Build Status](https://travis-ci.org/ProgrammingLife2016/PL3-2016.svg?branch=master)](https://travis-ci.org/ProgrammingLife2016/PL3-2016)
-
-Current coverage status: Current coverage status: [![Coverage Status](https://coveralls.io/repos/github/ProgrammingLife2016/PL3-2016/badge.svg?branch=master)](https://coveralls.io/github/ProgrammingLife2016/PL3-2016?branch=master)
+[![Build Status](https://travis-ci.org/ProgrammingLife2016/PL3-2016.svg?branch=master)](https://travis-ci.org/ProgrammingLife2016/PL3-2016)
+[![Coverage Status](https://coveralls.io/repos/github/ProgrammingLife2016/PL3-2016/badge.svg?branch=master)](https://coveralls.io/github/ProgrammingLife2016/PL3-2016?branch=master)
 
 ## About our group
 
