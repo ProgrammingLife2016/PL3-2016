@@ -80,27 +80,25 @@
 					<groupId>org.eluder.coveralls</groupId>
 					<artifactId>coveralls-maven-plugin</artifactId>
     					<version>4.2.0</version>
-					<configuration>
-						<excludes>
-							<exclude>**/*GraphController</exclude>
-							<exclude>**/*GraphSegment</exclude>
-							<exclude>**/*ImportHandler</exclude>
-							<exclude>**/*MainController</exclude>
-							<exclude>**/*Launcher</exclude>
-							<exclude>**/*PhylogenyController</exclude>
-							<exclude>**/*RibbonController</exclude>
-							<exclude>**/*SplashController</exclude>
-							<exclude>**/*NewickEdge</exclude>
-							<exclude>**/*NewickNode</exclude>
-							<exclude>**/*Main</exclude>
-						</excludes>
-					</configuration>
 				</plugin>
 				<plugin>
 				    <groupId>org.codehaus.mojo</groupId>
 				    <artifactId>cobertura-maven-plugin</artifactId>
 				    <version>2.7</version>
 				    <configuration>
+					<instrumentation>
+						<ignores>
+							<ignore>gui.*</ignore>
+							<ignore>gui.phylogeny.*</ignore>
+							<ignore>custommain.>*</ignore>
+						</ignores>
+						<excludes>
+							<exclude>**/gui/*</exclude>
+							<exclude>**/custommain/*</exclude>
+							<exclude>**/gui/phylogeny/*</exclude>
+						</excludes>
+					</instrumentation>
+
 					<format>xml</format>
 					<maxmem>256m</maxmem>
 					<!-- aggregated reports for multi-module projects -->
