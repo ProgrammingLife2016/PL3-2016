@@ -18,6 +18,7 @@ import db.tables.GenomeTable;
 import db.tables.LinkTable;
 import db.tables.SegmentTable;
 import db.tables.Table;
+import db.tuples.AnnotationTuple;
 import db.tuples.GenomeSegmentLinkTuple;
 import db.tuples.GenomeTuple;
 import db.tuples.LinkTuple;
@@ -75,6 +76,30 @@ public class GffParser {
 	 * 			Link line to parse.
 	 */
 	private void parseLine(String line) {
+		String seqid, source, type, start, end, score, strand, phase, attribute;
+		if (line.charAt(0) == '#') {
+			return;
+		}
+		String[] tuples = line.split("\t");
+		storeTuples(tuples);
+	}
+	
+	private void storeTuples(String[] tuples) {
 		
-	}	
+		if (tuples.length != 9) {
+			return;
+		}
+		
+		for (int i = 0; i < 9; i++) {
+			if (tuples[i] == null) {
+				tuples[i] = "null";
+			} else if (tuples[i].equals("")) {
+				tuples[i] = "null";
+			}
+		}
+		
+		dbManager.insert(new AnnotationTuple(tuples[0], 
+				tuples[1], tuples[2], tuples[3], tuples[4], 
+				tuples[5], tuples[6], tuples[7], tuples[8]));
+	}
 }
