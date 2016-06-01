@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>PL3</groupId>
-	<artifactId>ProgrammingLife</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<artifactId>DNALab</artifactId>
+	<version>6.0</version>
 	<packaging>jar</packaging>
 	<url>https://github.com/ProgrammingLife2016/PL3-2016</url>
 
@@ -39,7 +39,35 @@
 						</execution>
 					</executions>
 				</plugin>
-				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.0.0</version>
+					<!-- nothing here -->
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.6</version>
+					<configuration>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
+						<archive>
+							<manifest>
+								<mainClass>gui.Launcher</mainClass>
+							</manifest>
+						</archive>
+					</configuration>
+					<executions>
+					<execution>
+					<phase>package</phase>
+					<goals>
+						<goal>single</goal>
+					</goals>
+					</execution>
+					</executions>
+				</plugin>
 				 <plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-pmd-plugin</artifactId>
