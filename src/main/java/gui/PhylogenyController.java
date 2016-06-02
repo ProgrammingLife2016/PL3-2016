@@ -259,6 +259,7 @@ public class PhylogenyController implements Initializable {
 			NewickNode childNode = null;
 			if (child.isLeaf()) {
 				childNode = new NewickNode(child.getName());
+				childNode.setIsLeaf(true);
 				
 			} else {
 				childNode = getDrawableTree(child);

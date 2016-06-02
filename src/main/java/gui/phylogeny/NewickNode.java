@@ -17,7 +17,7 @@ public class NewickNode extends Group {
 	private static final int SIZE = 10;
 	private Rectangle node = new Rectangle(0 - SIZE / 2, 0 - SIZE / 2, SIZE, SIZE);
 	private Label label = null;
-	public boolean isLeaf = false;
+	private boolean isLeaf = false;
 	
 	/**
 	 * Event handler for mouse click event with the phylogenetic view.
@@ -47,15 +47,15 @@ public class NewickNode extends Group {
 	/**
 	 * Colors all relevant children in the Group black.
 	 */
-	private void turnChildrenBlack() {
+	public void turnChildrenBlack() {
 		for (Object child : this.getChildren()) {
 			if (child instanceof NewickNode) {
 				((NewickNode) child).getRectangle().setFill(Paint.valueOf("0x000000ff"));
-				if (label != null) {
+				if (((NewickNode) child).getLabel() != null) {
 					((NewickNode) child).getLabel().setTextFill(Paint.valueOf("0x000000ff"));
 				}
-				if (isLeaf == false) {
-					
+				if (((NewickNode) child).isLeaf() == false) {
+					((NewickNode) child).turnChildrenBlack();
 				}
 			} else if (child instanceof NewickEdge) {
 				((NewickEdge) child).setFill(Paint.valueOf("0x000000ff"));
@@ -66,12 +66,15 @@ public class NewickNode extends Group {
 	/**
 	 * Colors all relevant children in the Group light grey.
 	 */
-	private void turnChildrenGrey() {
+	public void turnChildrenGrey() {
 		for (Object child : this.getChildren()) {
 			if (child instanceof NewickNode) {
 				((NewickNode) child).getRectangle().setFill(Paint.valueOf("#778899"));
 				if (label != null) {
 					((NewickNode) child).getLabel().setTextFill(Paint.valueOf("#778899"));
+				}
+				if (((NewickNode) child).isLeaf() == false) {
+					((NewickNode) child).turnChildrenGrey();
 				}
 			} else if (child instanceof NewickEdge) {
 				((NewickEdge) child).setFill(Paint.valueOf("#778899"));
@@ -96,18 +99,49 @@ public class NewickNode extends Group {
 		this.addLabel(name);
 	}
 	
+	/**
+	 * Sets the node's isLeaf value to the given value.
+	 * @param value
+	 */
+	public void setIsLeaf(boolean value) {
+		isLeaf = value;
+	}
+	
+	/**
+	 * Returns whether the node is a leaf node or not.
+	 * @return
+	 */
+	public boolean isLeaf() {
+		return isLeaf;
+	}
+	
+	/**
+	 * Returns the nodes rectangle object so that it can be altered.
+	 * @return
+	 */
 	public Rectangle getRectangle() {
 		return node;
 	}
 	
+	/**
+	 * Returns the nodes Label object so that it can be altered.
+	 * @return
+	 */
 	public Label getLabel() {
 		return label;
 	}
 	
+	/**
+	 * Sets the nodes rectangle to visibility false, making it invisible.
+	 */
 	public void hideRectangle() {
 		node.setVisible(false);
 	}
 	
+	/**
+	 * Adds a label with the given text to the Group of the node.
+	 * @param text
+	 */
 	private void addLabel(String text) {
 		label = new Label(text);
 		label.setTranslateX(10);
