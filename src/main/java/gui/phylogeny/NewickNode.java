@@ -54,7 +54,9 @@ public class NewickNode extends Group {
 				if (label != null) {
 					((NewickNode) child).getLabel().setTextFill(Paint.valueOf("0x000000ff"));
 				}
-				if (!child.)
+				if (isLeaf == false) {
+					
+				}
 			} else if (child instanceof NewickEdge) {
 				((NewickEdge) child).setFill(Paint.valueOf("0x000000ff"));
 			}
