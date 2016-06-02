@@ -1,7 +1,7 @@
 package parsers;
 
 /**
- * Exception for the GFA parser to use.
+ * Exception for the GFF parser to use.
  */
 public class GffException extends Exception {
 	

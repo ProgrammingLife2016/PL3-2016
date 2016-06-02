@@ -22,10 +22,9 @@ import db.DatabaseManager;
 /**
  * @author hugokooijman
  *
- * Class containing all the logic involving the graph view. It reads out database tables,
- * stores required information in memory and adds the required to the Group "graphpane",
- * which is defined in the GraphLevel.fxml file. This will result in a visual representation
- * of all segments that are loaded into it.
+ * Class for dealing with the annotations. The elements are added to a
+ * new group, which are added to a ScrollPane. This view will give an idea
+ * of the actual length of the genome.
  */
 public class AnnotationController implements Initializable {
 	

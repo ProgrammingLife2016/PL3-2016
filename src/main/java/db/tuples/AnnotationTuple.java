@@ -4,7 +4,7 @@ import db.tables.AnnotationTable;
 
 /**
  * 
- * Tuple to insert into the Link table.
+ * Tuple to insert into the Annotation table.
  *
  */
 public class AnnotationTuple extends Tuple {

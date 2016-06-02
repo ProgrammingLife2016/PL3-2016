@@ -13,15 +13,13 @@ import parsers.GfaException;
 import parsers.GffException;
 import parsers.GffParser;
 
-
-
 public class GffParseTest {
 	
 	private static DatabaseManager dbm;
 	private static GffParser parser;
 	
 	/**
-	 * Locations of test files.
+	 * Locations of the test file.
 	 */
 	private static String filename = "testgff";
 	private static String gffPath = System.getProperty("user.dir") + File.separator + "Data"
@@ -31,7 +29,6 @@ public class GffParseTest {
 
 	/**
 	 * Run necessary functions once before running all tests.
-	 * @throws GfaException
 	 * @throws GffException 
 	 */
 	@BeforeClass
