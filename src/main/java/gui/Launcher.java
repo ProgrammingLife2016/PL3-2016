@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 
 import newick.NewickTree;
 import db.DatabaseManager;
+import parsers.GfaException;
 import parsers.GfaParser;
 import parsers.GffParser;
 import parsers.NewickTreeParser;
@@ -68,7 +69,6 @@ public class Launcher extends Application {
          */
         Task<Void> task = new Task<Void>() {
             @Override 
-<<<<<<< HEAD
             public Void call() throws Exception {
             	if (!database.exists()) {
             		Launcher.setDbManager(new DatabaseManager(dbPath));
@@ -92,29 +92,6 @@ public class Launcher extends Application {
         			dbm = new DatabaseManager(dbPath);
         			SplashController.progressNum.set(100);
         		}
-=======
-            public Void call() {
-            	try {
-            		if (!database.exists()) {
-                		Launcher.setDbManager(new DatabaseManager(dbPath));
-            			GfaParser parser = new GfaParser(dbm);
-            			SplashController.progressNum.set(10);
-            			SplashController.progressString.set("Start Parsing");
-            			parser.parse(gfaPath);
-            			SplashController.progressString.set("Start Calculating");
-            			dbm.getDbProcessor().calculateLinkCounts();
-            			SplashController.progressNum.set(60);
-            			dbm.getDbProcessor().updateCoordinates();
-            			dbm.getDbProcessor().locateBubbles();	
-            			SplashController.progressNum.set(100);
-            		} else {
-            			dbm = new DatabaseManager(dbPath);
-            			SplashController.progressNum.set(100);
-            		  }
-            	} catch (Throwable error) {
-            		error.printStackTrace();
-            	  }
->>>>>>> refs/remotes/origin/master
                 return null ;
             }
         };
