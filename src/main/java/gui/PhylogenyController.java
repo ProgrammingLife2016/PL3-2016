@@ -24,7 +24,7 @@ import newick.NewickTree;
 public class PhylogenyController implements Initializable {
 	
 	private static final int SPACING = 10;
-	private static final int SCALE = 50000;
+	private int SCALE;
 	
 	ArrayList<String> genomeNames;
 	
@@ -193,6 +193,36 @@ public class PhylogenyController implements Initializable {
 	}
 	
 	/**
+	 * Adjusts the scale for the lines so that they dont get super long
+	 * for a tree that isn't very big or visa versa.
+	 * @param tree - the tree that determines the scale
+	 */
+	private void adjustScale(NewickTree tree) {
+		if (countNodes(tree) <= 25) {
+			SCALE = 5000;
+		} else {
+			SCALE = 50000;
+		}
+	}
+	
+	/**
+	 * Counts the number of nodes in a newick tree.
+	 * @param tree
+	 * @return
+	 */
+	private int countNodes(NewickTree tree) {
+		int count = 1;
+		for (NewickTree child : tree.getChildren()) {
+			if (child.isLeaf()) {
+				return 1;
+			} else {
+				count = 1 + countNodes(child);
+			}
+		}
+		return count;
+	}
+	
+	/**
 	 * Returns a (drawable) {@link NewickNode} that represents the given
 	 * @param tree
 	 * @return
@@ -202,6 +232,7 @@ public class PhylogenyController implements Initializable {
 		while (!isPruned(tree)) {
 			pruneNewickTree(tree);
 		}
+		adjustScale(tree);
 		return getDrawableTreeInner(tree);
 	}
 	
@@ -228,6 +259,7 @@ public class PhylogenyController implements Initializable {
 			NewickNode childNode = null;
 			if (child.isLeaf()) {
 				childNode = new NewickNode(child.getName());
+				childNode.setIsLeaf(true);
 				
 			} else {
 				childNode = getDrawableTree(child);
@@ -244,16 +276,6 @@ public class PhylogenyController implements Initializable {
 			childNode.setTranslateY(currentY);
 			
 			currentY += SPACING + childNode.boundsInLocalProperty().get().getHeight();
-			
-			if (genomeNames.contains(child.getName())) {
-				childNode.addEventFilter(MouseEvent.MOUSE_CLICKED, 
-						new EventHandler<MouseEvent>() {
-					@Override
-					public void handle(MouseEvent mouseEvent) {
-						
-					}
-				});
-			}
 		}
 		return root;
 	}
