@@ -30,7 +30,6 @@ public class DatabaseProcessor {
 	 * Calculating the coordinates of segments and store them in the database
 	 */
 	public void updateCoordinates() {
-		
 		CoordinateDetermination coorddet = new CoordinateDetermination(dbr);
 		Coordinate[] coordinates = coorddet.calcCoords();
 		SplashController.progressString.set("Saving segment coordinates");
