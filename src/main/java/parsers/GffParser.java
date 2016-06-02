@@ -75,6 +75,11 @@ public class GffParser {
 		storeTuples(tuples);
 	}
 	
+	/**
+	 * Method that adds the relevant data of the parsed data to the database.
+	 * @param tuples contains the data of a line in an array
+	 */
+	
 	private void storeTuples(String[] tuples) {
 		
 		if (tuples.length != 16) {

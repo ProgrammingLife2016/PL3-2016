@@ -166,6 +166,11 @@ public class DatabaseReader {
 		return segmentList;
 	}
 	
+	/**
+	 * Returns the starting location in the reference genome of each annotation
+	 * @return the starting location in the reference genome of each annotation
+	 */
+	
 	public ArrayList<Integer> getAllAnnotationStartLocations() {
 		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
 		try (ResultSet rs = this.db.executeQuery(query)) {
@@ -180,6 +185,11 @@ public class DatabaseReader {
 		return null;
 	}
 	
+	/**
+	 * Returns the ending location in the reference genome of each annotation
+	 * @return the ending location in the reference genome of each annotation
+	 */
+	
 	public ArrayList<Integer> getAllAnnotationEndLocations() {
 		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
 		try (ResultSet rs = this.db.executeQuery(query)) {
@@ -193,6 +203,11 @@ public class DatabaseReader {
 		}
 		return null;
 	}
+	
+	/**
+	 * Returns the name of each annotation
+	 * @return the name of each annotation
+	 */
 	
 	public ArrayList<String> getAllAnnotationNames() {
 		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";

@@ -51,6 +51,9 @@ public class GffParseTest {
 		dbm.cleanDbDirectory();
 	}
 	
+	/**
+	 * Test for retrieving the start locations of each annotation.
+	 */
 	@Test
 	public void getAnnotationStartLocations() {
 		ArrayList<Integer> startLocations = dbm.getDbReader().getAllAnnotationStartLocations();
@@ -61,6 +64,9 @@ public class GffParseTest {
 		}
 	}
 	
+	/**
+	 * Test for retrieving the end locations of each annotation.
+	 */
 	@Test
 	public void getAnnotationEndLocations() {
 		ArrayList<Integer> endLocations = dbm.getDbReader().getAllAnnotationEndLocations();
@@ -69,6 +75,9 @@ public class GffParseTest {
 		assertEquals(70, (int)endLocations.get(2));
 	}
 	
+	/**
+	 * Test for retrieving the names of each annotation.
+	 */
 	@Test
 	public void getAnnotationNames() {
 		ArrayList<String> names = dbm.getDbReader().getAllAnnotationNames();

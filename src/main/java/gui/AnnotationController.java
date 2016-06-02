@@ -141,6 +141,11 @@ public class AnnotationController implements Initializable {
 		scrollPane.setContent(outerGroup);
 	}
 	
+	/**
+	 * Creates a visualization of the genome annotations.
+	 * @return a Group containing this visualization
+	 */
+	
 	private Group getAnnotations() {
 		Group res = new Group();
 		res.getChildren().add(new Line(0,50,4411100,50));
@@ -160,6 +165,10 @@ public class AnnotationController implements Initializable {
 		}
 		return res;
 	}
+	
+	/**
+	 * Load in the necessary data for the annotations.
+	 */
 	
 	private void loadData() {
 		this.dbm = Launcher.dbm;
