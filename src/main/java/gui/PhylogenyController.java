@@ -34,9 +34,6 @@ public class PhylogenyController implements Initializable {
 	
 	@FXML GridPane pane;
 	@FXML ScrollPane scrollPane;
-	@FXML Button menuButton;
-	@FXML AnchorPane slideMenu;
-	@FXML StackPane stackPane;
 	private Group root;
 	
     private static final double MAX_SCALE = 100.0d;
@@ -132,32 +129,12 @@ public class PhylogenyController implements Initializable {
 		scrollPane.setContent(root);
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
 		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
-	    slideMenu.setLeftAnchor(slideMenu.getChildren().get(0), 7.5);
-	    scrollPane.setTranslateX(70.0);
-	    slideMenu.setPrefWidth(500.0);
 		
 		// Resize the scrollpane along with the window.
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
 		    scrollPane.setPrefHeight(newValue.getHeight());
 		    scrollPane.setPrefWidth(newValue.getWidth());
-
-		    System.out.println("oldValue : " + oldValue.getWidth());
-		    if (Launcher.isLaunched == true) {
-		    	translateMenu(oldValue, newValue);
-		    }
 		});
-	}
-	
-	private void translateMenu(Bounds oldValue, Bounds newValue) {
-	    slideMenu.setPrefHeight(newValue.getHeight() - 100);
-	    slideMenu.setTopAnchor(slideMenu.getChildren().get(0), slideMenu.getPrefHeight()/2);
-	    System.out.println("oldValue : " + oldValue.getWidth());
-	    //slideMenu.setTranslateX(-(oldValue.getWidth() - newValue.getWidth()));
-	    System.out.println("newValue : " + newValue.getWidth());
-	}
-	
-	private double getTranslate() {
-		return menuButton.getWidth() + 30;
 	}
 	
 	/**

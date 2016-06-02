@@ -62,7 +62,6 @@ public class MainController implements Initializable {
 		graphTabController.setRibbonGroup(ribbonTabController.getInnerGroup());
 		ribbonTabController.setGraphPane(graphTabController.getScrollPane());
 		ribbonTabController.setGraphGroup(graphTabController.getInnerGroup());
-		Launcher.isLaunched = true;
 	}
 	
 	/**

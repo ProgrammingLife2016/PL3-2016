@@ -26,7 +26,6 @@ public class Launcher extends Application {
 	static DatabaseManager dbm;
 	static Stage stage;
 	static NewickTree nwkTree = null;
-	static boolean isLaunched = false;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
