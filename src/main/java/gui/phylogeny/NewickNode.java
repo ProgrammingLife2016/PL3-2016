@@ -57,8 +57,6 @@ public class NewickNode extends Group {
 				if (((NewickNode) child).isLeaf() == false) {
 					((NewickNode) child).turnChildrenBlack();
 				}
-			} else if (child instanceof NewickEdge) {
-				((NewickEdge) child).setFill(Paint.valueOf("0x000000ff"));
 			}
 		}
 	}
@@ -76,8 +74,6 @@ public class NewickNode extends Group {
 				if (((NewickNode) child).isLeaf() == false) {
 					((NewickNode) child).turnChildrenGrey();
 				}
-			} else if (child instanceof NewickEdge) {
-				((NewickEdge) child).setFill(Paint.valueOf("#778899"));
 			}
 		}
 	}
