@@ -20,7 +20,7 @@ import javafx.scene.text.Text;
 import db.DatabaseManager;
 
 /**
- * @author hugokooijman
+ * @author RobKapel
  *
  * Class for dealing with the annotations. The elements are added to a
  * new group, which are added to a ScrollPane. This view will give an idea
@@ -144,7 +144,6 @@ public class AnnotationController implements Initializable {
 	 * Creates a visualization of the genome annotations.
 	 * @return a Group containing this visualization
 	 */
-	
 	private Group getAnnotations() {
 		Group res = new Group();
 		res.getChildren().add(new Line(0,50,4411100,50));
@@ -168,7 +167,6 @@ public class AnnotationController implements Initializable {
 	/**
 	 * Load in the necessary data for the annotations.
 	 */
-	
 	private void loadData() {
 		this.dbm = Launcher.dbm;
 		startLocations = dbm.getDbReader().getAllAnnotationStartLocations();
