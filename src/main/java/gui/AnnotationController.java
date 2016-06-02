@@ -49,88 +49,88 @@ public class AnnotationController implements Initializable {
 	/**
 	 * Handles the scroll wheel event handler for zooming in and zooming out.
 	 */
-//	private final EventHandler<ScrollEvent> scrollEventHandler = new EventHandler<ScrollEvent>() {
-//		@Override
-//		public void handle(ScrollEvent event) {
-//			event.consume();
-//			if (event.isControlDown()) {
-//				double deltaY = event.getDeltaY();
-//				double delta = 1.2;
-//				double scale = innerGroup.getScaleX();
-//
-//				if (deltaY < 0) {
-//					scale /= Math.pow(delta, -event.getDeltaY() / 20);
-//					scale = scale < MIN_SCALE ? MIN_SCALE : scale;
-//				} else if (deltaY > 0) {
-//					scale *= Math.pow(delta, event.getDeltaY() / 20);
-//					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
-//				}
-//				
-//				double barValue = scrollPane.getHvalue();
-//				innerGroup.setScaleX(scale);
-//				otherGroup.setScaleX(scale);
-//				scrollPane.setHvalue(barValue);
-//				otherPane.setHvalue(barValue);
-//				return;
-//			}
-//
-//			double deltaY = event.getDeltaY();
-//			double deltaX = event.getDeltaX();
-//
-//			if (deltaY < 0) {
-//				scrollPane.setHvalue(Math.min(1, scrollPane.getHvalue() + 0.0007));
-//			} else if (deltaY > 0) {
-//				scrollPane.setHvalue(Math.max(0, scrollPane.getHvalue() - 0.0007));
-//			}
-//			if (deltaX < 0) {
-//				scrollPane.setVvalue(Math.min(1, scrollPane.getVvalue() + 0.05));
-//			} else if (deltaX > 0) {
-//				scrollPane.setVvalue(Math.max(0, scrollPane.getVvalue() - 0.05));
-//			}
-//			
-//		}
-//	};
+	private final EventHandler<ScrollEvent> scrollEventHandler = new EventHandler<ScrollEvent>() {
+		@Override
+		public void handle(ScrollEvent event) {
+			event.consume();
+			if (event.isControlDown()) {
+				double deltaY = event.getDeltaY();
+				double delta = 1.2;
+				double scale = innerGroup.getScaleX();
+
+				if (deltaY < 0) {
+					scale /= Math.pow(delta, -event.getDeltaY() / 20);
+					scale = scale < MIN_SCALE ? MIN_SCALE : scale;
+				} else if (deltaY > 0) {
+					scale *= Math.pow(delta, event.getDeltaY() / 20);
+					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
+				}
+				
+				double barValue = scrollPane.getHvalue();
+				innerGroup.setScaleX(scale);
+				scrollPane.setHvalue(barValue);
+				return;
+			}
+
+			double deltaY = event.getDeltaY();
+			double deltaX = event.getDeltaX();
+
+			if (deltaY < 0) {
+				scrollPane.setHvalue(Math.min(1, scrollPane.getHvalue() + 0.0007));
+			} else if (deltaY > 0) {
+				scrollPane.setHvalue(Math.max(0, scrollPane.getHvalue() - 0.0007));
+			}
+			if (deltaX < 0) {
+				scrollPane.setVvalue(Math.min(1, scrollPane.getVvalue() + 0.05));
+			} else if (deltaX > 0) {
+				scrollPane.setVvalue(Math.max(0, scrollPane.getVvalue() - 0.05));
+			}
+			
+		}
+	};
 	
 	/**
 	 * Event handler for zooming in and out using the keyboard instead of the scroll wheel.
 	 */
-//	private final EventHandler<KeyEvent> keyEventHandler = new EventHandler<KeyEvent>() {
-//		
-//		@Override
-//		public void handle(KeyEvent event) {
-//			String character = event.getCharacter();
-//			if (!event.isControlDown()) {
-//				return;
-//			}
-//			
-//			double delta = 1.2;
-//			double scale = innerGroup.getScaleY();
-//
-//			// Zoom in when ctrl and the "+" or "+/=" key is pressed.
-//			if (character.equals("+") || character.equals("=")) {
-//				scale *= delta;
-//
-//				// Cut off the scale if it is bigger than the maximum
-//				// allowed scale
-//				scale = scale > MAX_SCALE ? MAX_SCALE : scale;
-//			} else if (character.equals("-")) {
-//				scale /= delta;
-//				// Cut off the scale if it is bigger than the minimum
-//				// allowed scale
-//				scale = scale < MIN_SCALE ? MIN_SCALE : scale;
-//			} else {
-//				return;
-//			}
-//			innerGroup.setScaleY(scale);
-//			innerGroup.setScaleX(scale);
-//		}
-//	};
+	private final EventHandler<KeyEvent> keyEventHandler = new EventHandler<KeyEvent>() {
+		
+		@Override
+		public void handle(KeyEvent event) {
+			String character = event.getCharacter();
+			if (!event.isControlDown()) {
+				return;
+			}
+			
+			double delta = 1.2;
+			double scale = innerGroup.getScaleY();
+
+			// Zoom in when ctrl and the "+" or "+/=" key is pressed.
+			if (character.equals("+") || character.equals("=")) {
+				scale *= delta;
+
+				// Cut off the scale if it is bigger than the maximum
+				// allowed scale
+				scale = scale > MAX_SCALE ? MAX_SCALE : scale;
+			} else if (character.equals("-")) {
+				scale /= delta;
+				// Cut off the scale if it is bigger than the minimum
+				// allowed scale
+				scale = scale < MIN_SCALE ? MIN_SCALE : scale;
+			} else {
+				return;
+			}
+			innerGroup.setScaleY(scale);
+			innerGroup.setScaleX(scale);
+		}
+	};
 
 	/**
 	 * Initialize fxml file.
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
+		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
 		loadData();
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
 		    scrollPane.setPrefWidth(newValue.getWidth());
@@ -145,25 +145,20 @@ public class AnnotationController implements Initializable {
 	
 	private Group getAnnotations() {
 		Group res = new Group();
-		int maxV = 0;
 		res.getChildren().add(new Line(0,50,4411100,50));
 		for(int i = 0; i < startLocations.size(); i++) {
 			int startX = startLocations.get(i);
 			int endX = endLocations.get(i);
 			int width = endX - startX;
+			
 			Rectangle r = new Rectangle(startX, 20, width , 60);
 		    r.setFill(Color.rgb(244, 244, 244));
-
-		    r.setStroke(Color.rgb(i * 10 % 255, i * 4 % 255 , i * 25 % 255));
-			res.getChildren().add(r);
-			if(endX > maxV) {
-				maxV = endX;
-			}
+		    r.setStroke(Color.BLACK);
 			
 			Text text = new Text(startX, 95, names.get(i));
+			
+			res.getChildren().add(r);
 			res.getChildren().add(text);
-			
-			
 		}
 		return res;
 	}
