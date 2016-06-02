@@ -166,6 +166,22 @@ public class DatabaseReader {
 		return segmentList;
 	}
 	
+	public ArrayList<Integer> getAllAnnotationStartLocations() {
+		System.out.println("A");
+		String query = "SELECT * FROM ANNOTATION";
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			ArrayList<Integer> startList = new ArrayList<Integer>();
+			while (rs.next()) {
+				System.out.println(rs.getInt(4));
+				startList.add(rs.getInt(4));
+			 }
+			return startList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	/**
 	 * Returns all x-coordinates of the segments in the database.
 	 * 

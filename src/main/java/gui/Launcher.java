@@ -2,6 +2,7 @@ package gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.concurrent.Task;
@@ -14,6 +15,7 @@ import newick.NewickTree;
 import db.DatabaseManager;
 import parsers.GfaException;
 import parsers.GfaParser;
+import parsers.GffParser;
 import parsers.NewickTreeParser;
 import toolbar.RecentHandler;
 
@@ -38,11 +40,14 @@ public class Launcher extends Application {
 				+ File.separator + "db" + File.separator + filename;
 		final String nwkPath = System.getProperty("user.dir") 
 				+ "/Data/" + filename + "/" + "340tree.rooted.TKK.nwk";
+		final String gffPath = System.getProperty("user.dir") 
+				+ "/Data/" + filename + "/" + "decorationV5_20130412.gff";
 		final File database = new File(dbPath + ".mv.db");
 	
 		try {
 			NewickTree tree = NewickTreeParser.parse(new File(nwkPath));
 			setNewickTree(tree);
+			
 		} catch (IOException e) {
 			System.err.println("File: " + nwkPath + " not found");
 		}
@@ -71,10 +76,12 @@ public class Launcher extends Application {
             	if (!database.exists()) {
             		Launcher.setDbManager(new DatabaseManager(dbPath));
         			GfaParser parser = new GfaParser(dbm);
+        			GffParser gffparser = new GffParser(dbm);
         			SplashController.progressNum.set(10);
         			SplashController.progressString.set("Start Parsing");
         			try {
         				parser.parse(gfaPath);
+        				gffparser.parse(gffPath);
         			} catch (GfaException e) {
         				e.printStackTrace();
         			}

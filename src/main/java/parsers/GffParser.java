@@ -48,7 +48,6 @@ public class GffParser {
 	public void parse(String file) throws GffException {
 		tables.add(new AnnotationTable());
 		dbManager.createTables(tables);
-		
 		String line;
 		try {
 			BufferedReader bufferedReader = 
@@ -76,21 +75,24 @@ public class GffParser {
 	 * 			Link line to parse.
 	 */
 	private void parseLine(String line) {
-		String seqid, source, type, start, end, score, strand, phase, attribute;
 		if (line.charAt(0) == '#') {
 			return;
 		}
-		String[] tuples = line.split("\t");
+		line = line.replace('.', '_');
+		line = line.replace(' ', '_');
+		line = line.replace('-', '_');
+		line = line.replace('\'', ' ');
+		String[] tuples = line.split("\t|;|=");
 		storeTuples(tuples);
 	}
 	
 	private void storeTuples(String[] tuples) {
 		
-		if (tuples.length != 9) {
+		if (tuples.length != 16) {
 			return;
 		}
 		
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 16; i++) {
 			if (tuples[i] == null) {
 				tuples[i] = "null";
 			} else if (tuples[i].equals("")) {
@@ -99,7 +101,9 @@ public class GffParser {
 		}
 		
 		dbManager.insert(new AnnotationTuple(tuples[0], 
-				tuples[1], tuples[2], tuples[3], tuples[4], 
-				tuples[5], tuples[6], tuples[7], tuples[8]));
+				tuples[1], tuples[2], Integer.parseInt(tuples[3]), 
+				Integer.parseInt(tuples[4]), tuples[5], tuples[6], 
+				tuples[7], tuples[9], tuples[11], tuples[13],
+				tuples[15]));
 	}
 }
