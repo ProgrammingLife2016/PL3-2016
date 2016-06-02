@@ -167,6 +167,63 @@ public class DatabaseReader {
 	}
 	
 	/**
+	 * Returns the starting location in the reference genome of each annotation
+	 * @return the starting location in the reference genome of each annotation
+	 */
+	
+	public ArrayList<Integer> getAllAnnotationStartLocations() {
+		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			ArrayList<Integer> startList = new ArrayList<Integer>();
+			while (rs.next()) {
+				startList.add(rs.getInt(4));
+			 }
+			return startList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns the ending location in the reference genome of each annotation
+	 * @return the ending location in the reference genome of each annotation
+	 */
+	
+	public ArrayList<Integer> getAllAnnotationEndLocations() {
+		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			ArrayList<Integer> endList = new ArrayList<Integer>();
+			while (rs.next()) {
+				endList.add(rs.getInt(5));
+			 }
+			return endList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns the name of each annotation
+	 * @return the name of each annotation
+	 */
+	
+	public ArrayList<String> getAllAnnotationNames() {
+		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			ArrayList<String> nameList = new ArrayList<String>();
+			while (rs.next()) {
+				nameList.add(rs.getString(10));
+			 }
+			return nameList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
 	 * Returns all x-coordinates of the segments in the database.
 	 * 
 	 * @return All x-coordinates of the segments in the database.
