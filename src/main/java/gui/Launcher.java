@@ -12,7 +12,9 @@ import javafx.stage.Stage;
 
 import newick.NewickTree;
 import db.DatabaseManager;
+import parsers.GfaException;
 import parsers.GfaParser;
+import parsers.GffParser;
 import parsers.NewickTreeParser;
 import toolbar.RecentHandler;
 
@@ -36,11 +38,14 @@ public class Launcher extends Application {
 				+ File.separator + "db" + File.separator + filename;
 		final String nwkPath = System.getProperty("user.dir") 
 				+ "/Data/" + filename + "/" + "340tree.rooted.TKK.nwk";
+		final String gffPath = System.getProperty("user.dir") 
+				+ "/Data/" + filename + "/" + "decorationV5_20130412.gff";
 		final File database = new File(dbPath + ".mv.db");
 	
 		try {
 			NewickTree tree = NewickTreeParser.parse(new File(nwkPath));
 			setNewickTree(tree);
+			
 		} catch (IOException e) {
 			System.err.println("File: " + nwkPath + " not found");
 		}
@@ -64,27 +69,29 @@ public class Launcher extends Application {
          */
         Task<Void> task = new Task<Void>() {
             @Override 
-            public Void call() {
-            	try {
-            		if (!database.exists()) {
-                		Launcher.setDbManager(new DatabaseManager(dbPath));
-            			GfaParser parser = new GfaParser(dbm);
-            			SplashController.progressNum.set(10);
-            			SplashController.progressString.set("Start Parsing");
-            			parser.parse(gfaPath);
-            			SplashController.progressString.set("Start Calculating");
-            			dbm.getDbProcessor().calculateLinkCounts();
-            			SplashController.progressNum.set(60);
-            			dbm.getDbProcessor().updateCoordinates();
-            			dbm.getDbProcessor().locateBubbles();	
-            			SplashController.progressNum.set(100);
-            		} else {
-            			dbm = new DatabaseManager(dbPath);
-            			SplashController.progressNum.set(100);
-            		  }
-            	} catch (Throwable error) {
-            		error.printStackTrace();
-            	  }
+            public Void call() throws Exception {
+            	if (!database.exists()) {
+            		Launcher.setDbManager(new DatabaseManager(dbPath));
+        			GfaParser parser = new GfaParser(dbm);
+        			GffParser gffparser = new GffParser(dbm);
+        			SplashController.progressNum.set(10);
+        			SplashController.progressString.set("Start Parsing");
+        			try {
+        				parser.parse(gfaPath);
+        				gffparser.parse(gffPath);
+        			} catch (GfaException e) {
+        				e.printStackTrace();
+        			}
+        			SplashController.progressString.set("Start Calculating");
+        			dbm.getDbProcessor().calculateLinkCounts();
+        			SplashController.progressNum.set(60);
+        			dbm.getDbProcessor().updateCoordinates();
+        			dbm.getDbProcessor().locateBubbles();	
+        			SplashController.progressNum.set(100);
+        		} else {
+        			dbm = new DatabaseManager(dbPath);
+        			SplashController.progressNum.set(100);
+        		}
                 return null ;
             }
         };
