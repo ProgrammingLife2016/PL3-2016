@@ -2,7 +2,6 @@ package gui;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.concurrent.Task;

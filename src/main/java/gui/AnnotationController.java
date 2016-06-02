@@ -4,8 +4,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -146,18 +144,18 @@ public class AnnotationController implements Initializable {
 	private Group getAnnotations() {
 		Group res = new Group();
 		res.getChildren().add(new Line(0,50,4411100,50));
-		for(int i = 0; i < startLocations.size(); i++) {
+		for (int i = 0; i < startLocations.size(); i++) {
 			int startX = startLocations.get(i);
 			int endX = endLocations.get(i);
 			int width = endX - startX;
 			
-			Rectangle r = new Rectangle(startX, 20, width , 60);
-		    r.setFill(Color.rgb(244, 244, 244));
-		    r.setStroke(Color.BLACK);
+			Rectangle rect = new Rectangle(startX, 20, width , 60);
+		    rect.setFill(Color.rgb(244, 244, 244));
+		    rect.setStroke(Color.BLACK);
 			
 			Text text = new Text(startX, 95, names.get(i));
 			
-			res.getChildren().add(r);
+			res.getChildren().add(rect);
 			res.getChildren().add(text);
 		}
 		return res;

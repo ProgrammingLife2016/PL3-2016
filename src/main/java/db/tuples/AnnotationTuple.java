@@ -9,7 +9,7 @@ import db.tables.AnnotationTable;
  */
 public class AnnotationTuple extends Tuple {
 
-	private String seqID;
+	private String seqId;
 	private String source;
 	private String type;
 	private int start;
@@ -25,7 +25,7 @@ public class AnnotationTuple extends Tuple {
 	public AnnotationTuple(String seqid, String source, String type, int start, 
 			int end, String score, String strand, String phase, String calhounclass,
 			String name, String id, String displayName) {
-		this.seqID = seqid;
+		this.seqId = seqid;
 		this.source = source;
 		this.type = type;
 		this.start = start;
@@ -42,10 +42,10 @@ public class AnnotationTuple extends Tuple {
 
 	@Override
 	protected String getInsertValues() {
-		return " VALUES (\'" +  seqID + "\',\'" + source + "\',\'" + type + "\'," 
+		return " VALUES (\'" +  seqId + "\',\'" + source + "\',\'" + type + "\'," 
 				+ start + "," + end + ",\'" + score + "\',\'" + strand + "\',\'" 
-				+ phase + "\',\'" + calhounclass + "\',\'" + name + 
-				"\'," + id + ",\'" + displayName + "\')";
+				+ phase + "\',\'" + calhounclass + "\',\'" + name 
+				+ "\'," + id + ",\'" + displayName + "\')";
 	}
 
 }
