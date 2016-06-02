@@ -8,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import parsers.GfaException;
 import parsers.GfaParser;
 import db.DatabaseManager;
 
@@ -69,21 +68,21 @@ public class ImportHandler {
 		 */
         Task<Void> task = new Task<Void>() {
             @Override 
-            public Void call() throws Exception {
-        			Launcher.setDbManager(new DatabaseManager(dbPath));
+            public Void call() {
+            	try {
+            		Launcher.setDbManager(new DatabaseManager(dbPath));
         			GfaParser parser = new GfaParser(Launcher.dbm);
         			SplashController.progressNum.set(10);
         			SplashController.progressString.set("Start Parsing");
-        			try {
-        				parser.parse(gfaPath);
-        			} catch (GfaException e) {
-        				e.printStackTrace();
-        			}
+        			parser.parse(gfaPath);
         			SplashController.progressString.set("Start Calculating");
         			Launcher.dbm.getDbProcessor().calculateLinkCounts();
         			SplashController.progressNum.set(60);
         			Launcher.dbm.getDbProcessor().updateCoordinates();
         			SplashController.progressNum.set(100);
+            	} catch (Throwable error) {
+            		error.printStackTrace();
+            	}
                 return null ;
             }
         };
