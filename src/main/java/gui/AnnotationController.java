@@ -2,7 +2,6 @@ package gui;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -15,7 +14,10 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 import db.DatabaseManager;
 
@@ -37,6 +39,10 @@ public class AnnotationController implements Initializable {
 	
     private static final double MAX_SCALE = 3.0d;
     private static final double MIN_SCALE = .0035d;
+    
+    private ArrayList<Integer> startLocations;
+    private ArrayList<Integer> endLocations;
+    private ArrayList<String> names;
     
 	private DatabaseManager dbm;
 	
@@ -125,16 +131,48 @@ public class AnnotationController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		loadData();
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
 		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
 		});
 		scrollPane.setHvalue(0);
 		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		innerGroup = new Group();
-		innerGroup.getChildren().add(new Line(0,0,100,0));
+		innerGroup = getAnnotations();
 		outerGroup = new Group(innerGroup);
 		scrollPane.setContent(outerGroup);
+	}
+	
+	private Group getAnnotations() {
+		Group res = new Group();
+		int maxV = 0;
+		res.getChildren().add(new Line(0,50,4411100,50));
+		for(int i = 0; i < startLocations.size(); i++) {
+			int startX = startLocations.get(i);
+			int endX = endLocations.get(i);
+			int width = endX - startX;
+			Rectangle r = new Rectangle(startX, 20, width , 60);
+		    r.setFill(Color.rgb(244, 244, 244));
+
+		    r.setStroke(Color.rgb(i * 10 % 255, i * 4 % 255 , i * 25 % 255));
+			res.getChildren().add(r);
+			if(endX > maxV) {
+				maxV = endX;
+			}
+			
+			Text text = new Text(startX, 95, names.get(i));
+			res.getChildren().add(text);
+			
+			
+		}
+		return res;
+	}
+	
+	private void loadData() {
+		this.dbm = Launcher.dbm;
+		startLocations = dbm.getDbReader().getAllAnnotationStartLocations();
+		endLocations = dbm.getDbReader().getAllAnnotationEndLocations();
+		names = dbm.getDbReader().getAllAnnotationNames();
 	}
 	
 	

@@ -7,22 +7,11 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import db.DatabaseManager;
 import db.tables.AnnotationTable;
-import db.tables.BubbleTable;
-import db.tables.GenomeSegmentLinkTable;
-import db.tables.GenomeTable;
-import db.tables.LinkTable;
-import db.tables.SegmentTable;
 import db.tables.Table;
 import db.tuples.AnnotationTuple;
-import db.tuples.GenomeSegmentLinkTuple;
-import db.tuples.GenomeTuple;
-import db.tuples.LinkTuple;
-import db.tuples.SegmentTuple;
 
 public class GffParser {
 	

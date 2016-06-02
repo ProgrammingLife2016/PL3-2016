@@ -167,15 +167,41 @@ public class DatabaseReader {
 	}
 	
 	public ArrayList<Integer> getAllAnnotationStartLocations() {
-		System.out.println("A");
-		String query = "SELECT * FROM ANNOTATION";
+		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			ArrayList<Integer> startList = new ArrayList<Integer>();
 			while (rs.next()) {
-				System.out.println(rs.getInt(4));
 				startList.add(rs.getInt(4));
 			 }
 			return startList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public ArrayList<Integer> getAllAnnotationEndLocations() {
+		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			ArrayList<Integer> endList = new ArrayList<Integer>();
+			while (rs.next()) {
+				endList.add(rs.getInt(5));
+			 }
+			return endList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public ArrayList<String> getAllAnnotationNames() {
+		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			ArrayList<String> nameList = new ArrayList<String>();
+			while (rs.next()) {
+				nameList.add(rs.getString(10));
+			 }
+			return nameList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
