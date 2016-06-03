@@ -34,10 +34,10 @@ public class XlsxParserTest {
 	public void parseTest() {
 		XlsxParser xlsxparser = new XlsxParser();
 		xlsxparser.parse(xlsxpath);
-		assertEquals(xlsxparser.getLineages().get("TKK-01-0001"), "LIN 4");
-		assertEquals(xlsxparser.getLineages().get("TKK_03_0040"), "LIN 2");
-		assertEquals(xlsxparser.getLineages().get("TKK_04_0103"), "LIN 4");
-		assertEquals(xlsxparser.getLineages().get("TKK_05SA_0018"), "LIN 4");
+		assertEquals(xlsxparser.getLineages().get("TKK-01-0001"), "LIN4");
+		assertEquals(xlsxparser.getLineages().get("TKK_03_0040"), "LIN2");
+		assertEquals(xlsxparser.getLineages().get("TKK_04_0103"), "LIN4");
+		assertEquals(xlsxparser.getLineages().get("TKK_05SA_0018"), "LIN4");
 	}
 	
 	@Test
