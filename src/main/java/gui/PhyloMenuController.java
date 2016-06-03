@@ -63,18 +63,10 @@ public class PhyloMenuController implements Initializable {
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
 		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
-		    anchorPane.setTopAnchor(expandButton, newValue.getHeight()/2);
-		    anchorPane.setLeftAnchor(expandButton, newValue.getWidth()/2);
+		    anchorPane.setTopAnchor(expandButton, newValue.getHeight() / 2);
+		    anchorPane.setLeftAnchor(expandButton, newValue.getWidth() / 2);
 			System.out.println(newValue.getHeight());
 		});
-		setUpAnchorPane();
-	}
-	
-	/**
-	 * Method that prepares the AnchorPane
-	 */
-	private void setUpAnchorPane() {
-		
 	}
 	
 	/**
@@ -84,23 +76,22 @@ public class PhyloMenuController implements Initializable {
 		Timer animTimer = new Timer();
 	    animTimer.scheduleAtFixedRate(new TimerTask() {
 
-	        int i=0;
+	        int count = 0;
 
 	        @Override
 	        public void run() {
-	            if (i<25){
+	            if (count < 25) {
 
 	            	outerPane.getRowConstraints().get(1)
 	            		.setPrefHeight(outerPane.getRowConstraints().get(1).getPrefHeight() + 20);
-	            }
-	            else {
+	            } else {
 	                this.cancel();
 	            }
-	            if (i >= 25) {
+	            if (count >= 25) {
 	            	animTimer.cancel();
 	            	animTimer.purge();
 	            }
-	            i++;
+	            count++;
 	        }
 	    }, 1000, 25);
 		expanded = true;
@@ -113,23 +104,22 @@ public class PhyloMenuController implements Initializable {
 		Timer animTimer = new Timer();
 	    animTimer.scheduleAtFixedRate(new TimerTask() {
 
-	        int i=0;
+	        int count = 0;
 
 	        @Override
 	        public void run() {
-	            if (i<25){
+	            if (count < 25) {
 
 	            	outerPane.getRowConstraints().get(1)
 	            		.setPrefHeight(outerPane.getRowConstraints().get(1).getPrefHeight() - 20);
-	            }
-	            else {
+	            } else {
 	                this.cancel();
 	            }
-	            if (i >= 25) {
+	            if (count >= 25) {
 	            	animTimer.cancel();
 	            	animTimer.purge();
 	            }
-	            i++;
+	            count++;
 	        }
 	    }, 1000, 25);
 		expanded = false;
