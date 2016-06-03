@@ -93,7 +93,7 @@ public class PhyloMenuController implements Initializable {
 	            }
 	            count++;
 	        }
-	    }, 1000, 25);
+	    }, 200, 25);
 		expanded = true;
 	}
 	
@@ -121,7 +121,7 @@ public class PhyloMenuController implements Initializable {
 	            }
 	            count++;
 	        }
-	    }, 1000, 25);
+	    }, 200, 25);
 		expanded = false;
 	}
 	
