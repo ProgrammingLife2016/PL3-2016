@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -30,6 +31,10 @@ public class PhyloMenuController implements Initializable {
 	
 	@FXML private GridPane pane;
 	@FXML private ScrollPane scrollPane;
+	@FXML private AnchorPane anchorPane;
+	@FXML private Button expandButton;
+	
+	private GridPane outerPane;
 
 	/**
 	 * Initialize fxml file.
@@ -39,6 +44,8 @@ public class PhyloMenuController implements Initializable {
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
 		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
+		    anchorPane.setTopAnchor(expandButton, newValue.getHeight()/2);
+		    anchorPane.setLeftAnchor(expandButton, newValue.getWidth()/2);
 			System.out.println(newValue.getHeight());
 		});
 		setUpAnchorPane();
@@ -46,5 +53,9 @@ public class PhyloMenuController implements Initializable {
 	
 	private void setUpAnchorPane() {
 		
+	}
+	
+	public void setOuterPane(GridPane pane) {
+		outerPane = pane;
 	}
 }

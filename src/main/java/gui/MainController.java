@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -39,6 +40,8 @@ public class MainController implements Initializable {
 	 */
 	@FXML private GraphController graphTabController;
 	@FXML private RibbonController ribbonTabController;
+	@FXML private PhyloMenuController phyloMenuController;
+	@FXML private GridPane phyloGridPane;
 	
 	/**
 	 * Access to the scene window.
@@ -62,6 +65,7 @@ public class MainController implements Initializable {
 		graphTabController.setRibbonGroup(ribbonTabController.getInnerGroup());
 		ribbonTabController.setGraphPane(graphTabController.getScrollPane());
 		ribbonTabController.setGraphGroup(graphTabController.getInnerGroup());
+		phyloMenuController.setOuterPane(phyloGridPane);
 	}
 	
 	/**

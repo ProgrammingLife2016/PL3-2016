@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -15,9 +16,12 @@
       <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
    </rowConstraints>
    <children>
-      <ScrollPane fx:id="scrollPane" style="-fx-background-color:lightblue" fitToHeight="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" pannable="true" prefHeight="1028" prefWidth="720" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <ScrollPane fx:id="scrollPane" style="-fx-background-color:lightblue" fitToHeight="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" pannable="false" prefHeight="1028" prefWidth="720" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <content>
             <AnchorPane fx:id="anchorPane" style="-fx-background-color:lightblue" prefHeight="0.0" prefWidth="0.0">
+            	<children>
+            	   <Button text="Expand" fx:id="expandButton"  /> 
+            	</children>
             </AnchorPane>
          </content>
       </ScrollPane>
