@@ -27,9 +27,7 @@ import javafx.scene.text.Text;
 import db.DatabaseManager;
 
 /**
- * Class for dealing with the annotations. The elements are added to a
- * new group, which are added to a ScrollPane. This view will give an idea
- * of the actual length of the genome.
+ * Class for dealing with the Menu in the phylogeny.
  */
 public class PhyloMenuController implements Initializable {
 	
@@ -49,45 +47,9 @@ public class PhyloMenuController implements Initializable {
 		@Override
 		public void handle(MouseEvent event) {
 			if (expanded == false) {
-				Timer animTimer = new Timer();
-			    animTimer.scheduleAtFixedRate(new TimerTask() {
-
-			        int i=0;
-
-			        @Override
-			        public void run() {
-			            if (i<35){
-
-			            	outerPane.getRowConstraints().get(1).setPrefHeight(outerPane.getRowConstraints().get(1).getPrefHeight() + 20);
-			            }
-			            else {
-			                this.cancel();
-			            }
-
-			            i++;
-			        }
-			    }, 2000, 25);
-				expanded = true;
+				expandMenu();
 			} else if (expanded == true) {
-				Timer animTimer = new Timer();
-			    animTimer.scheduleAtFixedRate(new TimerTask() {
-
-			        int i=0;
-
-			        @Override
-			        public void run() {
-			            if (i<25){
-
-			            	outerPane.getRowConstraints().get(1).setPrefHeight(outerPane.getRowConstraints().get(1).getPrefHeight() - 20);
-			            }
-			            else {
-			                this.cancel();
-			            }
-
-			            i++;
-			        }
-			    }, 2000, 25);
-				expanded = false;
+				contractMenu();
 			}
 		}
 	};
@@ -108,8 +70,63 @@ public class PhyloMenuController implements Initializable {
 		setUpAnchorPane();
 	}
 	
+	/**
+	 * Method that prepares the AnchorPane
+	 */
 	private void setUpAnchorPane() {
 		
+	}
+	
+	/**
+	 * Expands the menu using a timer to animate the expansion.
+	 */
+	private void expandMenu() {
+		Timer animTimer = new Timer();
+	    animTimer.scheduleAtFixedRate(new TimerTask() {
+
+	        int i=0;
+
+	        @Override
+	        public void run() {
+	            if (i<35){
+
+	            	outerPane.getRowConstraints().get(1).setPrefHeight(outerPane.getRowConstraints().get(1).getPrefHeight() + 20);
+	            }
+	            else {
+	                this.cancel();
+	            }
+
+	            i++;
+	        }
+	    }, 1000, 25);
+	    animTimer.cancel();
+		expanded = true;
+	}
+	
+	/**
+	 * Contracts the menu using a timer to animate the contraction.
+	 */
+	private void contractMenu() {
+		Timer animTimer = new Timer();
+	    animTimer.scheduleAtFixedRate(new TimerTask() {
+
+	        int i=0;
+
+	        @Override
+	        public void run() {
+	            if (i<25){
+
+	            	outerPane.getRowConstraints().get(1).setPrefHeight(outerPane.getRowConstraints().get(1).getPrefHeight() - 20);
+	            }
+	            else {
+	                this.cancel();
+	            }
+
+	            i++;
+	        }
+	    }, 1000, 25);
+	    animTimer.cancel();
+		expanded = false;
 	}
 	
 	public void setOuterPane(GridPane pane) {
