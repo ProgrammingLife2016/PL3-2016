@@ -192,11 +192,35 @@ public class NewickNode extends Group {
 	public String getLineageColour(String lineage) {
 		String colour = "";
 		switch (lineage) {
+		case "LIN1":
+			colour = "#ED00C3";
+			break;
 		case "LIN2":
 			colour = "#0000FF";
 			break;
+		case "LIN3":
+			colour = "#500079";
+			break;
 		case "LIN4":
 			colour = "#FF0000";
+			break;
+		case "LIN5":
+			colour = "#4E2C00";
+			break;
+		case "LIN6":
+			colour = "#69CA00";
+			break;
+		case "LIN7":
+			colour = "#FF7E00";
+			break;
+		case "LINanimal":
+			colour = "#00FF9C";
+			break;
+		case "LINB":
+			colour = "#00FF9C";
+			break;
+		case "LINCANETTII":
+			colour = "#00FFFF";
 			break;
 		case "":
 			colour = "0x000000ff";
