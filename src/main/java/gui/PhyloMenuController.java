@@ -9,12 +9,12 @@ import java.util.TimerTask;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.Group;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
@@ -88,18 +88,21 @@ public class PhyloMenuController implements Initializable {
 
 	        @Override
 	        public void run() {
-	            if (i<35){
+	            if (i<25){
 
-	            	outerPane.getRowConstraints().get(1).setPrefHeight(outerPane.getRowConstraints().get(1).getPrefHeight() + 20);
+	            	outerPane.getRowConstraints().get(1)
+	            		.setPrefHeight(outerPane.getRowConstraints().get(1).getPrefHeight() + 20);
 	            }
 	            else {
 	                this.cancel();
 	            }
-
+	            if (i >= 25) {
+	            	animTimer.cancel();
+	            	animTimer.purge();
+	            }
 	            i++;
 	        }
 	    }, 1000, 25);
-	    animTimer.cancel();
 		expanded = true;
 	}
 	
@@ -116,16 +119,19 @@ public class PhyloMenuController implements Initializable {
 	        public void run() {
 	            if (i<25){
 
-	            	outerPane.getRowConstraints().get(1).setPrefHeight(outerPane.getRowConstraints().get(1).getPrefHeight() - 20);
+	            	outerPane.getRowConstraints().get(1)
+	            		.setPrefHeight(outerPane.getRowConstraints().get(1).getPrefHeight() - 20);
 	            }
 	            else {
 	                this.cancel();
 	            }
-
+	            if (i >= 25) {
+	            	animTimer.cancel();
+	            	animTimer.purge();
+	            }
 	            i++;
 	        }
 	    }, 1000, 25);
-	    animTimer.cancel();
 		expanded = false;
 	}
 	
