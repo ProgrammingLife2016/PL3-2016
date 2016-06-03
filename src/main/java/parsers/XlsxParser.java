@@ -36,8 +36,8 @@ public class XlsxParser {
 			XSSFWorkbook workbook = new XSSFWorkbook(file);
 			XSSFSheet sheet = workbook.getSheetAt(0); //Get first/desired sheet from the workbook
 			Iterator<Row> rowIterator = sheet.iterator();
+			
 			while (rowIterator.hasNext()) { //For each row
-
 				Row row = rowIterator.next();
 				Iterator<Cell> cellIterator = row.cellIterator();
 				Cell cell = cellIterator.next();
@@ -49,6 +49,7 @@ public class XlsxParser {
 					}
 					cell = cellIterator.next();
 					String specimenlineage = cell.getStringCellValue();
+					specimenlineage = specimenlineage.replace(" ", "");
 					lineages.put(specimenid, specimenlineage);
 				}
 			}

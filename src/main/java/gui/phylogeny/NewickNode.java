@@ -1,5 +1,7 @@
 package gui.phylogeny;
 
+import java.io.File;
+
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
@@ -14,10 +16,14 @@ import javafx.scene.shape.Shape;
  */
 public class NewickNode extends Group {
 	
+	private String lineage = "";
 	private static final int SIZE = 10;
 	private Rectangle node = new Rectangle(0 - SIZE / 2, 0 - SIZE / 2, SIZE, SIZE);
 	private Label label = null;
 	private boolean isLeaf = false;
+    private static final String stylespath = System.getProperty("user.dir") + File.separator
+    		+ "src" + File.separator + "main" + File.separator + "java" + File.separator
+    		+ "Styles" + File.separator + "PhylogeneticTree.css";
 	
 	/**
 	 * Event handler for mouse click event with the phylogenetic view.
@@ -27,39 +33,21 @@ public class NewickNode extends Group {
 		@Override
 		public void handle(MouseEvent event) {
 			Paint currentColor = node.getFill();
-			if (currentColor.toString().equals("0x000000ff")) {
+			if (!currentColor.equals(Paint.valueOf("#778899"))) {
 				node.setFill(Paint.valueOf("#778899"));
 				if (label != null) {
 					label.setTextFill(Paint.valueOf("#778899"));
 				}
 				turnChildrenGrey();
-				
 			} else {
-				node.setFill(Paint.valueOf("0x000000ff"));
+				node.setFill(Paint.valueOf(getLineageColour(lineage)));
 				if (label != null) {
-					label.setTextFill(Paint.valueOf("0x000000ff"));
+					label.setTextFill(Paint.valueOf(getLineageColour(lineage)));
 				}
-				turnChildrenBlack();
+				turnChildrenColoured();
 			}
 		}
 	};
-	
-	/**
-	 * Colors all relevant children in the Group black.
-	 */
-	public void turnChildrenBlack() {
-		for (Object child : this.getChildren()) {
-			if (child instanceof NewickNode) {
-				((NewickNode) child).getRectangle().setFill(Paint.valueOf("0x000000ff"));
-				if (((NewickNode) child).getLabel() != null) {
-					((NewickNode) child).getLabel().setTextFill(Paint.valueOf("0x000000ff"));
-				}
-				if (((NewickNode) child).isLeaf() == false) {
-					((NewickNode) child).turnChildrenBlack();
-				}
-			}
-		}
-	}
 	
 	/**
 	 * Colors all relevant children in the Group light grey.
@@ -68,7 +56,7 @@ public class NewickNode extends Group {
 		for (Object child : this.getChildren()) {
 			if (child instanceof NewickNode) {
 				((NewickNode) child).getRectangle().setFill(Paint.valueOf("#778899"));
-				if (label != null) {
+				if (((NewickNode) child).getLabel() != null) {
 					((NewickNode) child).getLabel().setTextFill(Paint.valueOf("#778899"));
 				}
 				if (((NewickNode) child).isLeaf() == false) {
@@ -78,8 +66,29 @@ public class NewickNode extends Group {
 		}
 	}
 	
+	/**
+	 * Colors all relevant children in the Group black.
+	 */
+	public void turnChildrenColoured() {
+		for (Object child : this.getChildren()) {
+			if (child instanceof NewickNode) {
+				((NewickNode) child).getRectangle().setFill(Paint
+						.valueOf(getLineageColour(((NewickNode) child).getLineage())));
+				if (((NewickNode) child).getLabel() != null) {
+					((NewickNode) child).getLabel().setTextFill(Paint
+						.valueOf(getLineageColour(((NewickNode) child).getLineage())));
+				}
+				if (((NewickNode) child).isLeaf() == false) {
+					((NewickNode) child).turnChildrenColoured();
+				}
+			}
+		}
+	}
+	
 	public NewickNode() {
 		node.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEventHandler);
+		this.getStylesheets().add("Styles/PhylogeneticTree.css");
+		node.getStyleClass().add("node");
 		this.getChildren().add(node);
 	}
 	
@@ -92,6 +101,22 @@ public class NewickNode extends Group {
 	 */
 	public NewickNode(String name) {
 		this();
+		this.addLabel(name);
+	}
+	
+	/**
+	 * Besides a label (the name of the specimen), this constructor
+	 * also sets the lineage.
+	 * 
+	 * @param name
+	 *            Text that the Label should display.
+	 * @param lineage
+	 * 			  Lineage of the specimen.
+	 */
+	public NewickNode(String name, String lineage) {
+		this();
+		this.lineage = lineage;
+		node.setFill(Paint.valueOf(getLineageColour(lineage)));
 		this.addLabel(name);
 	}
 	
@@ -143,7 +168,43 @@ public class NewickNode extends Group {
 		label.setTranslateX(10);
 		label.setTranslateY(-8);
 		label.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEventHandler);
+		label.setTextFill(Paint.valueOf(getLineageColour(lineage)));
 		this.getChildren().add(label);
 	}
 	
+	public void setLineage(String lineage) {
+		//node.getStyleClass().add(lineage);
+		//label.getStyleClass().add(lineage);
+	}
+	
+	public String getLineage() {
+		return this.lineage;
+	}
+	
+	/**
+	 * Get the colour belonging to the specified lineage.
+	 * 
+	 * @param lineage
+	 * 			The input lineage
+	 * @return
+	 * 			The requested colour
+	 */
+	public String getLineageColour(String lineage) {
+		String colour = "";
+		switch (lineage) {
+		case "LIN2":
+			colour = "#0000FF";
+			break;
+		case "LIN4":
+			colour = "#FF0000";
+			break;
+		case "":
+			colour = "0x000000ff";
+			break;
+		default:
+		break;
+		
+		}
+		return colour;
+	}
 }

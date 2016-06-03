@@ -1,9 +1,12 @@
 package gui;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import parsers.XlsxParser;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,7 +16,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
-
 import gui.phylogeny.NewickEdge;
 import gui.phylogeny.NewickNode;
 import newick.NewickTree;
@@ -32,8 +34,26 @@ public class PhylogenyController implements Initializable {
 	@FXML ScrollPane scrollPane;
 	private Group root;
 	
+	/**
+	 * The upper boundary for zooming.
+	 */
     private static final double MAX_SCALE = 100.0d;
+    
+    /**
+     * The lower boundary for zooming.
+     */
     private static final double MIN_SCALE = .1d;
+    
+	/**
+	 * Location of metadata.xlsx
+	 */
+	private static String xlsxpath = System.getProperty("user.dir") + File.separator + "Data"
+			+ File.separator + "TB10" + File.separator + "metadata" + ".xlsx";
+	
+	/**
+	 * HashMap containing the lineages of the specimens.
+	 */
+	private HashMap<String, String> lineages;
 	
 	/**
 	 * Handles the scroll wheel event for the phylogenetic view.
@@ -115,13 +135,30 @@ public class PhylogenyController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		parseLineages();
 		NewickNode node = getDrawableTree(Launcher.nwkTree);
 		node.setTranslateX(100);
 		node.setTranslateY(100);
-		
+	
 		root = new Group();
-		root.getChildren().add(node);
+		root.getChildren().add(node);	
+		scrollPaneSetup();
+	}
+	
+	/**
+	 * Parse lineages of the specimens.
+	 */
+	private void parseLineages() {
+		XlsxParser xlsxparser = new XlsxParser();
+		xlsxparser.parse(xlsxpath);
+		lineages = xlsxparser.getLineages();
+		System.out.println(lineages.toString());
+	}
+	
+	/**
+	 * Setup basic properties of the ScrollPane.
+	 */
+	private void scrollPaneSetup() {
 		scrollPane.setContent(root);
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
 		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
@@ -131,7 +168,6 @@ public class PhylogenyController implements Initializable {
 		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
 		});
-
 	}
 	
 	/**
@@ -258,9 +294,9 @@ public class PhylogenyController implements Initializable {
 			updateGenomeNames();
 			NewickNode childNode = null;
 			if (child.isLeaf()) {
-				childNode = new NewickNode(child.getName());
-				childNode.setIsLeaf(true);
-				
+				String lineage = lineages.get(child.getName());
+				childNode = new NewickNode(child.getName(), lineage);
+				childNode.setIsLeaf(true);	
 			} else {
 				childNode = getDrawableTree(child);
 			}
