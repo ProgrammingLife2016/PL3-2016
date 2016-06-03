@@ -1,15 +1,11 @@
 package gui.phylogeny;
 
-import java.io.File;
-
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 
 /**
  * Class that is used to visualize a single node of a {@link NewickTree}
@@ -21,9 +17,6 @@ public class NewickNode extends Group {
 	private Rectangle node = new Rectangle(0 - SIZE / 2, 0 - SIZE / 2, SIZE, SIZE);
 	private Label label = null;
 	private boolean isLeaf = false;
-    private static final String stylespath = System.getProperty("user.dir") + File.separator
-    		+ "src" + File.separator + "main" + File.separator + "java" + File.separator
-    		+ "Styles" + File.separator + "PhylogeneticTree.css";
 	
 	/**
 	 * Event handler for mouse click event with the phylogenetic view.

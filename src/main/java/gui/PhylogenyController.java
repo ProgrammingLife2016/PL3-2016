@@ -6,19 +6,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import parsers.XlsxParser;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
+
 import gui.phylogeny.NewickEdge;
 import gui.phylogeny.NewickNode;
 import newick.NewickTree;
+import parsers.XlsxParser;
 
 /**
  * Controller class for the Phylogenetic tree view.
@@ -26,7 +26,7 @@ import newick.NewickTree;
 public class PhylogenyController implements Initializable {
 	
 	private static final int SPACING = 10;
-	private int SCALE;
+	private int scale;
 	
 	ArrayList<String> genomeNames;
 	
@@ -235,9 +235,9 @@ public class PhylogenyController implements Initializable {
 	 */
 	private void adjustScale(NewickTree tree) {
 		if (countNodes(tree) <= 25) {
-			SCALE = 5000;
+			scale = 5000;
 		} else {
-			SCALE = 50000;
+			scale = 50000;
 		}
 	}
 	
@@ -308,7 +308,7 @@ public class PhylogenyController implements Initializable {
 			root.getChildren().add(edge);
 			root.getChildren().add(childNode);
 			
-			childNode.setTranslateX(SCALE * child.getDistance());
+			childNode.setTranslateX(scale * child.getDistance());
 			childNode.setTranslateY(currentY);
 			
 			currentY += SPACING + childNode.boundsInLocalProperty().get().getHeight();
