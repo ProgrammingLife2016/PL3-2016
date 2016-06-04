@@ -83,8 +83,6 @@ public class NewickNode extends Group {
 	
 	public NewickNode() {
 		node.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEventHandler);
-		this.getStylesheets().add("Styles/PhylogeneticTree.css");
-		node.getStyleClass().add("node");
 		this.getChildren().add(node);
 	}
 	
@@ -166,11 +164,6 @@ public class NewickNode extends Group {
 		label.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEventHandler);
 		label.setTextFill(Paint.valueOf(LineageColourMatching.getLineageColour(lineage)));
 		this.getChildren().add(label);
-	}
-	
-	public void setLineage(String lineage) {
-		//node.getStyleClass().add(lineage);
-		//label.getStyleClass().add(lineage);
 	}
 	
 	public String getLineage() {
