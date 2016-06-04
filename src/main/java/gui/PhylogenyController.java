@@ -15,7 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 
-import gui.phylogeny.LineageColourMatching;
+import gui.phylogeny.NewickColourMatching;
 import gui.phylogeny.NewickEdge;
 import gui.phylogeny.NewickNode;
 import newick.NewickTree;
