@@ -65,6 +65,9 @@ public class NewickNode extends Group {
 		this.addLabel(name);
 	}
 	
+	/**
+	 * Handles node layout aspects.
+	 */
 	public void setupNodeLayout() {
 		node = new Rectangle(0 - RECTANGLE_SIZE / 2,
 				0 - RECTANGLE_SIZE / 2, RECTANGLE_SIZE, RECTANGLE_SIZE);
@@ -100,7 +103,7 @@ public class NewickNode extends Group {
 	}
 	
 	/**
-	 * Set up layout of the label.
+	 * Handles label layout aspects.
 	 */
 	private void setupLabelLayout() {
 		label.setTranslateX(10);

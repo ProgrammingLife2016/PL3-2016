@@ -29,6 +29,7 @@ public class NewickColourMatching {
 	private static final String GRAY_COLOUR = "#778899";
 	
 	/**
+	 * Returns colour associated with a certain lineage.
 	 * 
 	 * @param lineage
 	 * 			Lineage of a specimen.
@@ -45,8 +46,12 @@ public class NewickColourMatching {
 		return Paint.valueOf(lineagecolour);
 	}
 	
+	/**
+	 * Returns Paint object containing a gray colour.
+	 * 
+	 * @return Paint
+	 */
 	public static Paint getDeactivatedColour() {
 		return Paint.valueOf(GRAY_COLOUR);
 	}
-
 }

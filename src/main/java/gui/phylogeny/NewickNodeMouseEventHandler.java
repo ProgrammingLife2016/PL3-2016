@@ -5,6 +5,10 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 
+/**
+ * EventHandler for MouseEvents associated with the NewickNode.
+ *
+ */
 public class NewickNodeMouseEventHandler implements EventHandler<MouseEvent> {
 
 	/**
@@ -12,10 +16,16 @@ public class NewickNodeMouseEventHandler implements EventHandler<MouseEvent> {
 	 */
 	private NewickNode newicknode;
 	
+	/**
+	 * The MouseEventHandler for a designated NewickNode.
+	 */
 	public NewickNodeMouseEventHandler(NewickNode node) {
 		newicknode = node;
 	}
 
+	/**
+	 * Handles the MouseEvent.
+	 */
 	@Override
 	public void handle(MouseEvent event) {
 		toggleActive();
@@ -40,39 +50,3 @@ public class NewickNodeMouseEventHandler implements EventHandler<MouseEvent> {
 		}
 	}
 }
-	
-//	/**
-//	 * Colors all relevant children in the Group light grey.
-//	 */
-//	public void turnChildrenGrey(NewickNode node) {
-//		for (Object child : newicknode.getChildren()) {
-//			if (child instanceof NewickNode) {
-//				((NewickNode) child).unsetColoured();
-//				if (!((NewickNode) child).isLeaf()) {
-//					((NewickNode) child).turnChildrenGrey();
-//				}
-//			}
-//		}
-//	}
-//	
-//	/**
-//	 * Colors all relevant children in the Group black.
-//	 */
-//	public void turnChildrenColoured() {
-//		for (Object child : this.getChildren()) {
-//			if (child instanceof NewickNode) {
-//				((NewickNode) child).getRectangle().setFill(Paint
-//						.valueOf(NewickColourMatching
-//						.getLineageColour((((NewickNode) child).getLineage()))));
-//				if (((NewickNode) child).getLabel() != null) {
-//					((NewickNode) child).getLabel().setTextFill(Paint
-//							.valueOf(NewickColourMatching
-//							.getLineageColour((((NewickNode) child).getLineage()))));
-//				}
-//				if (((NewickNode) child).isLeaf() == false) {
-//					((NewickNode) child).turnChildrenColoured();
-//				}
-//			}
-//		}
-//	}
-//}
