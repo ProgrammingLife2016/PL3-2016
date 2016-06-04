@@ -33,9 +33,10 @@ public class NewickNode extends Group {
 				}
 				turnChildrenGrey();
 			} else {
-				node.setFill(Paint.valueOf(getLineageColour(lineage)));
+				node.setFill(Paint.valueOf(LineageColourMatching.getLineageColour(lineage)));
 				if (label != null) {
-					label.setTextFill(Paint.valueOf(getLineageColour(lineage)));
+					label.setTextFill(Paint.valueOf(LineageColourMatching
+							.getLineageColour(lineage)));
 				}
 				turnChildrenColoured();
 			}
@@ -66,10 +67,12 @@ public class NewickNode extends Group {
 		for (Object child : this.getChildren()) {
 			if (child instanceof NewickNode) {
 				((NewickNode) child).getRectangle().setFill(Paint
-						.valueOf(getLineageColour(((NewickNode) child).getLineage())));
+						.valueOf(LineageColourMatching
+						.getLineageColour((((NewickNode) child).getLineage()))));
 				if (((NewickNode) child).getLabel() != null) {
 					((NewickNode) child).getLabel().setTextFill(Paint
-						.valueOf(getLineageColour(((NewickNode) child).getLineage())));
+							.valueOf(LineageColourMatching
+							.getLineageColour((((NewickNode) child).getLineage()))));
 				}
 				if (((NewickNode) child).isLeaf() == false) {
 					((NewickNode) child).turnChildrenColoured();
@@ -109,7 +112,7 @@ public class NewickNode extends Group {
 	public NewickNode(String name, String lineage) {
 		this();
 		this.lineage = lineage;
-		node.setFill(Paint.valueOf(getLineageColour(lineage)));
+		node.setFill(Paint.valueOf(LineageColourMatching.getLineageColour(lineage)));
 		this.addLabel(name);
 	}
 	
@@ -161,7 +164,7 @@ public class NewickNode extends Group {
 		label.setTranslateX(10);
 		label.setTranslateY(-8);
 		label.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEventHandler);
-		label.setTextFill(Paint.valueOf(getLineageColour(lineage)));
+		label.setTextFill(Paint.valueOf(LineageColourMatching.getLineageColour(lineage)));
 		this.getChildren().add(label);
 	}
 	
@@ -174,54 +177,4 @@ public class NewickNode extends Group {
 		return this.lineage;
 	}
 	
-	/**
-	 * Get the colour belonging to the specified lineage.
-	 * 
-	 * @param lineage
-	 * 			The input lineage
-	 * @return
-	 * 			The requested colour
-	 */
-	public String getLineageColour(String lineage) {
-		String colour = "";
-		switch (lineage) {
-		case "LIN1":
-			colour = "#ED00C3";
-			break;
-		case "LIN2":
-			colour = "#0000FF";
-			break;
-		case "LIN3":
-			colour = "#500079";
-			break;
-		case "LIN4":
-			colour = "#FF0000";
-			break;
-		case "LIN5":
-			colour = "#4E2C00";
-			break;
-		case "LIN6":
-			colour = "#69CA00";
-			break;
-		case "LIN7":
-			colour = "#FF7E00";
-			break;
-		case "LINanimal":
-			colour = "#00FF9C";
-			break;
-		case "LINB":
-			colour = "#00FF9C";
-			break;
-		case "LINCANETTII":
-			colour = "#00FFFF";
-			break;
-		case "":
-			colour = "0x000000ff";
-			break;
-		default:
-		break;
-		
-		}
-		return colour;
-	}
 }

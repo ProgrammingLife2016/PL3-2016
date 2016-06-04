@@ -15,6 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 
+import gui.phylogeny.LineageColourMatching;
 import gui.phylogeny.NewickEdge;
 import gui.phylogeny.NewickNode;
 import newick.NewickTree;
@@ -152,7 +153,6 @@ public class PhylogenyController implements Initializable {
 		XlsxParser xlsxparser = new XlsxParser();
 		xlsxparser.parse(xlsxpath);
 		lineages = xlsxparser.getLineages();
-		System.out.println(lineages.toString());
 	}
 	
 	/**
