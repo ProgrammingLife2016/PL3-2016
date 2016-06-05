@@ -48,7 +48,6 @@ public class XlsxParser {
 					cell = cellIterator.next();
 					String specimenlineage = cell.getStringCellValue();
 					specimenlineage = specimenlineage.replace(" ", "");
-					System.out.println(specimenid + " " + specimenlineage);
 					lineages.put(specimenid, specimenlineage);
 				}
 			}

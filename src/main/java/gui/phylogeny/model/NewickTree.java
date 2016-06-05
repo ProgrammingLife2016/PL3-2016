@@ -1,7 +1,9 @@
-package newick;
+package gui.phylogeny.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import gui.Launcher;
 
 /**
  * 
@@ -54,4 +56,6 @@ public class NewickTree {
 		sb.append(")");
 		return sb.toString();
 	}
+	
+	
 }

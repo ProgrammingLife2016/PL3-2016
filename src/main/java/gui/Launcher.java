@@ -9,9 +9,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import newick.NewickTree;
 import db.DatabaseManager;
+import gui.phylogeny.model.NewickTree;
 import parsers.GfaException;
 import parsers.GfaParser;
 import parsers.GffParser;
