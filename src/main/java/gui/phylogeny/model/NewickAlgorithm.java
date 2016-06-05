@@ -35,7 +35,7 @@ public class NewickAlgorithm {
 	/**
 	 * Parse lineages of the specimens.
 	 */
-	protected void parseLineages() {
+	public void parseLineages() {
 		XlsxParser xlsxparser = new XlsxParser();
 		xlsxparser.parse(xlsxpath);
 		lineages = xlsxparser.getLineages();

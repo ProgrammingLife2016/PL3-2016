@@ -18,7 +18,7 @@ import gui.phylogeny.model.NewickNode;
 /**
  * Controller class for the Phylogenetic tree view.
  */
-public class PhylogenyController extends NewickAlgorithm implements Initializable {
+public class PhylogenyController implements Initializable {
 	
 	@FXML GridPane pane;
 	@FXML ScrollPane scrollPane;
@@ -113,8 +113,9 @@ public class PhylogenyController extends NewickAlgorithm implements Initializabl
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		parseLineages();
-		NewickNode node = getDrawableTree(Launcher.nwkTree);
+		NewickAlgorithm newickAlg = new NewickAlgorithm();
+		newickAlg.parseLineages();
+		NewickNode node = newickAlg.getDrawableTree(Launcher.nwkTree);
 		node.setTranslateX(100);
 		node.setTranslateY(100);
 	
