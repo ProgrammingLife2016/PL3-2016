@@ -1,4 +1,4 @@
-package gui.phylogeny;
+package gui.phylogeny.model;
 
 import javafx.scene.shape.HLineTo;
 import javafx.scene.shape.MoveTo;

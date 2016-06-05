@@ -1,4 +1,4 @@
-package gui;
+package gui.phylogeny.controller;
 
 import java.io.File;
 import java.net.URL;
@@ -14,10 +14,10 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
-
-import gui.phylogeny.NewickColourMatching;
-import gui.phylogeny.NewickEdge;
-import gui.phylogeny.NewickNode;
+import gui.Launcher;
+import gui.phylogeny.model.NewickColourMatching;
+import gui.phylogeny.model.NewickEdge;
+import gui.phylogeny.model.NewickNode;
 import newick.NewickTree;
 import parsers.XlsxParser;
 

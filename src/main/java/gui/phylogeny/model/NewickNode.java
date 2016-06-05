@@ -1,5 +1,6 @@
-package gui.phylogeny;
+package gui.phylogeny.model;
 
+import gui.phylogeny.NewickNodeMouseEventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -127,7 +128,7 @@ public class NewickNode extends Group {
 	/**
 	 * Toggles "selected" state of a node.
 	 */
-	protected void toggleSelected() {
+	public void toggleSelected() {
 		if (isSelected) {
 			isSelected = false;
 		} else {

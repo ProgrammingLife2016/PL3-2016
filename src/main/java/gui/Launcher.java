@@ -23,9 +23,9 @@ import toolbar.RecentHandler;
  * @author Björn Ho
  */
 public class Launcher extends Application {
-	static DatabaseManager dbm;
+	public static DatabaseManager dbm;
 	static Stage stage;
-	static NewickTree nwkTree = null;
+	public static NewickTree nwkTree = null;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
