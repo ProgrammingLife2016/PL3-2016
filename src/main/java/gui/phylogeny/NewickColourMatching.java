@@ -41,6 +41,7 @@ public class NewickColourMatching {
 		for (int i = 0; i < LINEAGELIST.length; i++) {
 			if (lineage.equals(LINEAGELIST[i])) {
 				lineagecolour = LINEAGECOLOURLIST[i];
+				return Paint.valueOf(lineagecolour);
 			}
 		}
 		return Paint.valueOf(lineagecolour);

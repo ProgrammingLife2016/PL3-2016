@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -34,6 +35,7 @@ public class PhylogenyController implements Initializable {
 	@FXML GridPane pane;
 	@FXML ScrollPane scrollPane;
 	private Group root;
+	private static NewickNode rootnode;
 	
 	/**
 	 * The upper boundary for zooming.
@@ -137,12 +139,13 @@ public class PhylogenyController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		parseLineages();
-		NewickNode node = getDrawableTree(Launcher.nwkTree);
-		node.setTranslateX(100);
-		node.setTranslateY(100);
+		rootnode = getDrawableTree(Launcher.nwkTree);
+		rootnode.setParentLineages();
+		rootnode.setTranslateX(100);
+		rootnode.setTranslateY(100);
 	
 		root = new Group();
-		root.getChildren().add(node);	
+		root.getChildren().add(rootnode);	
 		scrollPaneSetup();
 	}
 	
@@ -314,5 +317,9 @@ public class PhylogenyController implements Initializable {
 			currentY += SPACING + childNode.boundsInLocalProperty().get().getHeight();
 		}
 		return root;
+	}
+	
+	public static NewickNode getRootNode() {
+		return rootnode;
 	}
 }

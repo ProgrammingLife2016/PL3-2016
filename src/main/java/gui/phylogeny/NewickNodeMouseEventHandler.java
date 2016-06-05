@@ -40,7 +40,7 @@ public class NewickNodeMouseEventHandler implements EventHandler<MouseEvent> {
 	}
 	
 	/**
-	 * Adjusts the colour according to the "selected" state of a node.
+	 * Adjusts the colour to an active or non-active state.
 	 */
 	private void toggleColour() {
 		if (newicknode.isSelected()) {

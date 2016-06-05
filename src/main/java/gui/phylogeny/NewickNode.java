@@ -1,6 +1,10 @@
 package gui.phylogeny;
 
+import java.util.ArrayList;
+
+import gui.PhylogenyController;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
@@ -39,7 +43,7 @@ public class NewickNode extends Group {
 	/**
 	 * variable for labeling a node as selected.
 	 */
-	private boolean isSelected = false;
+	private boolean isSelected = true;
 	
 	/**
 	 * Main constructor of NewickNode.
@@ -123,6 +127,10 @@ public class NewickNode extends Group {
 	public String getLineage() {
 		return this.lineage;
 	}
+	
+	public void setLineage(String lineage) {
+		this.lineage = lineage;
+	}
 
 	/**
 	 * Toggles "selected" state of a node.
@@ -169,7 +177,8 @@ public class NewickNode extends Group {
 	}
 	
 	/**
-	 * Set colour corresponding to node's lineage.
+	 * Set colour of a node corresponding to its lineage. Also colours all of
+	 * its children.
 	 */
 	public void setColoured() {
 		node.setFill(this.getColour());
@@ -185,7 +194,8 @@ public class NewickNode extends Group {
 	}
 	
 	/**
-	 * Unset colour of this node (makes node appear gray).
+	 * Unset colour of this node (makes node appear gray). Also unsets
+	 * colour of all of its children.
 	 */
 	public void unsetColoured() {
 		node.setFill(NewickColourMatching.getDeactivatedColour());
@@ -199,4 +209,44 @@ public class NewickNode extends Group {
 			}
 		}
 	}
+	
+	
+	public String setParentLineages() {
+		if (!this.isLeaf()) {
+			ArrayList<String> lineagelist = new ArrayList<String>();
+			for (Object child : this.getChildren()) {
+				if (child instanceof NewickNode) {
+					if (((NewickNode) child).isLeaf()) {
+						lineagelist.add(((NewickNode) child).getLineage());
+					} else { //if child not a leaf
+						lineagelist.add(((NewickNode) child).setParentLineages()); 
+					}
+				}
+			} //looped through all children, stored their lineages in list
+			if (isSameLineage(lineagelist)) {
+				this.setLineage(lineagelist.get(0));
+			} else {
+				this.setLineage("");
+			}
+		} else { //if rootnode is a leaf
+			return this.getLineage();
+		}
+		return this.getLineage();
+	}
+	
+	/**
+	 * Check if lineages in list are the same.
+	 * 
+	 * @param lineagelist
+	 * @return boolean
+	 */
+	public boolean isSameLineage(ArrayList<String> lineagelist) {
+		for (int i = 1; i < lineagelist.size(); i++) {
+			if (!lineagelist.get(0).equals(lineagelist.get(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 }
