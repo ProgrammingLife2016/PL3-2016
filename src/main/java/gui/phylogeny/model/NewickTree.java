@@ -56,6 +56,4 @@ public class NewickTree {
 		sb.append(")");
 		return sb.toString();
 	}
-	
-	
 }

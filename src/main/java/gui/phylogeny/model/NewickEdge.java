@@ -20,7 +20,6 @@ public class NewickEdge extends Path {
 	
 	public NewickEdge(NewickNode dst) {
 		
-		
 		MoveTo moveTo = new MoveTo();
 		moveTo.xProperty().bind(dst.translateXProperty());
 		moveTo.yProperty().bind(dst.translateYProperty());
@@ -37,8 +36,5 @@ public class NewickEdge extends Path {
 		VLineTo vertical = new VLineTo();
 		this.getElements().add(vertical);
 		
-
 	}
-
-
 }
