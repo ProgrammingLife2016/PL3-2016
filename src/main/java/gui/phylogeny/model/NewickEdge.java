@@ -17,21 +17,28 @@ public class NewickEdge extends Path {
 	 * 
 	 * @param dst Destination node.
 	 */
+	
 	public NewickEdge(NewickNode dst) {
-		MoveTo moveTo = new MoveTo();
 		
+		
+		MoveTo moveTo = new MoveTo();
 		moveTo.xProperty().bind(dst.translateXProperty());
 		moveTo.yProperty().bind(dst.translateYProperty());
-		this.getElements().add(moveTo);
 
+		this.getElements().add(moveTo);
+		
 		// Add a horizontal line from the current position to the x-coordinate
 		// of the destination.
 		HLineTo horizontal = new HLineTo();
 		this.getElements().add(horizontal);
-
+		
 		// Add a vertical line from the current position to the y-coordinate of
 		// the destination.
 		VLineTo vertical = new VLineTo();
 		this.getElements().add(vertical);
+		
+
 	}
+
+
 }

@@ -1,5 +1,9 @@
 package gui.phylogeny.model;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import gui.phylogeny.NewickNodeMouseEventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
@@ -42,6 +46,12 @@ public class NewickNode extends Group {
 	 */
 	private boolean isSelected = false;
 	
+	private static Set<NewickNode> selectedSet;
+	static {
+		selectedSet = new HashSet<NewickNode>();
+	}
+	 
+	
 	/**
 	 * Main constructor of NewickNode.
 	 */
@@ -49,6 +59,11 @@ public class NewickNode extends Group {
 		this.setupNodeLayout();
 		this.getChildren().add(node);
 	}
+	
+	
+	
+	
+	private String nodeName;
 	
 	/**
 	 * Leafnode constructor that adds a label with the given name to a leaf node and colours it
@@ -63,8 +78,17 @@ public class NewickNode extends Group {
 		this();
 		this.lineage = lineage;
 		this.setColoured();
+		this.nodeName = name;
+		
 		this.addLabel(name);
 	}
+	
+	
+	public String getName() {
+		return this.nodeName;
+	}
+	
+	
 	
 	/**
 	 * Handles node layout aspects.
@@ -130,6 +154,7 @@ public class NewickNode extends Group {
 	 */
 	public void toggleSelected() {
 		if (isSelected) {
+			//System.out.println(this.getName());
 			isSelected = false;
 		} else {
 			isSelected = true;
@@ -173,12 +198,16 @@ public class NewickNode extends Group {
 	 * Set colour corresponding to node's lineage.
 	 */
 	public void setColoured() {
+		System.out.println("removing");
 		node.setFill(this.getColour());
 		if (this.isLeaf()) {
 			label.setTextFill(this.getColour());
+			selectedSet.remove((NewickNode) this);
 		} else {
 			for (Object child : this.getChildren()) {
 				if (child instanceof NewickNode) {
+					if(((NewickNode) child).getName() != null)
+						selectedSet.remove(((NewickNode) child));
 					((NewickNode) child).setColoured();
 				}
 			}
@@ -192,12 +221,21 @@ public class NewickNode extends Group {
 		node.setFill(NewickColourMatching.getDeactivatedColour());
 		if (this.isLeaf()) {
 			label.setTextFill(NewickColourMatching.getDeactivatedColour());
+			selectedSet.add(((NewickNode) this));
 		} else {
 			for (Object child : this.getChildren()) {
 				if (child instanceof NewickNode) {
+					if(((NewickNode) child).getName() != null)
+						selectedSet.add(((NewickNode) child));
 					((NewickNode) child).unsetColoured();
 				}
 			}
+		}
+		
+		Iterator<NewickNode> it = selectedSet.iterator();
+		while(it.hasNext()) {
+			System.out.println(it.next().getName());
+			System.out.println(selectedSet.size());
 		}
 	}
 }

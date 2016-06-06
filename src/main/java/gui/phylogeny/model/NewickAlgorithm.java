@@ -51,6 +51,7 @@ public class NewickAlgorithm {
 		while (!isPruned(tree)) {
 			pruneNewickTree(tree);
 		}
+		
 		adjustScale(tree);
 		return getDrawableTreeInner(tree);
 	}
@@ -88,6 +89,8 @@ public class NewickAlgorithm {
 			}
 			
 			NewickEdge edge = new NewickEdge(childNode);
+			
+			
 			root.getChildren().add(edge);
 			root.getChildren().add(childNode);
 			

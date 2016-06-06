@@ -116,9 +116,10 @@ public class PhylogenyController implements Initializable {
 		NewickAlgorithm newickAlg = new NewickAlgorithm();
 		newickAlg.parseLineages();
 		NewickNode node = newickAlg.getDrawableTree(Launcher.nwkTree);
+		
 		node.setTranslateX(100);
 		node.setTranslateY(100);
-	
+		
 		root = new Group();
 		root.getChildren().add(node);	
 		scrollPaneSetup();
