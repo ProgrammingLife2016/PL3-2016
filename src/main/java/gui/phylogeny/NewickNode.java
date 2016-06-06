@@ -45,6 +45,8 @@ public class NewickNode extends Group {
 	 */
 	private boolean isSelected = true;
 	
+	private boolean nodeHidden = false;
+	
 	/**
 	 * Main constructor of NewickNode.
 	 */
@@ -92,6 +94,12 @@ public class NewickNode extends Group {
 	 */
 	public void hideRectangle() {
 		node.setVisible(false);
+		nodeHidden = true;
+		
+	}
+	
+	public boolean getHidden() {
+		return nodeHidden;
 	}
 	
 	/**
@@ -210,7 +218,10 @@ public class NewickNode extends Group {
 		}
 	}
 	
-	
+	/**
+	 * Stores the lineages for the children for the parent to use.
+	 * @return
+	 */
 	public String setParentLineages() {
 		if (!this.isLeaf()) {
 			ArrayList<String> lineagelist = new ArrayList<String>();
@@ -231,6 +242,7 @@ public class NewickNode extends Group {
 		} else { //if rootnode is a leaf
 			return this.getLineage();
 		}
+		this.setColoured();
 		return this.getLineage();
 	}
 	
@@ -247,6 +259,36 @@ public class NewickNode extends Group {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Hides nodes that should be hidden.
+	 */
+	public void hideNodes() {
+		int nodeCount = 0;
+		for (Object child : this.getChildren()) {
+			if (child instanceof NewickNode) {
+				if (!((NewickNode) child).getHidden()) {
+					nodeCount++;
+				}
+			}
+		}
+		if (nodeCount < 2) {
+			this.hideRectangle();
+		}
+	}
+	
+	/**
+	 * Colors the edges of this node and all its children.
+	 */
+	public void colorEdges() {
+		for (Object child : this.getChildren()) {
+			if (child instanceof NewickNode) {
+				((NewickNode) child).colorEdges();
+			} else if (child instanceof NewickEdge) {
+				((NewickEdge) child).setStroke(this.getColour());
+			}
+		}
 	}
 	
 }

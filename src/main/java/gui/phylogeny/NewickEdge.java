@@ -10,6 +10,8 @@ import javafx.scene.shape.VLineTo;
  */
 public class NewickEdge extends Path {
 	
+	public boolean vertical;
+	
 	/**
 	 * Create a Path from the current position to the position of the
 	 * destination node. A vertical and horizontal segment are used to create a
@@ -20,18 +22,20 @@ public class NewickEdge extends Path {
 	public NewickEdge(NewickNode dst) {
 		MoveTo moveTo = new MoveTo();
 		
-		moveTo.xProperty().bind(dst.translateXProperty());
-		moveTo.yProperty().bind(dst.translateYProperty());
+		moveTo.xProperty().bind(dst.translateXProperty().add(5));
+		moveTo.yProperty().bind(dst.translateYProperty().add(5));
 		this.getElements().add(moveTo);
 
 		// Add a horizontal line from the current position to the x-coordinate
 		// of the destination.
 		HLineTo horizontal = new HLineTo();
+		horizontal.setX(horizontal.getX() + 5);
 		this.getElements().add(horizontal);
 
 		// Add a vertical line from the current position to the y-coordinate of
 		// the destination.
 		VLineTo vertical = new VLineTo();
+		vertical.setY(vertical.getY() + 5);
 		this.getElements().add(vertical);
 	}
 }

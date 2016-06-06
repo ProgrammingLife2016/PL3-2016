@@ -141,6 +141,8 @@ public class PhylogenyController implements Initializable {
 		parseLineages();
 		rootnode = getDrawableTree(Launcher.nwkTree);
 		rootnode.setParentLineages();
+		rootnode.colorEdges();
+		rootnode.hideNodes();
 		rootnode.setTranslateX(100);
 		rootnode.setTranslateY(100);
 	
@@ -310,8 +312,12 @@ public class PhylogenyController implements Initializable {
 			NewickEdge edge = new NewickEdge(childNode);
 			root.getChildren().add(edge);
 			root.getChildren().add(childNode);
-			
-			childNode.setTranslateX(scale * child.getDistance());
+			double translate = scale * child.getDistance();
+			if (translate < 20) {
+				childNode.setTranslateX(20);
+			} else {
+				childNode.setTranslateX(translate);
+			}
 			childNode.setTranslateY(currentY);
 			
 			currentY += SPACING + childNode.boundsInLocalProperty().get().getHeight();
