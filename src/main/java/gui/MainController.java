@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.scene.control.TabPane;
 
 import db.DatabaseManager;
 import org.apache.commons.io.FilenameUtils;
@@ -33,7 +34,7 @@ public class MainController implements Initializable {
 	 * if necessary).
 	 */
 	// @FXML private GridPane ribbonTab;
-	// @FXML private TabPane tabPane;
+	@FXML private TabPane tabPane;
 	
 	/**
 	 * Access to the controllers to update the view when changing files.
@@ -72,6 +73,7 @@ public class MainController implements Initializable {
 		ribbonTabController.setAnnotationGraphGroup(annotationsGraphController.getInnerGroup());
 		ribbonTabController.setAnnotationGraphPane(annotationsGraphController.getScrollPane());
 		phyloMenuController.setOuterPane(phyloGridPane);
+		tabPane.getTabs().get(2).setDisable(true);
 	}
 	
 	/**
