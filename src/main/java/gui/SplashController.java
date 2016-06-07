@@ -91,7 +91,7 @@ public class SplashController implements Initializable{
 							Number oldVal, Number newVal) {
 						updateProgress(newVal.longValue(), 100);
 						if ((int) newVal == 100) {
-							fadeOutSplash();
+							launchMain();
 						}
 					}
 				};
