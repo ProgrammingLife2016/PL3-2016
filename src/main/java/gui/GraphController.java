@@ -163,6 +163,18 @@ public class GraphController implements Initializable {
 			}
 		});
 		
+		checkboxInsert.selectedProperty().addListener(
+			(ChangeListener<Boolean>) (observable, oldValue, newValue) -> 
+			//For now, we just print a line. Should be toggling the insertions
+			System.out.println("You pressed the insert checkbox")
+		);
+		
+		checkboxSnp.selectedProperty().addListener(
+			(ChangeListener<Boolean>) (observable, oldValue, newValue) -> 
+			//For now, we just print a line. Should be toggling the SNPs
+			System.out.println("You pressed the SNP checkbox")
+		);
+		
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(0.4);
