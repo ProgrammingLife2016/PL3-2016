@@ -9,10 +9,12 @@ import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -38,9 +40,10 @@ public class RibbonController implements Initializable {
 	private Group collapsedGroup = createCollapsedRibbons();
 	private Group normalGroup = createNormalRibbons();
 	
-    private static final double MAX_SCALE = 100.0d;
-    private static final double MIN_SCALE = .0035d;
-    private static final double COLLAPSE = 2;
+    private static final double MAX_SCALE = 1.0d;
+    private static final double MIN_SCALE = .003d;
+    private static final double COLLAPSE = .2;
+    private static final double GRAPH = .8;
 	
 	private double prevScale = 1;
 	
@@ -55,6 +58,7 @@ public class RibbonController implements Initializable {
 				double deltaY = event.getDeltaY();
 				double delta = 1.2;
 				double scale = innerGroup.getScaleX();
+				double oldBarValue = scrollPane.getHvalue();
 
 				if (deltaY < 0) {
 					scale /= Math.pow(delta, -event.getDeltaY() / 20);
@@ -66,11 +70,22 @@ public class RibbonController implements Initializable {
 				if (prevScale < COLLAPSE && scale >= COLLAPSE) {
 					System.out.println("switch to normal");
 					innerGroup.getChildren().clear();
-					innerGroup.getChildren().addAll(normalGroup.getChildren());
-				} else if (prevScale > COLLAPSE && scale <= COLLAPSE) {
+					Group temp = new Group(normalGroup);
+					innerGroup.getChildren().addAll(temp.getChildren());
+					scrollPane.setHvalue(oldBarValue);
+				} else if ((prevScale > COLLAPSE && scale <= COLLAPSE) 
+						||(prevScale < COLLAPSE && scale >= COLLAPSE)) {
 					System.out.println("switch to collapsed");
 					innerGroup.getChildren().clear();
-					innerGroup.getChildren().addAll(collapsedGroup.getChildren());
+					Group temp = new Group(collapsedGroup);
+					innerGroup.getChildren().addAll(temp.getChildren());
+					scrollPane.setHvalue(oldBarValue);
+				} else if (prevScale < GRAPH && scale >= GRAPH) {
+					System.out.println("switch to graph");
+					innerGroup.getChildren().clear();
+					Group temp = new Group(otherGroup);
+					innerGroup.getChildren().addAll(temp.getChildren());
+					scrollPane.setHvalue(oldBarValue);
 				}
 				
 				System.out.println(prevScale + "->" + scale);
@@ -165,7 +180,7 @@ public class RibbonController implements Initializable {
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
-		innerGroup.setScaleX(0.4);
+		innerGroup.setScaleX(MIN_SCALE);
 	}
 	
 	/**
@@ -174,7 +189,7 @@ public class RibbonController implements Initializable {
 	 */
 	public void updateView() {
 		// Inner group and outer group according to the ScrollPane JavaDoc.
-		innerGroup = collapsedGroup;
+		innerGroup = new Group(collapsedGroup);
 		outerGroup = new Group(innerGroup);
 		scrollPane.setContent(outerGroup);
 	}
@@ -222,6 +237,7 @@ public class RibbonController implements Initializable {
 		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles());
 		
 		int countIdx = 0; // current index in the counts list.
+		int countIdy = 0;
 		
 		List<Integer> ignore = new LinkedList<>();
 		
@@ -232,13 +248,12 @@ public class RibbonController implements Initializable {
 				int[] bubble = bubbles.poll();
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
-				line.setStrokeWidth(0.2);
+				line.setStrokeWidth(7);
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
 			} else {
 				if (ignore.contains(fromId)) {
 					continue;
-					
 				}
 				for (int toId : edges) {
 					if (!bubbles.isEmpty() && toId == bubbles.peek()[1]) {

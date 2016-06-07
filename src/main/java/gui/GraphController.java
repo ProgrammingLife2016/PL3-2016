@@ -38,7 +38,7 @@ public class GraphController implements Initializable {
 	private Group otherGroup;
 	
     private static final double MAX_SCALE = 3.0d;
-    private static final double MIN_SCALE = .0035d;
+    private static final double MIN_SCALE = .003d;
     
 	private DatabaseManager dbm;
 	
@@ -241,6 +241,8 @@ public class GraphController implements Initializable {
 	 */
 	private Group getGraphEdges() {
 		Group res = new Group();
+		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
+		int countIdx = 0;
 		for (int i = 0; i < from.size(); i++) {
 			int fromId = from.get(i);
 			int toId = to.get(i);
@@ -253,7 +255,7 @@ public class GraphController implements Initializable {
 			
 			Line line = new Line(fromX, fromsegment.getLayoutY() + fromsegment.getRadius(),
 					toX, tosegment.getLayoutY() + tosegment.getRadius());
-	        line.setStrokeWidth(1);
+	        line.setStrokeWidth(1 + counts.get(countIdx++));
 	        res.getChildren().add(line);
 		}
 		return res;
