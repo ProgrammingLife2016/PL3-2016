@@ -13,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -28,6 +29,9 @@ public class RibbonController implements Initializable {
 	@FXML private GridPane pane;
 	@FXML private ScrollPane scrollPane;
 	private ScrollPane otherPane;
+
+	@FXML private CheckBox checkboxSnp;
+	@FXML private CheckBox checkboxInsert;
 	
 	private DatabaseManager dbm = Launcher.dbm;
 	
