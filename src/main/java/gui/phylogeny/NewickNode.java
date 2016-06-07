@@ -285,8 +285,9 @@ public class NewickNode extends Group {
 		for (Object child : this.getChildren()) {
 			if (child instanceof NewickNode) {
 				((NewickNode) child).colorEdges();
-			} else if (child instanceof NewickEdge) {
-				((NewickEdge) child).setStroke(this.getColour());
+			}
+			if (child instanceof NewickEdge) {
+				((NewickEdge) child).setStyle("#449955");
 			}
 		}
 	}

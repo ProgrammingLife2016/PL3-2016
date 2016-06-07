@@ -15,6 +15,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Rectangle;
 
 import gui.phylogeny.NewickColourMatching;
 import gui.phylogeny.NewickEdge;
@@ -149,6 +150,7 @@ public class PhylogenyController implements Initializable {
 		root = new Group();
 		root.getChildren().add(rootnode);	
 		scrollPaneSetup();
+		//activateNodeVisualisation(rootnode);
 	}
 	
 	/**
@@ -309,7 +311,7 @@ public class PhylogenyController implements Initializable {
 				childNode.hideRectangle();
 			}
 			
-			NewickEdge edge = new NewickEdge(childNode);
+			NewickEdge edge = new NewickEdge(root, childNode);
 			root.getChildren().add(edge);
 			root.getChildren().add(childNode);
 			double translate = scale * child.getDistance();
@@ -323,6 +325,18 @@ public class PhylogenyController implements Initializable {
 			currentY += SPACING + childNode.boundsInLocalProperty().get().getHeight();
 		}
 		return root;
+	}
+	
+	private void activateNodeVisualisation(NewickNode root) {
+		for (Object child : root.getChildren()) {
+			if (child instanceof Rectangle) {
+				root.getChildren().remove((Rectangle) child);
+				root.getChildren().add(root.getRectangle());
+			}
+			if (child instanceof NewickNode) {
+				activateNodeVisualisation(((NewickNode) child));
+			}
+		}
 	}
 	
 	public static NewickNode getRootNode() {
