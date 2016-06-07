@@ -9,12 +9,15 @@ import java.util.ResourceBundle;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 
 import gui.phylogeny.NewickColourMatching;
 import gui.phylogeny.NewickEdge;
@@ -145,7 +148,6 @@ public class PhylogenyController implements Initializable {
 		rootnode.hideNodes();
 		rootnode.setTranslateX(100);
 		rootnode.setTranslateY(100);
-	
 		root = new Group();
 		root.getChildren().add(rootnode);	
 		scrollPaneSetup();
@@ -170,8 +172,8 @@ public class PhylogenyController implements Initializable {
 		
 		// Resize the scrollpane along with the window.
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
-		    scrollPane.setPrefWidth(newValue.getWidth());
 		    scrollPane.setPrefHeight(newValue.getHeight());
+		    scrollPane.setPrefWidth(newValue.getWidth());
 		});
 	}
 	
