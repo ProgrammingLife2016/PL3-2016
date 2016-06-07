@@ -71,17 +71,17 @@ public class RibbonController implements Initializable {
 					scale *= Math.pow(delta, event.getDeltaY() / 20);
 					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
-				if (prevScale < COLLAPSE && scale >= COLLAPSE) {
+				if (prevScale > COLLAPSE && scale <= COLLAPSE) {
 					System.out.println("switch to normal");
 					innerGroup.getChildren().clear();
-					Group temp = new Group(normalGroup);
+					Group temp = new Group(collapsedGroup);
 					innerGroup.getChildren().addAll(temp.getChildren());
 					scrollPane.setHvalue(oldBarValue);
-				} else if ((prevScale > COLLAPSE && scale <= COLLAPSE) 
-						||(prevScale < COLLAPSE && scale >= COLLAPSE)) {
+				} else if ((prevScale < COLLAPSE && scale >= COLLAPSE) 
+						||(prevScale > GRAPH && scale <= GRAPH)) {
 					System.out.println("switch to collapsed");
 					innerGroup.getChildren().clear();
-					Group temp = new Group(collapsedGroup);
+					Group temp = new Group(normalGroup);
 					innerGroup.getChildren().addAll(temp.getChildren());
 					scrollPane.setHvalue(oldBarValue);
 				} else if (prevScale < GRAPH && scale >= GRAPH) {
@@ -108,7 +108,6 @@ public class RibbonController implements Initializable {
 
 			double deltaY = event.getDeltaY();
 			double deltaX = event.getDeltaX();
-
 			if (deltaY < 0) {
 				scrollPane.setHvalue(Math.min(1, scrollPane.getHvalue() + 0.0007));
 			} else if (deltaY > 0) {
@@ -153,6 +152,8 @@ public class RibbonController implements Initializable {
 			innerGroup.setScaleX(scale);
 			otherGroup.setScaleX(scale);
 			annotationRibbonGroup.setScaleX(scale);
+			annotationRibbonPane.setPrefWidth(scrollPane.getPrefWidth());
+			annotationGraphGroup.setScaleX(scale);
 			annotationRibbonPane.setPrefWidth(scrollPane.getPrefWidth());
 			scrollPane.setHvalue(barValue);
 			otherPane.setHvalue(barValue);

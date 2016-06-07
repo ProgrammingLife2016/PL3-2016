@@ -37,7 +37,7 @@ public class GraphController implements Initializable {
 	private Group outerGroup;
 	private Group otherGroup;
 	
-    private static final double MAX_SCALE = 3.0d;
+    private static final double MAX_SCALE = 1.0d;
     private static final double MIN_SCALE = .003d;
     
 	private DatabaseManager dbm;
@@ -161,7 +161,7 @@ public class GraphController implements Initializable {
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
-		innerGroup.setScaleX(0.4);
+		innerGroup.setScaleX(MIN_SCALE);
 	}
 	
 	/**
