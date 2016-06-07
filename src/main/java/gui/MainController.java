@@ -39,6 +39,8 @@ public class MainController implements Initializable {
 	 */
 	@FXML private GraphController graphTabController;
 	@FXML private RibbonController ribbonTabController;
+	@FXML private AnnotationController annotationsGraphController;
+	@FXML private AnnotationController annotationsRibbonController;
 	
 	/**
 	 * Access to the scene window.
@@ -62,6 +64,10 @@ public class MainController implements Initializable {
 		graphTabController.setRibbonGroup(ribbonTabController.getInnerGroup());
 		ribbonTabController.setGraphPane(graphTabController.getScrollPane());
 		ribbonTabController.setGraphGroup(graphTabController.getInnerGroup());
+		ribbonTabController.setAnnotationRibbonGroup(annotationsRibbonController.getInnerGroup());
+		ribbonTabController.setAnnotationRibbonPane(annotationsRibbonController.getScrollPane());
+		ribbonTabController.setAnnotationGraphGroup(annotationsGraphController.getInnerGroup());
+		ribbonTabController.setAnnotationGraphPane(annotationsGraphController.getScrollPane());
 	}
 	
 	/**

@@ -50,7 +50,7 @@
                     </rowConstraints>
                     <children>
                     	<fx:include fx:id="ribbonTab" source="RibbonLevel.fxml"/>
-                    	<fx:include fx:id="annotations" source="AnnotationLevel.fxml" GridPane.rowIndex="1" />
+                    	<fx:include fx:id="annotationsGraph" source="AnnotationLevel.fxml" GridPane.rowIndex="1" />
                     </children>
                   </GridPane>
                </content>
@@ -67,7 +67,7 @@
                     </rowConstraints>
                     <children>
                     	<fx:include fx:id="graphTab" source="GraphLevel.fxml"/>
-                    	<fx:include fx:id="annotations" source="AnnotationLevel.fxml" GridPane.rowIndex="1" />
+                    	<fx:include fx:id="annotationsRibbon" source="AnnotationLevel.fxml" GridPane.rowIndex="1" />
                     </children>
                   </GridPane>
                </content>

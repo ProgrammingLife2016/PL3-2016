@@ -30,12 +30,16 @@ public class RibbonController implements Initializable {
 	@FXML private GridPane pane;
 	@FXML private ScrollPane scrollPane;
 	private ScrollPane otherPane;
+	private ScrollPane annotationRibbonPane;
+	private ScrollPane annotationGraphPane;
 	
 	private DatabaseManager dbm = Launcher.dbm;
 	
 	private Group innerGroup;
 	private Group outerGroup;
 	private Group otherGroup;
+	private Group annotationRibbonGroup;
+	private Group annotationGraphGroup;
 
 	private Group collapsedGroup = createCollapsedRibbons();
 	private Group normalGroup = createNormalRibbons();
@@ -92,8 +96,12 @@ public class RibbonController implements Initializable {
 				double barValue = scrollPane.getHvalue();
 				innerGroup.setScaleX(scale);
 				otherGroup.setScaleX(scale);
+				annotationRibbonGroup.setScaleX(scale);
+				annotationGraphGroup.setScaleX(scale);
 				scrollPane.setHvalue(barValue);
 				otherPane.setHvalue(barValue);
+				annotationRibbonPane.setHvalue(barValue);
+				annotationGraphPane.setHvalue(barValue);
 				prevScale = scale;
 				return;
 			}
@@ -144,6 +152,8 @@ public class RibbonController implements Initializable {
 			double barValue = scrollPane.getHvalue();
 			innerGroup.setScaleX(scale);
 			otherGroup.setScaleX(scale);
+			annotationRibbonGroup.setScaleX(scale);
+			annotationRibbonPane.setPrefWidth(scrollPane.getPrefWidth());
 			scrollPane.setHvalue(barValue);
 			otherPane.setHvalue(barValue);
 		}
@@ -175,6 +185,8 @@ public class RibbonController implements Initializable {
 			public void changed(ObservableValue<? extends Number> observable, 
 					Number oldValue, Number newValue) {
 				otherPane.setHvalue(newValue.doubleValue());
+				annotationRibbonPane.setHvalue(newValue.doubleValue());
+				annotationGraphPane.setHvalue(newValue.doubleValue());
 			}
 		});
 		
@@ -287,5 +299,20 @@ public class RibbonController implements Initializable {
 	public void setGraphGroup(Group group) {
 		otherGroup = group;
 	}
-
+	
+	public void setAnnotationRibbonGroup(Group group) {
+		annotationRibbonGroup = group;
+	}
+	
+	public void setAnnotationRibbonPane(ScrollPane scrollpane) {
+		annotationRibbonPane = scrollpane;
+	}
+	
+	public void setAnnotationGraphGroup(Group group) {
+		annotationGraphGroup = group;
+	}
+	
+	public void setAnnotationGraphPane(ScrollPane scrollpane) {
+		annotationGraphPane = scrollpane;
+	}
 }
