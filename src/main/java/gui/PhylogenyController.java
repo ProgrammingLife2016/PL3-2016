@@ -10,11 +10,13 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 
+import gui.phylogeny.NewickColourMatching;
 import gui.phylogeny.NewickEdge;
 import gui.phylogeny.NewickNode;
 import newick.NewickTree;
@@ -33,6 +35,7 @@ public class PhylogenyController implements Initializable {
 	@FXML GridPane pane;
 	@FXML ScrollPane scrollPane;
 	private Group root;
+	private static NewickNode rootnode;
 	
 	/**
 	 * The upper boundary for zooming.
@@ -136,12 +139,15 @@ public class PhylogenyController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		parseLineages();
-		NewickNode node = getDrawableTree(Launcher.nwkTree);
-		node.setTranslateX(100);
-		node.setTranslateY(100);
+		rootnode = getDrawableTree(Launcher.nwkTree);
+		rootnode.setParentLineages();
+		rootnode.colorEdges();
+		rootnode.hideNodes();
+		rootnode.setTranslateX(100);
+		rootnode.setTranslateY(100);
 	
 		root = new Group();
-		root.getChildren().add(node);	
+		root.getChildren().add(rootnode);	
 		scrollPaneSetup();
 	}
 	
@@ -152,7 +158,6 @@ public class PhylogenyController implements Initializable {
 		XlsxParser xlsxparser = new XlsxParser();
 		xlsxparser.parse(xlsxpath);
 		lineages = xlsxparser.getLineages();
-		System.out.println(lineages.toString());
 	}
 	
 	/**
@@ -307,12 +312,20 @@ public class PhylogenyController implements Initializable {
 			NewickEdge edge = new NewickEdge(childNode);
 			root.getChildren().add(edge);
 			root.getChildren().add(childNode);
-			
-			childNode.setTranslateX(scale * child.getDistance());
+			double translate = scale * child.getDistance();
+			if (translate < 20) {
+				childNode.setTranslateX(20);
+			} else {
+				childNode.setTranslateX(translate);
+			}
 			childNode.setTranslateY(currentY);
 			
 			currentY += SPACING + childNode.boundsInLocalProperty().get().getHeight();
 		}
 		return root;
+	}
+	
+	public static NewickNode getRootNode() {
+		return rootnode;
 	}
 }

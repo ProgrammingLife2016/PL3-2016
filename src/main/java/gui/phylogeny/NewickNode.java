@@ -1,7 +1,10 @@
 package gui.phylogeny;
 
-import javafx.event.EventHandler;
+import java.util.ArrayList;
+
+import gui.PhylogenyController;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
@@ -12,94 +15,49 @@ import javafx.scene.shape.Rectangle;
  */
 public class NewickNode extends Group {
 	
-	private String lineage = "";
-	private static final int SIZE = 10;
-	private Rectangle node = new Rectangle(0 - SIZE / 2, 0 - SIZE / 2, SIZE, SIZE);
+	/**
+	 * The rectangle shape that represents a NewickNode in the phylogenetic tree.
+	 */
+	private Rectangle node;
+	
+	/**
+	 * Size of the rectangle representing the node.
+	 */
+	private static final int RECTANGLE_SIZE = 10;
+	
+	/**
+	 * Text label displaying the genome ID of leaf nodes.
+	 */
 	private Label label = null;
+	
+	/**
+	 * Lineage of the specimen.
+	 */
+	private String lineage = "";
+	
+	/**
+	 * variable for labeling a leaf node.
+	 */
 	private boolean isLeaf = false;
 	
 	/**
-	 * Event handler for mouse click event with the phylogenetic view.
+	 * variable for labeling a node as selected.
 	 */
-	private final EventHandler<MouseEvent> mouseEventHandler = new EventHandler<MouseEvent>() {
-		
-		@Override
-		public void handle(MouseEvent event) {
-			Paint currentColor = node.getFill();
-			if (!currentColor.equals(Paint.valueOf("#778899"))) {
-				node.setFill(Paint.valueOf("#778899"));
-				if (label != null) {
-					label.setTextFill(Paint.valueOf("#778899"));
-				}
-				turnChildrenGrey();
-			} else {
-				node.setFill(Paint.valueOf(getLineageColour(lineage)));
-				if (label != null) {
-					label.setTextFill(Paint.valueOf(getLineageColour(lineage)));
-				}
-				turnChildrenColoured();
-			}
-		}
-	};
+	private boolean isSelected = true;
+	
+	private boolean nodeHidden = false;
 	
 	/**
-	 * Colors all relevant children in the Group light grey.
+	 * Main constructor of NewickNode.
 	 */
-	public void turnChildrenGrey() {
-		for (Object child : this.getChildren()) {
-			if (child instanceof NewickNode) {
-				((NewickNode) child).getRectangle().setFill(Paint.valueOf("#778899"));
-				if (((NewickNode) child).getLabel() != null) {
-					((NewickNode) child).getLabel().setTextFill(Paint.valueOf("#778899"));
-				}
-				if (((NewickNode) child).isLeaf() == false) {
-					((NewickNode) child).turnChildrenGrey();
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Colors all relevant children in the Group black.
-	 */
-	public void turnChildrenColoured() {
-		for (Object child : this.getChildren()) {
-			if (child instanceof NewickNode) {
-				((NewickNode) child).getRectangle().setFill(Paint
-						.valueOf(getLineageColour(((NewickNode) child).getLineage())));
-				if (((NewickNode) child).getLabel() != null) {
-					((NewickNode) child).getLabel().setTextFill(Paint
-						.valueOf(getLineageColour(((NewickNode) child).getLineage())));
-				}
-				if (((NewickNode) child).isLeaf() == false) {
-					((NewickNode) child).turnChildrenColoured();
-				}
-			}
-		}
-	}
-	
 	public NewickNode() {
-		node.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEventHandler);
-		this.getStylesheets().add("Styles/PhylogeneticTree.css");
-		node.getStyleClass().add("node");
+		this.setupNodeLayout();
 		this.getChildren().add(node);
 	}
 	
 	/**
-	 * Add a label with the given name to the right of the Rectangle. This
-	 * constructor should only be used for leaf nodes.
-	 * 
-	 * @param name
-	 *            Text that the Label should display.
-	 */
-	public NewickNode(String name) {
-		this();
-		this.addLabel(name);
-	}
-	
-	/**
-	 * Besides a label (the name of the specimen), this constructor
-	 * also sets the lineage.
+	 * Leafnode constructor that adds a label with the given name to a leaf node and colours it
+	 * accordingly.
 	 * 
 	 * @param name
 	 *            Text that the Label should display.
@@ -109,32 +67,61 @@ public class NewickNode extends Group {
 	public NewickNode(String name, String lineage) {
 		this();
 		this.lineage = lineage;
-		node.setFill(Paint.valueOf(getLineageColour(lineage)));
+		this.setColoured();
 		this.addLabel(name);
 	}
 	
 	/**
-	 * Sets the node's isLeaf value to the given value.
-	 * @param value
+	 * Handles node layout aspects.
 	 */
-	public void setIsLeaf(boolean value) {
-		isLeaf = value;
-	}
-	
-	/**
-	 * Returns whether the node is a leaf node or not.
-	 * @return
-	 */
-	public boolean isLeaf() {
-		return isLeaf;
+	public void setupNodeLayout() {
+		node = new Rectangle(0 - RECTANGLE_SIZE / 2,
+				0 - RECTANGLE_SIZE / 2, RECTANGLE_SIZE, RECTANGLE_SIZE);
+		node.addEventFilter(MouseEvent.MOUSE_CLICKED, new NewickNodeMouseEventHandler(this));
 	}
 	
 	/**
 	 * Returns the nodes rectangle object so that it can be altered.
-	 * @return
+	 * 
+	 * @return node
 	 */
 	public Rectangle getRectangle() {
 		return node;
+	}
+	
+	/**
+	 * Sets the nodes rectangle to visibility false, making it invisible.
+	 */
+	public void hideRectangle() {
+		node.setVisible(false);
+		nodeHidden = true;
+		
+	}
+	
+	public boolean getHidden() {
+		return nodeHidden;
+	}
+	
+	/**
+	 * Adds a label with the given text to the Group of the node.
+	 * 
+	 * @param text
+	 * 			Text the label will display
+	 */
+	private void addLabel(String text) {
+		label = new Label(text);
+		setupLabelLayout();
+		this.getChildren().add(label);
+	}
+	
+	/**
+	 * Handles label layout aspects.
+	 */
+	private void setupLabelLayout() {
+		label.setTranslateX(10);
+		label.setTranslateY(-8);
+		label.addEventFilter(MouseEvent.MOUSE_CLICKED, new NewickNodeMouseEventHandler(this));
+		label.setTextFill(this.getColour());
 	}
 	
 	/**
@@ -145,83 +132,163 @@ public class NewickNode extends Group {
 		return label;
 	}
 	
-	/**
-	 * Sets the nodes rectangle to visibility false, making it invisible.
-	 */
-	public void hideRectangle() {
-		node.setVisible(false);
-	}
-	
-	/**
-	 * Adds a label with the given text to the Group of the node.
-	 * @param text
-	 */
-	private void addLabel(String text) {
-		label = new Label(text);
-		label.setTranslateX(10);
-		label.setTranslateY(-8);
-		label.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEventHandler);
-		label.setTextFill(Paint.valueOf(getLineageColour(lineage)));
-		this.getChildren().add(label);
-	}
-	
-	public void setLineage(String lineage) {
-		//node.getStyleClass().add(lineage);
-		//label.getStyleClass().add(lineage);
-	}
-	
 	public String getLineage() {
 		return this.lineage;
 	}
 	
-	/**
-	 * Get the colour belonging to the specified lineage.
-	 * 
-	 * @param lineage
-	 * 			The input lineage
-	 * @return
-	 * 			The requested colour
-	 */
-	public String getLineageColour(String lineage) {
-		String colour = "";
-		switch (lineage) {
-		case "LIN1":
-			colour = "#ED00C3";
-			break;
-		case "LIN2":
-			colour = "#0000FF";
-			break;
-		case "LIN3":
-			colour = "#500079";
-			break;
-		case "LIN4":
-			colour = "#FF0000";
-			break;
-		case "LIN5":
-			colour = "#4E2C00";
-			break;
-		case "LIN6":
-			colour = "#69CA00";
-			break;
-		case "LIN7":
-			colour = "#FF7E00";
-			break;
-		case "LINanimal":
-			colour = "#00FF9C";
-			break;
-		case "LINB":
-			colour = "#00FF9C";
-			break;
-		case "LINCANETTII":
-			colour = "#00FFFF";
-			break;
-		case "":
-			colour = "0x000000ff";
-			break;
-		default:
-		break;
-		
-		}
-		return colour;
+	public void setLineage(String lineage) {
+		this.lineage = lineage;
 	}
+
+	/**
+	 * Toggles "selected" state of a node.
+	 */
+	protected void toggleSelected() {
+		if (isSelected) {
+			isSelected = false;
+		} else {
+			isSelected = true;
+		}
+	}
+
+	public boolean isSelected() {
+		return isSelected;
+	}
+	
+	/**
+	 * Sets the node's isLeaf value to the given value.
+	 * 
+	 * @param value
+	 * 			true or false.
+	 */
+	public void setIsLeaf(boolean value) {
+		isLeaf = value;
+	}
+	
+	/**
+	 * Returns whether the node is a leaf node or not.
+	 * 
+	 * @return isLeaf
+	 * 			true or false.
+	 */
+	public boolean isLeaf() {
+		return isLeaf;
+	}
+	
+	/**
+	 * Get colour corresponding to this node's lineage.
+	 * 
+	 * @return Paint
+	 */
+	public Paint getColour() {
+		return NewickColourMatching.getLineageColour(this.getLineage());
+	}
+	
+	/**
+	 * Set colour of a node corresponding to its lineage. Also colours all of
+	 * its children.
+	 */
+	public void setColoured() {
+		node.setFill(this.getColour());
+		if (this.isLeaf()) {
+			label.setTextFill(this.getColour());
+		} else {
+			for (Object child : this.getChildren()) {
+				if (child instanceof NewickNode) {
+					((NewickNode) child).setColoured();
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Unset colour of this node (makes node appear gray). Also unsets
+	 * colour of all of its children.
+	 */
+	public void unsetColoured() {
+		node.setFill(NewickColourMatching.getDeactivatedColour());
+		if (this.isLeaf()) {
+			label.setTextFill(NewickColourMatching.getDeactivatedColour());
+		} else {
+			for (Object child : this.getChildren()) {
+				if (child instanceof NewickNode) {
+					((NewickNode) child).unsetColoured();
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Stores the lineages for the children for the parent to use.
+	 * @return
+	 */
+	public String setParentLineages() {
+		if (!this.isLeaf()) {
+			ArrayList<String> lineagelist = new ArrayList<String>();
+			for (Object child : this.getChildren()) {
+				if (child instanceof NewickNode) {
+					if (((NewickNode) child).isLeaf()) {
+						lineagelist.add(((NewickNode) child).getLineage());
+					} else { //if child not a leaf
+						lineagelist.add(((NewickNode) child).setParentLineages()); 
+					}
+				}
+			} //looped through all children, stored their lineages in list
+			if (isSameLineage(lineagelist)) {
+				this.setLineage(lineagelist.get(0));
+			} else {
+				this.setLineage("");
+			}
+		} else { //if rootnode is a leaf
+			return this.getLineage();
+		}
+		this.setColoured();
+		return this.getLineage();
+	}
+	
+	/**
+	 * Check if lineages in list are the same.
+	 * 
+	 * @param lineagelist
+	 * @return boolean
+	 */
+	public boolean isSameLineage(ArrayList<String> lineagelist) {
+		for (int i = 1; i < lineagelist.size(); i++) {
+			if (!lineagelist.get(0).equals(lineagelist.get(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Hides nodes that should be hidden.
+	 */
+	public void hideNodes() {
+		int nodeCount = 0;
+		for (Object child : this.getChildren()) {
+			if (child instanceof NewickNode) {
+				if (!((NewickNode) child).getHidden()) {
+					nodeCount++;
+				}
+			}
+		}
+		if (nodeCount < 2) {
+			this.hideRectangle();
+		}
+	}
+	
+	/**
+	 * Colors the edges of this node and all its children.
+	 */
+	public void colorEdges() {
+		for (Object child : this.getChildren()) {
+			if (child instanceof NewickNode) {
+				((NewickNode) child).colorEdges();
+			} else if (child instanceof NewickEdge) {
+				((NewickEdge) child).setStroke(this.getColour());
+			}
+		}
+	}
+	
 }
