@@ -46,10 +46,10 @@
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="100.0" prefHeight="900.0" vgrow="ALWAYS" />
-                      <RowConstraints minHeight="100.0" prefHeight="300.0" vgrow="ALWAYS" />
+                      <RowConstraints minHeight="100.0" prefHeight="200.0" vgrow="ALWAYS" />
                     </rowConstraints>
                     <children>
-                    	<fx:include fx:id="ribbonTab" source="RibbonLevel.fxml"/>
+                    	<fx:include fx:id="ribbonTab" source="RibbonLevel.fxml" />
                     	<fx:include fx:id="annotations" source="AnnotationLevel.fxml" GridPane.rowIndex="1" />
                     </children>
                   </GridPane>
@@ -63,10 +63,10 @@
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="100.0" prefHeight="900.0" vgrow="ALWAYS" />
-                      <RowConstraints minHeight="100.0" prefHeight="300.0" vgrow="ALWAYS" />
+                      <RowConstraints minHeight="100.0" prefHeight="200.0" vgrow="ALWAYS" />
                     </rowConstraints>
                     <children>
-                    	<fx:include fx:id="graphTab" source="GraphLevel.fxml"/>
+                    	<fx:include fx:id="graphTab" source="GraphLevel.fxml" />
                     	<fx:include fx:id="annotations" source="AnnotationLevel.fxml" GridPane.rowIndex="1" />
                     </children>
                   </GridPane>
