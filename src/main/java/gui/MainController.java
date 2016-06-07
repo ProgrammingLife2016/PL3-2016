@@ -43,8 +43,8 @@ public class MainController implements Initializable {
 	@FXML private RibbonController ribbonTabController;
 	@FXML private AnnotationController annotationsGraphController;
 	@FXML private AnnotationController annotationsRibbonController;
-	@FXML private PhyloMenuController phyloMenuController;
-	@FXML private GridPane phyloGridPane;
+	//@FXML private PhyloMenuController phyloMenuController;
+	//@FXML private GridPane phyloGridPane;
 	
 	/**
 	 * Access to the scene window.
@@ -72,8 +72,8 @@ public class MainController implements Initializable {
 		ribbonTabController.setAnnotationRibbonPane(annotationsRibbonController.getScrollPane());
 		ribbonTabController.setAnnotationGraphGroup(annotationsGraphController.getInnerGroup());
 		ribbonTabController.setAnnotationGraphPane(annotationsGraphController.getScrollPane());
-		phyloMenuController.setOuterPane(phyloGridPane);
-		tabPane.getTabs().get(2).setDisable(true);
+		//phyloMenuController.setOuterPane(phyloGridPane);
+		//tabPane.getTabs().get(2).setDisable(true);
 	}
 	
 	/**

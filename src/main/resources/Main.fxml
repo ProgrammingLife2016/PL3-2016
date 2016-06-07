@@ -63,11 +63,9 @@
 			        </columnConstraints>
 			        <rowConstraints>
 			          <RowConstraints minHeight="100.0" prefHeight="900.0" vgrow="ALWAYS" />
-			          <RowConstraints minHeight="100.0" prefHeight="50.0" vgrow="ALWAYS" />
 			        </rowConstraints>
 			        <children>
 			        	<fx:include fx:id="phyloTab" source="PhylogenyView.fxml" />
-			        	<fx:include fx:id="phyloMenu" source="PhylogenyMenu.fxml" GridPane.rowIndex="1" />
 			        </children>
 			      </GridPane>
 		      </content>
