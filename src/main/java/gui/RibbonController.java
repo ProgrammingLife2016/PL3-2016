@@ -1,7 +1,11 @@
 package gui;
 
+import javafx.scene.paint.Paint;
+
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -20,8 +24,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Line;
-
+import parsers.XlsxParser;
 import db.DatabaseManager;
+import gui.phylogeny.NewickColourMatching;
 
 /**
  * Controller class for the Ribbon screen/tab.
@@ -41,6 +46,8 @@ public class RibbonController implements Initializable {
 	private Group annotationRibbonGroup;
 	private Group annotationGraphGroup;
 
+
+	private HashMap<String, String> lineages = updateLineages();
 	private Group collapsedGroup = createCollapsedRibbons();
 	private Group normalGroup = createNormalRibbons();
 	
@@ -50,6 +57,13 @@ public class RibbonController implements Initializable {
     private static final double GRAPH = .8;
 	
 	private double prevScale = 1;
+	
+	/**
+	 * HashMap containing the lineages of the specimens.
+	 */
+	
+	private static String xlsxpath = System.getProperty("user.dir") + File.separator + "Data"
+			+ File.separator + "TB10" + File.separator + "metadata" + ".xlsx";
 	
 	/**
 	 * Handles the scroll wheel event for the ribbon view.
@@ -190,10 +204,15 @@ public class RibbonController implements Initializable {
 				annotationGraphPane.setHvalue(newValue.doubleValue());
 			}
 		});
-		
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(MIN_SCALE);
+	}
+	
+	private HashMap<String, String> updateLineages() {
+		XlsxParser xlsxparser = new XlsxParser();
+		xlsxparser.parse(xlsxpath);
+		return xlsxparser.getLineages();
 	}
 	
 	/**
@@ -215,6 +234,7 @@ public class RibbonController implements Initializable {
 	 * @return A group containing the ribbons.
 	 */
 	public Group createNormalRibbons() {
+		System.out.println("Creating normal ribbons");
 		Group res = new Group();
 		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks();
 		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
@@ -229,9 +249,11 @@ public class RibbonController implements Initializable {
 						xcoords.get(toId - 1), ycoords.get(toId - 1));
 //		        line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
 				line.setStrokeWidth(1 + counts.get(countIdx++));
+				line.setStroke(getLineColor(fromId, toId));
 		        res.getChildren().add(line);
 			}
 		}
+		System.out.println("Finished normal ribbons");
 		return res;
 	}
 	
@@ -242,6 +264,7 @@ public class RibbonController implements Initializable {
 	 * @return A group containing the ribbons.
 	 */
 	public Group createCollapsedRibbons() {
+		System.out.println("Creating collapsed ribbons");
 		Group res = new Group();
 		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks();
 		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
@@ -261,7 +284,12 @@ public class RibbonController implements Initializable {
 				int[] bubble = bubbles.poll();
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
-				line.setStrokeWidth(7);
+				double width = 1 + counts.get(countIdx++);
+				if(width >= 7)
+					line.setStrokeWidth(width);
+				else
+					line.setStrokeWidth(7);
+				line.setStroke(getLineColor(fromId));
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
 			} else {
@@ -276,13 +304,42 @@ public class RibbonController implements Initializable {
 					Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 							xcoords.get(toId - 1), ycoords.get(toId - 1));
 //					line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
-					line.setStrokeWidth(1 + counts.get(countIdx++));
-					res.getChildren().add(line);
+					double width = 1 + counts.get(countIdx++);
+					if(width >= 7)
+						line.setStrokeWidth(width);
+					else
+						line.setStrokeWidth(7);
+					line.setStroke(getLineColor(fromId));
+			        res.getChildren().add(line);
 				}
 			}
 		}
+		System.out.println("Finished collapsed ribbons");
 		
 		return res;
+	}
+	
+	public Paint getLineColor(int from) {
+		Paint color = Paint.valueOf("0xff0000ff");
+		ArrayList<String> genomes1 = dbm.getDbReader().getGenomesThroughSegment(from);
+		for(String genome : genomes1) {
+			if(lineages.containsKey(genome)) {
+				return NewickColourMatching.getLineageColour(lineages.get(genome));
+			}
+		}
+		return color;
+	}
+	
+	public Paint getLineColor(int from, int to) {
+		Paint color = Paint.valueOf("0xff0000ff");
+		ArrayList<String> genomes1 = dbm.getDbReader().getGenomesThroughSegment(from);
+		ArrayList<String> genomes2 = dbm.getDbReader().getGenomesThroughSegment(to);
+		for(String genome : genomes2) {
+			if(lineages.containsKey(genome) && genomes1.contains(genome) && !genome.equals("MT_H37RV_BRD_V5.ref")) {
+				return NewickColourMatching.getLineageColour(lineages.get(genome));
+			}
+		}
+		return color;
 	}
 	
 	public ScrollPane getScrollPane() {

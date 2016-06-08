@@ -61,6 +61,52 @@ public class DatabaseReader {
 		}
 	}
 	
+
+	
+	/**
+	 * Returns the number of genomes for each segment of the database
+	 * @return an ArrayList of the number of genomes for each segment of the database
+	 */
+	
+	public ArrayList<String> getGenomesThroughSegment(int i) {
+		ArrayList<Integer> segments = new ArrayList<Integer>();
+		String query = "SELECT GENOMEID "
+				+ "FROM GENOMESEGMENTLINK WHERE SEGMENTID = " + i;
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				segments.add(rs.getInt(1));
+			}
+			return getGenomesThroughSegmentHelper(segments);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+
+	
+	/**
+	 * Returns the number of genomes for each segment of the database
+	 * @return an ArrayList of the number of genomes for each segment of the database
+	 */
+	
+	private ArrayList<String> getGenomesThroughSegmentHelper(ArrayList<Integer> ints) {
+		ArrayList<String> segments = new ArrayList<String>();
+		for (int i : ints) {
+			String query = "SELECT NAME "
+					+ "FROM GENOMES WHERE ID = " + i;
+			try (ResultSet rs = this.db.executeQuery(query)) {
+				if (rs.next()) {
+					segments.add(rs.getString(1));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		return segments;
+	}
+	
 	
 	
 	/**

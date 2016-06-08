@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,9 +16,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
-
+import parsers.XlsxParser;
 import db.DatabaseManager;
+import gui.phylogeny.NewickColourMatching;
 
 /**
  * @author hugokooijman
@@ -46,6 +49,17 @@ public class GraphController implements Initializable {
 	 * Map of all GraphSegments.
 	 */
 	private HashMap<Integer, GraphSegment> segments;
+    
+	/**
+	 * Location of metadata.xlsx
+	 */
+	private static String xlsxpath = System.getProperty("user.dir") + File.separator + "Data"
+			+ File.separator + "TB10" + File.separator + "metadata" + ".xlsx";
+	
+	/**
+	 * HashMap containing the lineages of the specimens.
+	 */
+	private HashMap<String, String> lineages = updateLineages();
 	
 	/**
 	 * 5 lists of required data for constructing GraphSegments.
@@ -164,6 +178,12 @@ public class GraphController implements Initializable {
 		innerGroup.setScaleX(MIN_SCALE);
 	}
 	
+	private HashMap<String, String> updateLineages() {
+		XlsxParser xlsxparser = new XlsxParser();
+		xlsxparser.parse(xlsxpath);
+		return xlsxparser.getLineages();
+	}
+	
 	/**
 	 * Updates the view. Used when changing database files so the graph
 	 * will have to adjust to the new file.
@@ -259,6 +279,18 @@ public class GraphController implements Initializable {
 	        res.getChildren().add(line);
 		}
 		return res;
+	}
+	
+	public Paint getLineColor(int from, int to) {
+		Paint color = Paint.valueOf("0xff0000ff");
+		ArrayList<String> genomes1 = dbm.getDbReader().getGenomesThroughSegment(from);
+		ArrayList<String> genomes2 = dbm.getDbReader().getGenomesThroughSegment(to);
+		for(String genome : genomes2) {
+			if(lineages.containsKey(genome) && genomes1.contains(genome) && !genome.equals("MT_H37RV_BRD_V5.ref")) {
+				return NewickColourMatching.getLineageColour(lineages.get(genome));
+			}
+		}
+		return color;
 	}
 	
 	/**
