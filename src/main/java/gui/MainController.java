@@ -73,7 +73,7 @@ public class MainController implements Initializable {
 		ribbonTabController.setAnnotationGraphGroup(annotationsGraphController.getInnerGroup());
 		ribbonTabController.setAnnotationGraphPane(annotationsGraphController.getScrollPane());
 		//phyloMenuController.setOuterPane(phyloGridPane);
-		//tabPane.getTabs().get(2).setDisable(true);
+		tabPane.getTabs().get(2).setDisable(true);
 	}
 	
 	/**
