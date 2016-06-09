@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -394,7 +395,7 @@ public class DatabaseReader {
 	 */
 	public ArrayList<ArrayList<Integer>> getLinks() {
 
-		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS GROUP BY FROMID, TOID";
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = 1 GROUP BY FROMID, TOID";
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
 		
 		for(int i = 0; i < this.countSegments(); i++) {
@@ -413,6 +414,29 @@ public class DatabaseReader {
 		return linkList;
 	}
 	
+	public HashMap<Integer, ArrayList<Integer>> getGenomesPerLink() {
+
+		String query = "SELECT FROMID, TOID, GENOMEID FROM LINKS WHERE GENOMEID = 1";
+		HashMap<Integer, ArrayList<Integer>> hash = new HashMap<Integer, ArrayList<Integer>>();
+		
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				int key = 100000 * rs.getInt(1) + rs.getInt(2);
+				ArrayList<Integer> link = hash.get(key);
+				if(link == null) {
+					link = new ArrayList<Integer>();
+				}
+				link.add(rs.getInt(3));
+				hash.put(key, link);
+			}
+			return hash;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return hash;
+	}
+	
 	/**
 	 * Returns the number of genomes through a link for each link. For each segment, an arraylist 
 	 * is created in which they can store per segment how many genomes use that link. All these 
@@ -421,7 +445,7 @@ public class DatabaseReader {
 	 */
 	
 	public ArrayList<ArrayList<Integer>> getLinkWeights() {
-		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS GROUP BY FROMID, TOID";
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = 1 GROUP BY FROMID, TOID";
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
 		for(int i = 0; i < this.countSegments(); i++) {
 			linkList.add(new ArrayList<Integer>());

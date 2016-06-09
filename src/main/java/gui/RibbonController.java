@@ -238,6 +238,7 @@ public class RibbonController implements Initializable {
 		Group res = new Group();
 		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks();
 		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights();
+		ArrayList<ArrayList<Paint>> colours = calculateColours(links);
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
 
@@ -251,12 +252,32 @@ public class RibbonController implements Initializable {
 						xcoords.get(toId - 1), ycoords.get(toId - 1));
 //		        line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
 				line.setStrokeWidth(counts.get(fromId - 1).get(j));
-				line.setStroke(getLineColor(fromId, toId));
+				line.setStroke(colours.get(fromId - 1).get(j));
 		        res.getChildren().add(line);
 			}
 		}
 		System.out.println("Finished normal ribbons");
 		return res;
+	}
+	
+	private ArrayList<ArrayList<Paint>> calculateColours(ArrayList<ArrayList<Integer>> linkIds) {
+		ArrayList<ArrayList<Paint>> colours = new ArrayList<ArrayList<Paint>>();
+		for(int i = 0; i < dbm.getDbReader().countSegments(); i++) {
+			colours.add(new ArrayList<Paint>());
+		}
+		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames();
+		
+		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink();
+		for(int i = 0; i < linkIds.size(); i++) {
+			for(int j = 0; j < linkIds.get(i).size(); j++) {
+				ArrayList<Integer> genomeIds = hash.get(100000 * (i + 1) + linkIds.get(i).get(j));
+				String genome = genomeNames.get(genomeIds.get(0));
+				Paint colour = NewickColourMatching.getLineageColour(lineages.get(genome));
+				colours.get(i).add(colour);
+			}
+		}
+		
+		return colours;
 	}
 	
 	/**
