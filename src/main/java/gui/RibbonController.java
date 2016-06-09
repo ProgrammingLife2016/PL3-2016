@@ -245,8 +245,6 @@ public class RibbonController implements Initializable {
 		ArrayList<ArrayList<Paint>> colours = calculateColours(links, genomestodraw);
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
-
-		int countIdx = 0;
 		
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
 			System.out.println(fromId);
@@ -254,7 +252,6 @@ public class RibbonController implements Initializable {
 				int toId = links.get(fromId - 1).get(j);
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(toId - 1), ycoords.get(toId - 1));
-//		        line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
 				line.setStrokeWidth(counts.get(fromId - 1).get(j));
 				line.setStroke(colours.get(fromId - 1).get(j));
 		        res.getChildren().add(line);
@@ -299,11 +296,14 @@ public class RibbonController implements Initializable {
 	public Group createCollapsedRibbons() {
 		System.out.println("Creating collapsed ribbons");
 		Group res = new Group();
-		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks();
-		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
+		ArrayList<Integer> genomestodraw = new ArrayList<Integer>();
+		genomestodraw.add(1);
+		genomestodraw.add(2);
+		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomestodraw);
+		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomestodraw);
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
-		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles());
+		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles(genomestodraw));
 		
 		int countIdx = 0; // current index in the counts list.
 		int countIdy = 0;
@@ -317,11 +317,8 @@ public class RibbonController implements Initializable {
 				int[] bubble = bubbles.poll();
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
-				double width = 1 + counts.get(countIdx++);
-				if(width >= 7)
-					line.setStrokeWidth(width);
-				else
-					line.setStrokeWidth(7);
+				double width = bubble[2];
+				line.setStrokeWidth(2 * width);
 				line.setStroke(getLineColor(fromId));
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
@@ -334,16 +331,13 @@ public class RibbonController implements Initializable {
 						countIdx += edges.size();
 						break;
 					}
-					Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
-							xcoords.get(toId - 1), ycoords.get(toId - 1));
-//					line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
-					double width = 1 + counts.get(countIdx++);
-					if(width >= 7)
-						line.setStrokeWidth(width);
-					else
-						line.setStrokeWidth(7);
-					line.setStroke(getLineColor(fromId));
-			        res.getChildren().add(line);
+					for (int j = 0; j < links.get(fromId - 1).size(); j++) {
+						Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
+								xcoords.get(toId - 1), ycoords.get(toId - 1));
+						line.setStrokeWidth(2 * counts.get(fromId - 1).get(j));
+						line.setStroke(getLineColor(fromId));
+						res.getChildren().add(line);
+					}
 				}
 			}
 		}

@@ -60,17 +60,23 @@ public class DatabaseProcessor {
 
 		ArrayList<ArrayList<Integer>> links = dbr.getLinks();
 		for (int segmentId = 1; segmentId <= links.size(); segmentId++) {
+			System.out.println(segmentId);
 			ArrayList<Integer> outgoingEdges = links.get(segmentId - 1);
-			
+			System.out.println("a");
 			if (outgoingEdges.size() > 1) {
+				System.out.println("b");
 				int firstChildId = outgoingEdges.get(0);
+				System.out.println("c");
 				int secondChildId = outgoingEdges.get(1);
+				System.out.println("d");
 				ArrayList<Integer> firstChildEdges = links.get(firstChildId - 1);
+				System.out.println("e");
 				ArrayList<Integer> secondChildEdges = links.get(secondChildId - 1);
-				
+				System.out.println("f");
 				int firstChildEdge;
 				int secondChildEdge;
 				try {
+					System.out.println("g");
 					firstChildEdge = firstChildEdges.get(0);
 					secondChildEdge = secondChildEdges.get(0);
 				} catch (IndexOutOfBoundsException e) {
@@ -79,10 +85,14 @@ public class DatabaseProcessor {
 				}
 				if (secondChildEdge == firstChildEdge) {
 					try {
-						//ArrayList<Integer> genomeIds = dbr.getGenomesInBubble(segmentId, firstChildEdge, firstChildId, secondChildId);
-						//System.out.println("Size of the bubble: " + genomeIds.size());
-						this.db.executeUpdate(new BubbleTuple(segmentId, firstChildEdge)
-								.getInsertQuery());
+						System.out.println("h");
+						ArrayList<Integer> genomeIds = dbr.getGenomesInBubble(segmentId, firstChildEdge, firstChildId, secondChildId);
+						System.out.println("i");
+						for(int i = 0; i < genomeIds.size(); i++) {
+							System.out.println("i: " + i);
+							this.db.executeUpdate(new BubbleTuple(segmentId, firstChildEdge, genomeIds.get(i))
+									.getInsertQuery());
+						}
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}

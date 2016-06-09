@@ -64,12 +64,13 @@ public class DatabaseReader {
 	
 	public ArrayList<Integer> getGenomesInBubble(int fromId, int toId, int branch1, int branch2) {
 		ArrayList<Integer> genomes = new ArrayList<Integer>();
-		String query = "SELECT DISTINCT GENOMEID FROM (SELECT GENOMEID FROM LINKS WHERE "
+		String query = "SELECT GENOMEID FROM (SELECT GENOMEID, COUNT(*) AS C FROM LINKS WHERE "
 				+ "(FROMID = " + fromId + " AND TOID = " + branch1 + ")"
 				+ "OR (FROMID = " + branch1 + " AND TOID = " + toId + ")"
 				+ "OR (FROMID = " + fromId + " AND TOID = " + branch2 + ")"
-				+ "OR (FROMID = " + branch2 + " AND TOID = " + toId + "))"
-				+ "WHERE COUNT(*) > 1 GROUP BY GENOMEID";
+				+ "OR (FROMID = " + branch2 + " AND TOID = " + toId + ")"
+				+ "GROUP BY GENOMEID)"
+				+ "WHERE C > 1";
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
 				genomes.add(rs.getInt(1));
@@ -176,10 +177,32 @@ public class DatabaseReader {
 
 		List<int[]> bubbleList = new ArrayList<>();
 
-		String query = "SELECT * FROM BUBBLES";
+		String query = "SELECT DISTINCT FROMID, TOID FROM BUBBLES ORDER BY FROMID";
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
 				bubbleList.add(new int[]{rs.getInt(1),rs.getInt(2)});
+			 }
+			return bubbleList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<int[]> getBubbles(ArrayList<Integer> genomes) {
+
+		List<int[]> bubbleList = new ArrayList<>();
+		
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM BUBBLES WHERE GENOMEID = "
+				+ genomes.get(0);
+		for(int i = 1; i < genomes.size(); i++) {
+			query = query + " OR GENOMEID = " + genomes.get(i);
+		}
+		query = query + " GROUP BY FROMID, TOID ORDER BY FROMID";
+
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				bubbleList.add(new int[]{rs.getInt(1),rs.getInt(2),rs.getInt(3)});
 			 }
 			return bubbleList;
 		} catch (SQLException e) {
