@@ -1,5 +1,6 @@
-package gui.phylogeny;
+package gui.phylogeny.EventHandlers;
 
+import gui.phylogeny.model.NewickNode;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;

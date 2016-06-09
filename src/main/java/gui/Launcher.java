@@ -9,9 +9,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import newick.NewickTree;
 import db.DatabaseManager;
+import gui.phylogeny.model.NewickTree;
 import parsers.GfaException;
 import parsers.GfaParser;
 import parsers.GffParser;
@@ -23,9 +22,9 @@ import toolbar.RecentHandler;
  * @author Björn Ho
  */
 public class Launcher extends Application {
-	static DatabaseManager dbm;
+	public static DatabaseManager dbm;
 	static Stage stage;
-	static NewickTree nwkTree = null;
+	public static NewickTree nwkTree = null;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
