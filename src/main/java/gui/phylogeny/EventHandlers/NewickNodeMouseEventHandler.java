@@ -30,6 +30,7 @@ public class NewickNodeMouseEventHandler implements EventHandler<MouseEvent> {
 	@Override
 	public void handle(MouseEvent event) {
 		toggleActive();
+		System.out.println(NewickNode.getSelected());
 	}
 	
 	/**
