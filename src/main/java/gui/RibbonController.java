@@ -309,7 +309,7 @@ public class RibbonController implements Initializable {
 						line.setStrokeWidth(width);
 					else
 						line.setStrokeWidth(7);
-					line.setStroke(getLineColor(fromId));
+					line.setStroke(getLineColor(fromId, toId));
 			        res.getChildren().add(line);
 				}
 			}
@@ -330,13 +330,31 @@ public class RibbonController implements Initializable {
 		return color;
 	}
 	
-	public Paint getLineColor(int from, int to) {
+	public Paint getLineColor(int f, int t) {
 		Paint color = Paint.valueOf("0xff0000ff");
-		ArrayList<String> genomes1 = dbm.getDbReader().getGenomesThroughSegment(from);
-		ArrayList<String> genomes2 = dbm.getDbReader().getGenomesThroughSegment(to);
-		for(String genome : genomes2) {
-			if(lineages.containsKey(genome) && genomes1.contains(genome) && !genome.equals("MT_H37RV_BRD_V5.ref")) {
-				return NewickColourMatching.getLineageColour(lineages.get(genome));
+		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(f);
+		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(t);
+		int size = 0;
+		if(from.size() > to.size()) {
+			for(int i = 0; i < to.size(); i++) {
+				String genome = to.get(i);
+				if(lineages.containsKey(genome) && from.contains(genome) && !genome.equals("MT_H37RV_BRD_V5.ref")) {
+					return NewickColourMatching.getLineageColour(lineages.get(genome));
+				}
+			}
+		} else if(from.size() < to.size()) {
+			for(int i = 0; i < from.size(); i++) {
+				String genome = from.get(i);
+				if(lineages.containsKey(genome) && to.contains(genome) && !genome.equals("MT_H37RV_BRD_V5.ref")) {
+					return NewickColourMatching.getLineageColour(lineages.get(genome));
+				}
+			}
+		} else {
+			for(int i = 0; i < from.size(); i++) {
+				String genome = from.get(i);
+				if(lineages.containsKey(genome) && to.contains(genome) && !genome.equals("MT_H37RV_BRD_V5.ref")) {
+					return NewickColourMatching.getLineageColour(lineages.get(genome));
+				}
 			}
 		}
 		return color;
