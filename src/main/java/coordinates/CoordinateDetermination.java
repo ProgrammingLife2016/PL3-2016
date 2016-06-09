@@ -75,16 +75,18 @@ public class CoordinateDetermination {
 				SplashController.progressString.set((i * 100 / noOfSegments) 
 						+ 1 + "% Calculated");
 			}
-			System.out.println(i);
 			int alreadyDrawn = 0;
 			int leftToDraw = countGenomesInSeg(i);
 			Coordinate coords = coordinates[i - 1];
-			System.out.println("Coordinate stored at location " + (i-1) + " = " + coords);
 			ArrayList<Integer> outgoingedges = links.get(i - 1);
 			
 			for (int j = 0; j < outgoingedges.size(); j++) {
 				
-				System.out.println("Looking at the link from " + (i-1) + " to " + outgoingedges.get(j));
+				if(outgoingedges.get(j) < 5) {
+					System.out.println(i);
+					System.out.println(j);
+					System.out.println(outgoingedges.get(j));
+				}
 				leftToDraw = leftToDraw - countGenomesInLink(i, outgoingedges.get(j));
 				int xc = coords.getX() + 100;
 				int yc = coords.getY() - 50 * leftToDraw + 50 * alreadyDrawn;
@@ -108,9 +110,7 @@ public class CoordinateDetermination {
 		SplashController.progressString.set("Calculating start coordinates");
 		for (int i = 1; i <= firstSegments.size(); i++) {
 			int segId = firstSegments.get(i - 1);
-			System.out.println("SEGID: " + segId);
 			int index = segIds.indexOf(segId);
-			System.out.println("INDEX: " + index);
 			if (index == -1) {
 				segIds.add(segId);
 				segWeights.add(1);
@@ -124,7 +124,6 @@ public class CoordinateDetermination {
 			int index = segIds.get(i);
 			int weight = segWeights.get(i);
 			coordinates[index - 1] = new Coordinate(0, 100 * genomesDrawn + 50 * weight);
-			System.out.println("Added coordinate at location " + (index - 1) + " which has index " + index);
 			cweights[index - 1] = weight;
 			genomesDrawn += weight;
 		}
@@ -142,10 +141,8 @@ public class CoordinateDetermination {
 	 * 			Amount of genomes that pass through a segment.
 	 */
 	public void storeCoord(Coordinate coord, int segId, int weight) {
-		System.out.println("Trying to store segment " + segId);
 		if (coordinates[segId - 1] == null) {
 			coordinates[segId - 1] = coord;
-			System.out.println("Added coordinate at location " + (segId - 1) + " with a segId of " + segId);
 			cweights[segId - 1] = weight;
 		} else {
 			Coordinate oldCoord = coordinates[segId - 1];
@@ -153,7 +150,6 @@ public class CoordinateDetermination {
 			int newY = (coord.getY() * weight + oldCoord.getY() * cweights[segId - 1])
 					/ (weight + cweights[segId - 1]);
 			coordinates[segId - 1] = new Coordinate(newX, newY);
-			System.out.println("Updated coordinate at location " + (segId - 1) + " ,which has segId " + segId);
 			cweights[segId - 1] += weight;
 		}
 	}

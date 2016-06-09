@@ -2,6 +2,7 @@ package gui;
 
 import javafx.scene.paint.Paint;
 
+import java.awt.Color;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -266,13 +267,19 @@ public class RibbonController implements Initializable {
 			colours.add(new ArrayList<Paint>());
 		}
 		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames();
+		System.out.println("Size: " + genomeNames.size());
 		
 		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink();
 		for(int i = 0; i < linkIds.size(); i++) {
 			for(int j = 0; j < linkIds.get(i).size(); j++) {
 				ArrayList<Integer> genomeIds = hash.get(100000 * (i + 1) + linkIds.get(i).get(j));
-				String genome = genomeNames.get(genomeIds.get(0));
-				Paint colour = NewickColourMatching.getLineageColour(lineages.get(genome));
+				int id = genomeIds.get(0);
+				Paint colour = Paint.valueOf("0x000000ff");
+				if(id != 5) {
+					String genome = genomeNames.get(id - 1);
+					colour = NewickColourMatching.getLineageColour(lineages.get(genome));
+				} 
+				
 				colours.get(i).add(colour);
 			}
 		}

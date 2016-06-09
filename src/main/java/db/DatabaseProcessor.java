@@ -34,6 +34,8 @@ public class DatabaseProcessor {
 		Coordinate[] coordinates = coorddet.calcCoords();
 		SplashController.progressString.set("Saving segment coordinates");
 		for (int i = 1; i <= coordinates.length; i++) {
+			System.out.println(i);
+			System.out.println(coordinates[i-1]);
 			if ( (i % coordinates.length) / 10 == 0) {
 				SplashController.progressString
 					.set((i * 100 / coordinates.length) + "% Stored");
@@ -77,6 +79,8 @@ public class DatabaseProcessor {
 				}
 				if (secondChildEdge == firstChildEdge) {
 					try {
+						//ArrayList<Integer> genomeIds = dbr.getGenomesInBubble(segmentId, firstChildEdge, firstChildId, secondChildId);
+						//System.out.println("Size of the bubble: " + genomeIds.size());
 						this.db.executeUpdate(new BubbleTuple(segmentId, firstChildEdge)
 								.getInsertQuery());
 					} catch (SQLException e) {
