@@ -116,31 +116,31 @@ public class DatabaseProcessor {
 		ArrayList<Integer> from = dbr.getAllFromId();
 		ArrayList<Integer> to = dbr.getAllToId();
 		noOfSegments = to.get(to.size() - 1);
-		SplashController.progressString.set("Retrieving link data");
-		for (int i = 0; i < from.size(); i++) {
-			if ( ((i + 1) % from.size()) / 10 == 0) {
-				SplashController.progressString
-					.set((i * 100 / from.size() + 1) + "% Retrieved");
-			}
-			hashmap.put(noOfSegments * (from.get(i) - 1) + to.get(i) - 1, 0);
-		}
+		
+		ArrayList<ArrayList<Integer>> allLinks = new ArrayList<ArrayList<Integer>>();
+		
 		SplashController.progressString.set("Starting to analyze genomes");
+		
 		for (int i = 1; i <= dbr.countGenomes(); i++) {
-			hashmap = analyzeGenome(hashmap, i);
+			ArrayList<ArrayList<Integer>> links = analyzeGenome(i);
+			allLinks.addAll(links);
 			SplashController.progressString.set(i + "genome(s) analyzed");
 		}
+		
 		SplashController.progressString.set("Storing link data");
+		
 		try {
 			this.db.executeUpdate("DELETE FROM LINKS");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		for (int i = 0; i < from.size(); i++) {
+		
+		for (int i = 0; i < allLinks.size(); i++) {
 			if ( ((i + 1) % from.size()) / 10 == 0) {
 				SplashController.progressString.set((i * 100 / from.size() + 1) + "% Stored");
 			}
-			updateDblinkcount(from.get(i), to.get(i), 
-					hashmap.get(noOfSegments * (from.get(i) - 1) + to.get(i) - 1));
+			ArrayList<Integer> link = allLinks.get(i);
+			updateDblinkcount(link.get(0), link.get(1), link.get(2));
 		}
 	}
 	
@@ -151,25 +151,29 @@ public class DatabaseProcessor {
 	 * @param genomeID The ID of the genome we're analyzing
 	 * @return An updated HashMap where data about the genome we analyzed is also stored
 	 */
-	public HashMap<Integer, Integer> analyzeGenome(HashMap<Integer, Integer> map, int genomeId) {
+	public ArrayList<ArrayList<Integer>> analyzeGenome(int genomeId) {
 		String query = "SELECT * "
 				+ "FROM GENOMESEGMENTLINK WHERE GENOMEID = " + genomeId;
+		ArrayList<ArrayList<Integer>> links = new ArrayList<ArrayList<Integer>>();
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			if (rs.next()) {
 				int first = rs.getInt(1);
 				int second;
 				while (rs.next()) {
+					ArrayList<Integer> link = new ArrayList<Integer>();
 					second = rs.getInt(1);
-					int currentcount = map.remove(noOfSegments * (first - 1) + second - 1);
-					map.put(noOfSegments * (first - 1) + second - 1, currentcount + 1);
+					link.add(first);
+					link.add(second);
+					link.add(genomeId);
+					links.add(link);
 					first = second;
 				}
-				return map;
+				return links;
 			}
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return map;
+			return null;
 		}
 	}
 	

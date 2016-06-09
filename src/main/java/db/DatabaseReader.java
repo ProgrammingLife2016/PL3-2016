@@ -176,7 +176,7 @@ public class DatabaseReader {
 	 * @return All id's of the segments that have one or more outgoing links.
 	 */
 	public ArrayList<Integer> getAllFromId() {
-		String query = "SELECT * FROM LINKS";
+		String query = "SELECT DISTINCT FROMID, TOID FROM LINKS";
 		ArrayList<Integer> fromIdList = new ArrayList<Integer>();
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
@@ -345,17 +345,19 @@ public class DatabaseReader {
 	 */
 	
 	public ArrayList<Integer> getAllCounts() {
-		String query = "SELECT * FROM LINKS";
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS GROUP BY FROMID, TOID";
 		ArrayList<Integer> toIdList = new ArrayList<Integer>();
+		
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
 				toIdList.add(rs.getInt(3));
-			 }
+			}
 			return toIdList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		
+		return toIdList;
 	}
 
 	
@@ -392,19 +394,22 @@ public class DatabaseReader {
 	 */
 	public ArrayList<ArrayList<Integer>> getLinks() {
 
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS GROUP BY FROMID, TOID";
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
-		for (int i = 0; i <= this.countSegments(); i++) {
+		
+		for(int i = 0; i < this.countSegments(); i++) {
 			linkList.add(new ArrayList<Integer>());
 		}
-
-		ArrayList<Integer> fromIDs = this.getAllFromId();
-		ArrayList<Integer> toIDs = this.getAllToId();
-
-		for (int i = 1; i <= fromIDs.size(); i++) {
-			int fromId = fromIDs.get(i - 1);
-			int toId = toIDs.get(i - 1);
-			linkList.get(fromId - 1).add(toId);
+		
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				linkList.get(rs.getInt(1) - 1).add(rs.getInt(2));
+			}
+			return linkList;
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		
 		return linkList;
 	}
 	
@@ -416,21 +421,21 @@ public class DatabaseReader {
 	 */
 	
 	public ArrayList<ArrayList<Integer>> getLinkWeights() {
-
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS GROUP BY FROMID, TOID";
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
-		for (int i = 0; i <= this.countSegments(); i++) {
+		for(int i = 0; i < this.countSegments(); i++) {
 			linkList.add(new ArrayList<Integer>());
 		}
 		
-		ArrayList<Integer> fromIDs = this.getAllFromId();
-		ArrayList<Integer> weights = this.getAllCounts();
-		
-		
-		for (int i = 1; i <= fromIDs.size(); i++) {
-			int fromId = fromIDs.get(i - 1);
-			int toId = weights.get(i - 1);
-			linkList.get(fromId - 1).add(toId);
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				linkList.get(rs.getInt(1) - 1).add(rs.getInt(3));
+			}
+			return linkList;
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		
 		return linkList;
 	}
 	

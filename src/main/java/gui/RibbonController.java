@@ -237,18 +237,20 @@ public class RibbonController implements Initializable {
 		System.out.println("Creating normal ribbons");
 		Group res = new Group();
 		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks();
-		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
+		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights();
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
 
 		int countIdx = 0;
 		
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
-			for (int toId : links.get(fromId - 1)) {
+			System.out.println(fromId);
+			for (int j = 0; j < links.get(fromId - 1).size(); j++) {
+				int toId = links.get(fromId - 1).get(j);
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(toId - 1), ycoords.get(toId - 1));
 //		        line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
-				line.setStrokeWidth(1 + counts.get(countIdx++));
+				line.setStrokeWidth(counts.get(fromId - 1).get(j));
 				line.setStroke(getLineColor(fromId, toId));
 		        res.getChildren().add(line);
 			}

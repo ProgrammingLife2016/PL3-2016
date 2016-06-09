@@ -275,7 +275,7 @@ public class GraphController implements Initializable {
 			
 			Line line = new Line(fromX, fromsegment.getLayoutY() + fromsegment.getRadius(),
 					toX, tosegment.getLayoutY() + tosegment.getRadius());
-	        line.setStrokeWidth(1 + counts.get(countIdx++));
+	        line.setStrokeWidth(1 + counts.get(i));
 	        res.getChildren().add(line);
 		}
 		return res;
