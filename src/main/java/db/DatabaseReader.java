@@ -433,8 +433,12 @@ public class DatabaseReader {
 	}
 	
 	public ArrayList<ArrayList<Integer>> getLinks(ArrayList<Integer> genomes) {
-
-		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = 1 GROUP BY FROMID, TOID";
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
+				+ genomes.get(0);
+		for(int i = 1; i < genomes.size(); i++) {
+			query = query + " OR GENOMEID = " + genomes.get(i);
+		}
+		query = query + " GROUP BY FROMID, TOID";
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
 		
 		for(int i = 0; i < this.countSegments(); i++) {
@@ -478,7 +482,12 @@ public class DatabaseReader {
 	
 	public HashMap<Integer, ArrayList<Integer>> getGenomesPerLink(ArrayList<Integer> genomes) {
 
-		String query = "SELECT FROMID, TOID, GENOMEID FROM LINKS WHERE GENOMEID = 1";
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
+				+ genomes.get(0);
+		for(int i = 1; i < genomes.size(); i++) {
+			query = query + " OR GENOMEID = " + genomes.get(i);
+		}
+		query = query + " GROUP BY FROMID, TOID";
 		HashMap<Integer, ArrayList<Integer>> hash = new HashMap<Integer, ArrayList<Integer>>();
 		
 		try (ResultSet rs = this.db.executeQuery(query)) {
@@ -526,7 +535,12 @@ public class DatabaseReader {
 	}
 	
 	public ArrayList<ArrayList<Integer>> getLinkWeights(ArrayList<Integer> genomes) {
-		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = 1 GROUP BY FROMID, TOID";
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
+				+ genomes.get(0);
+		for(int i = 1; i < genomes.size(); i++) {
+			query = query + " OR GENOMEID = " + genomes.get(i);
+		}
+		query = query + " GROUP BY FROMID, TOID";
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
 		for(int i = 0; i < this.countSegments(); i++) {
 			linkList.add(new ArrayList<Integer>());

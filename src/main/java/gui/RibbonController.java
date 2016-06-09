@@ -237,9 +237,12 @@ public class RibbonController implements Initializable {
 	public Group createNormalRibbons() {
 		System.out.println("Creating normal ribbons");
 		Group res = new Group();
-		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks();
-		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights();
-		ArrayList<ArrayList<Paint>> colours = calculateColours(links);
+		ArrayList<Integer> genomestodraw = new ArrayList<Integer>();
+		genomestodraw.add(1);
+		genomestodraw.add(2);
+		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomestodraw);
+		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomestodraw);
+		ArrayList<ArrayList<Paint>> colours = calculateColours(links, genomestodraw);
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
 
@@ -261,7 +264,7 @@ public class RibbonController implements Initializable {
 		return res;
 	}
 	
-	private ArrayList<ArrayList<Paint>> calculateColours(ArrayList<ArrayList<Integer>> linkIds) {
+	private ArrayList<ArrayList<Paint>> calculateColours(ArrayList<ArrayList<Integer>> linkIds, ArrayList<Integer> genomes) {
 		ArrayList<ArrayList<Paint>> colours = new ArrayList<ArrayList<Paint>>();
 		for(int i = 0; i < dbm.getDbReader().countSegments(); i++) {
 			colours.add(new ArrayList<Paint>());
@@ -269,7 +272,7 @@ public class RibbonController implements Initializable {
 		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames();
 		System.out.println("Size: " + genomeNames.size());
 		
-		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink();
+		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink(genomes);
 		for(int i = 0; i < linkIds.size(); i++) {
 			for(int j = 0; j < linkIds.get(i).size(); j++) {
 				ArrayList<Integer> genomeIds = hash.get(100000 * (i + 1) + linkIds.get(i).get(j));
