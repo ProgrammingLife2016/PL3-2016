@@ -301,6 +301,7 @@ public class RibbonController implements Initializable {
 		genomestodraw.add(2);
 		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomestodraw);
 		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomestodraw);
+		ArrayList<ArrayList<Paint>> colours = calculateColours(links, genomestodraw);
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
 		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles(genomestodraw));
@@ -319,7 +320,7 @@ public class RibbonController implements Initializable {
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
 				double width = bubble[2];
 				line.setStrokeWidth(2 * width);
-				line.setStroke(getLineColor(fromId));
+				line.setStroke(colours.get(fromId-1).get(0));
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
 			} else {
@@ -335,7 +336,7 @@ public class RibbonController implements Initializable {
 						Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 								xcoords.get(toId - 1), ycoords.get(toId - 1));
 						line.setStrokeWidth(2 * counts.get(fromId - 1).get(j));
-						line.setStroke(getLineColor(fromId));
+						line.setStroke(colours.get(fromId-1).get(j));
 						res.getChildren().add(line);
 					}
 				}
