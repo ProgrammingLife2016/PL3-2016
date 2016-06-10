@@ -118,7 +118,10 @@
 						<ignores>
 							<ignore>gui.*</ignore>
 							<ignore>gui.phylogeny.*</ignore>
-							<ignore>custommain.>*</ignore>
+							<ignore>gui.phylogeny.model.*</ignore>
+							<ignore>gui.phylogeny.controller.*</ignore>
+							<ignore>gui.phylogeny.EventHandlers.*</ignore>
+							<ignore>custommain.*</ignore>
 						</ignores>
 						<excludes>
 							<exclude>**/gui/*</exclude>
