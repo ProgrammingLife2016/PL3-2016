@@ -15,6 +15,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -37,9 +38,9 @@ public class GraphController implements Initializable {
 	@FXML private GridPane pane;
 	@FXML private ScrollPane scrollPane;
 	private ScrollPane otherPane;
-	
-//	@FXML private CheckBox checkboxSnp;
-//	@FXML private CheckBox checkboxInsert;
+
+	@FXML private CheckBox checkboxSnp;
+	@FXML private CheckBox checkboxInsert;
 	
 	private Group innerGroup;
 	private Group outerGroup;
@@ -153,12 +154,6 @@ public class GraphController implements Initializable {
 			innerGroup.setScaleY(scale);
 			innerGroup.setScaleX(MIN_SCALE);
 		}
-		
-		private HashMap<String, String> updateLineages() {
-			XlsxParser xlsxparser = new XlsxParser();
-			xlsxparser.parse(xlsxpath);
-			return xlsxparser.getLineages();
-		}
 	};
 
 
@@ -193,6 +188,18 @@ public class GraphController implements Initializable {
 				otherPane.setHvalue(newValue.doubleValue());
 			}
 		});
+		
+		checkboxInsert.selectedProperty().addListener(
+			(ChangeListener<Boolean>) (observable, oldValue, newValue) -> 
+			//For now, we just print a line. Should be toggling the insertions
+			System.out.println("You pressed the insert checkbox")
+		);
+		
+		checkboxSnp.selectedProperty().addListener(
+			(ChangeListener<Boolean>) (observable, oldValue, newValue) -> 
+			//For now, we just print a line. Should be toggling the SNPs
+			System.out.println("You pressed the SNP checkbox")
+		);
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
@@ -334,7 +341,6 @@ public class GraphController implements Initializable {
 		Paint color = Paint.valueOf("0xff0000ff");
 		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(f);
 		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(t);
-		int size = 0;
 		if(from.size() > to.size()) {
 			for(int i = 0; i < to.size(); i++) {
 				String genome = to.get(i);

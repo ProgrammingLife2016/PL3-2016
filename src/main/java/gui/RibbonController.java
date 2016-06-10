@@ -17,6 +17,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -34,8 +35,12 @@ public class RibbonController implements Initializable {
 	@FXML private GridPane pane;
 	@FXML private ScrollPane scrollPane;
 	private ScrollPane otherPane;
+
 	private ScrollPane annotationRibbonPane;
 	private ScrollPane annotationGraphPane;
+
+	@FXML private CheckBox checkboxSnp;
+	@FXML private CheckBox checkboxInsert;
 	
 	private DatabaseManager dbm = Launcher.dbm;
 	
@@ -206,6 +211,19 @@ public class RibbonController implements Initializable {
 				annotationGraphPane.setHvalue(newValue.doubleValue());
 			}
 		});
+
+		checkboxInsert.selectedProperty().addListener(
+				(ChangeListener<Boolean>) (observable, oldValue, newValue) -> 
+				//For now, we just print a line. Should be toggling the insertions
+				System.out.println("You pressed the insert checkbox")
+			);
+			
+		checkboxSnp.selectedProperty().addListener(
+			(ChangeListener<Boolean>) (observable, oldValue, newValue) -> 
+			//For now, we just print a line. Should be toggling the SNPs
+			System.out.println("You pressed the SNP checkbox")
+		);
+		
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(MIN_SCALE);
@@ -263,7 +281,6 @@ public class RibbonController implements Initializable {
 		Paint color = Paint.valueOf("0xff0000ff");
 		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(ff);
 		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(tt);
-		int size = 0;
 		if (from.size() > to.size()) {
 			for (int i = 0; i < to.size(); i++) {
 				String genome = to.get(i);

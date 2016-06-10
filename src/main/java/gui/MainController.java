@@ -46,8 +46,7 @@ public class MainController implements Initializable {
 	 */
 	@FXML private GraphController graphTabController;
 	@FXML private RibbonController ribbonTabController;
-	@FXML private AnnotationController annotationsGraphController;
-	@FXML private AnnotationController annotationsRibbonController;
+	@FXML private AnnotationController annotationsController;
 	//@FXML private PhyloMenuController phyloMenuController;
 	//@FXML private GridPane phyloGridPane;
 	
@@ -73,10 +72,10 @@ public class MainController implements Initializable {
 		graphTabController.setRibbonGroup(ribbonTabController.getInnerGroup());
 		ribbonTabController.setGraphPane(graphTabController.getScrollPane());
 		ribbonTabController.setGraphGroup(graphTabController.getInnerGroup());
-		ribbonTabController.setAnnotationRibbonGroup(annotationsRibbonController.getInnerGroup());
-		ribbonTabController.setAnnotationRibbonPane(annotationsRibbonController.getScrollPane());
-		ribbonTabController.setAnnotationGraphGroup(annotationsGraphController.getInnerGroup());
-		ribbonTabController.setAnnotationGraphPane(annotationsGraphController.getScrollPane());
+		ribbonTabController.setAnnotationRibbonGroup(annotationsController.getInnerGroup());
+		ribbonTabController.setAnnotationRibbonPane(annotationsController.getScrollPane());
+		ribbonTabController.setAnnotationGraphGroup(annotationsController.getInnerGroup());
+		ribbonTabController.setAnnotationGraphPane(annotationsController.getScrollPane());
 		//phyloMenuController.setOuterPane(phyloGridPane);
 		tabPane.getTabs().get(2).setDisable(true);
 		tabPane.getSelectionModel().selectedItemProperty().addListener(
