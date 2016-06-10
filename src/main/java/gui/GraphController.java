@@ -265,9 +265,13 @@ public class GraphController implements Initializable {
 	 * are located, how they are related and what their DNA strand is.
 	 */
 	public Group getGraph() {
+		System.out.println("Starting graph calculations");
 		Group res = new Group();
+		System.out.println("Calculating graph edges");
 		res.getChildren().add(getGraphEdges());
+		System.out.println("Calculating graph segments");
 		res.getChildren().add(getGraphSegments());
+		System.out.println("Finished calculating graph");
 		return res;
 	}
 	
@@ -292,7 +296,7 @@ public class GraphController implements Initializable {
 					toX, tosegment.getLayoutY() + tosegment.getRadius());
 
 			line.setStrokeWidth(1 + counts.get(countIdx++));
-			line.setStroke(getLineColor(fromId, toId));
+			//line.setStroke(getLineColor(fromId, toId));
 	        res.getChildren().add(line);
 		}
 		System.out.println("Finished creating graph edges");
