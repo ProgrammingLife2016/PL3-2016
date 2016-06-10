@@ -13,17 +13,16 @@ import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Line;
+
 import parsers.XlsxParser;
 import db.DatabaseManager;
 import gui.phylogeny.NewickColourMatching;
@@ -48,6 +47,7 @@ public class RibbonController implements Initializable {
 
 
 	private HashMap<String, String> lineages = updateLineages();
+	private ArrayList<Integer> genomeIds = createList();
 	private Group collapsedGroup = createCollapsedRibbons();
 	private Group normalGroup = createNormalRibbons();
 	
@@ -91,8 +91,8 @@ public class RibbonController implements Initializable {
 					Group temp = new Group(collapsedGroup);
 					innerGroup.getChildren().addAll(temp.getChildren());
 					scrollPane.setHvalue(oldBarValue);
-				} else if ((prevScale < COLLAPSE && scale >= COLLAPSE) 
-						||(prevScale > GRAPH && scale <= GRAPH)) {
+				} else if (prevScale < COLLAPSE && scale >= COLLAPSE 
+						|| prevScale > GRAPH && scale <= GRAPH) {
 					System.out.println("switch to collapsed");
 					innerGroup.getChildren().clear();
 					Group temp = new Group(normalGroup);
@@ -109,11 +109,12 @@ public class RibbonController implements Initializable {
 				System.out.println(prevScale + "->" + scale);
 				double barValue = scrollPane.getHvalue();
 				innerGroup.setScaleX(scale);
+				scrollPane.setHvalue(barValue);
 				otherGroup.setScaleX(scale);
+				otherPane.setHvalue(barValue);
+				
 				annotationRibbonGroup.setScaleX(scale);
 				annotationGraphGroup.setScaleX(scale);
-				scrollPane.setHvalue(barValue);
-				otherPane.setHvalue(barValue);
 				annotationRibbonPane.setHvalue(barValue);
 				annotationGraphPane.setHvalue(barValue);
 				prevScale = scale;
@@ -165,12 +166,13 @@ public class RibbonController implements Initializable {
 			double barValue = scrollPane.getHvalue();
 			innerGroup.setScaleX(scale);
 			otherGroup.setScaleX(scale);
+			scrollPane.setHvalue(barValue);
+			otherPane.setHvalue(barValue);
 			annotationRibbonGroup.setScaleX(scale);
 			annotationRibbonPane.setPrefWidth(scrollPane.getPrefWidth());
 			annotationGraphGroup.setScaleX(scale);
 			annotationRibbonPane.setPrefWidth(scrollPane.getPrefWidth());
-			scrollPane.setHvalue(barValue);
-			otherPane.setHvalue(barValue);
+
 		}
 	};
     
@@ -207,6 +209,7 @@ public class RibbonController implements Initializable {
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(MIN_SCALE);
+		
 	}
 	
 	private HashMap<String, String> updateLineages() {
@@ -236,25 +239,52 @@ public class RibbonController implements Initializable {
 	public Group createNormalRibbons() {
 		System.out.println("Creating normal ribbons");
 		Group res = new Group();
-		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks();
-		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
+		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomeIds);
+		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomeIds);
+		ArrayList<ArrayList<Paint>> colours = calculateColours(links, genomeIds);
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
-
-		int countIdx = 0;
 		
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
-			for (int toId : links.get(fromId - 1)) {
+			for (int j = 0; j < links.get(fromId - 1).size(); j++) {
+				int toId = links.get(fromId - 1).get(j);
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(toId - 1), ycoords.get(toId - 1));
-//		        line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
-				line.setStrokeWidth(1 + counts.get(countIdx++));
-				line.setStroke(getLineColor(fromId, toId));
+				line.setStrokeWidth(counts.get(fromId - 1).get(j));
+				line.setStroke(colours.get(fromId - 1).get(j));
 		        res.getChildren().add(line);
 			}
 		}
 		System.out.println("Finished normal ribbons");
 		return res;
+	}
+	
+	private ArrayList<ArrayList<Paint>> calculateColours(ArrayList<ArrayList<Integer>> linkIds, 
+			ArrayList<Integer> genomes) {
+		ArrayList<ArrayList<Paint>> colours = 
+				new ArrayList<ArrayList<Paint>>();
+		for (int i = 0; i < dbm.getDbReader().countSegments(); i++) {
+			colours.add(new ArrayList<Paint>());
+		}
+		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames(genomes);
+		System.out.println("Size: " + genomeNames.size());
+		
+		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink(genomes);
+		for (int i = 0; i < linkIds.size(); i++) {
+			for (int j = 0; j < linkIds.get(i).size(); j++) {
+				ArrayList<Integer> genomeIds = hash.get(100000 * (i + 1) 
+						+ linkIds.get(i).get(j));
+				int id = genomeIds.get(0);
+				Paint colour = Paint.valueOf("0x000000ff");
+				String genome = genomeNames.get(id - 1);
+				if (!genome.startsWith("M")) {
+					colour = NewickColourMatching
+							.getLineageColour(lineages.get(genome));
+				} 
+				colours.get(i).add(colour);
+			}
+		}
+		return colours;
 	}
 	
 	/**
@@ -266,14 +296,12 @@ public class RibbonController implements Initializable {
 	public Group createCollapsedRibbons() {
 		System.out.println("Creating collapsed ribbons");
 		Group res = new Group();
-		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks();
-		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
+		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomeIds);
+		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomeIds);
+		ArrayList<ArrayList<Paint>> colours = calculateColours(links, genomeIds);
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
-		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles());
-		
-		int countIdx = 0; // current index in the counts list.
-		int countIdy = 0;
+		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles(genomeIds));
 		
 		List<Integer> ignore = new LinkedList<>();
 		
@@ -284,12 +312,9 @@ public class RibbonController implements Initializable {
 				int[] bubble = bubbles.poll();
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
-				double width = 1 + counts.get(countIdx++);
-				if(width >= 7)
-					line.setStrokeWidth(width);
-				else
-					line.setStrokeWidth(7);
-				line.setStroke(getLineColor(fromId));
+				double width = bubble[2];
+				line.setStrokeWidth(2 * width);
+				line.setStroke(colours.get(fromId - 1).get(0));
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
 			} else {
@@ -298,19 +323,18 @@ public class RibbonController implements Initializable {
 				}
 				for (int toId : edges) {
 					if (!bubbles.isEmpty() && toId == bubbles.peek()[1]) {
-						countIdx += edges.size();
 						break;
 					}
-					Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
-							xcoords.get(toId - 1), ycoords.get(toId - 1));
-//					line.setStrokeWidth(0.02 + 0.02 * counts.get(countIdx++));
-					double width = 1 + counts.get(countIdx++);
-					if(width >= 7)
-						line.setStrokeWidth(width);
-					else
-						line.setStrokeWidth(7);
-					line.setStroke(getLineColor(fromId, toId));
-			        res.getChildren().add(line);
+
+					for (int j = 0; j < links.get(fromId - 1).size(); j++) {
+						Line line = new Line(xcoords.get(fromId - 1), 
+								ycoords.get(fromId - 1), 
+								xcoords.get(toId - 1), 
+								ycoords.get(toId - 1));
+						line.setStrokeWidth(2 * counts.get(fromId - 1).get(j));
+						line.setStroke(colours.get(fromId - 1).get(j));
+						res.getChildren().add(line);
+					}
 				}
 			}
 		}
@@ -318,46 +342,14 @@ public class RibbonController implements Initializable {
 		
 		return res;
 	}
-	
-	public Paint getLineColor(int from) {
-		Paint color = Paint.valueOf("0xff0000ff");
-		ArrayList<String> genomes1 = dbm.getDbReader().getGenomesThroughSegment(from);
-		for(String genome : genomes1) {
-			if(lineages.containsKey(genome)) {
-				return NewickColourMatching.getLineageColour(lineages.get(genome));
-			}
-		}
-		return color;
-	}
-	
-	public Paint getLineColor(int f, int t) {
-		Paint color = Paint.valueOf("0xff0000ff");
-		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(f);
-		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(t);
-		int size = 0;
-		if(from.size() > to.size()) {
-			for(int i = 0; i < to.size(); i++) {
-				String genome = to.get(i);
-				if(lineages.containsKey(genome) && from.contains(genome) && !genome.equals("MT_H37RV_BRD_V5.ref")) {
-					return NewickColourMatching.getLineageColour(lineages.get(genome));
-				}
-			}
-		} else if(from.size() < to.size()) {
-			for(int i = 0; i < from.size(); i++) {
-				String genome = from.get(i);
-				if(lineages.containsKey(genome) && to.contains(genome) && !genome.equals("MT_H37RV_BRD_V5.ref")) {
-					return NewickColourMatching.getLineageColour(lineages.get(genome));
-				}
-			}
-		} else {
-			for(int i = 0; i < from.size(); i++) {
-				String genome = from.get(i);
-				if(lineages.containsKey(genome) && to.contains(genome) && !genome.equals("MT_H37RV_BRD_V5.ref")) {
-					return NewickColourMatching.getLineageColour(lineages.get(genome));
-				}
-			}
-		}
-		return color;
+
+	public void redraw() {
+		collapsedGroup = createCollapsedRibbons();
+		normalGroup = createNormalRibbons();
+		updateView();
+		double maxY = dbm.getDbReader().getMaxYCoord();
+		innerGroup.setScaleY(720.0 / maxY);
+		innerGroup.setScaleX(MIN_SCALE);
 	}
 	
 	public ScrollPane getScrollPane() {
@@ -390,5 +382,17 @@ public class RibbonController implements Initializable {
 	
 	public void setAnnotationGraphPane(ScrollPane scrollpane) {
 		annotationGraphPane = scrollpane;
+	}
+	
+	public void setGenomeIds(ArrayList<Integer> ids) {
+		genomeIds = ids;
+	}
+	
+	public ArrayList<Integer> createList() {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for (int i = 0; i < 10; i++) {
+			list.add(i);
+		}
+		return list;
 	}
 }

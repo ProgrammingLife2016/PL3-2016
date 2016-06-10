@@ -2,22 +2,27 @@ package gui;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.scene.control.TabPane;
 
 import db.DatabaseManager;
+import gui.phylogeny.model.NewickNode;
+
 import org.apache.commons.io.FilenameUtils;
 import toolbar.ExistingHandler;
 import toolbar.RecentHandler;
@@ -74,6 +79,24 @@ public class MainController implements Initializable {
 		ribbonTabController.setAnnotationGraphPane(annotationsGraphController.getScrollPane());
 		//phyloMenuController.setOuterPane(phyloGridPane);
 		tabPane.getTabs().get(2).setDisable(true);
+		tabPane.getSelectionModel().selectedItemProperty().addListener(
+			    new ChangeListener<Tab>() {
+			        @Override
+			        public void changed(ObservableValue<? extends Tab> ov, Tab t1, Tab t2) {
+			        	if (t2.getText().startsWith("Main") && NewickNode.changed) {
+			        		ArrayList<String> genomeNames = NewickNode.getSelectedGenomes();
+			        		ArrayList<Integer> genomeIds = Launcher.dbm.getDbReader().
+			        				findGenomeId(genomeNames);
+			        		for (int i = 0; i < genomeIds.size(); i++) {
+			        			System.out.println(genomeIds.get(i));
+			        		}
+			        		ribbonTabController.setGenomeIds(genomeIds);
+			        		ribbonTabController.redraw();
+			        		NewickNode.changed = false;
+			        	}
+			        }
+			    }
+			);
 	}
 	
 	/**

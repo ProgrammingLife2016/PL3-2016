@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -61,6 +62,25 @@ public class DatabaseReader {
 		}
 	}
 	
+	public ArrayList<Integer> getGenomesInBubble(int fromId, int toId, int branch1, int branch2) {
+		ArrayList<Integer> genomes = new ArrayList<Integer>();
+		String query = "SELECT GENOMEID FROM (SELECT GENOMEID, COUNT(*) AS C FROM LINKS WHERE "
+				+ "(FROMID = " + fromId + " AND TOID = " + branch1 + ")"
+				+ "OR (FROMID = " + branch1 + " AND TOID = " + toId + ")"
+				+ "OR (FROMID = " + fromId + " AND TOID = " + branch2 + ")"
+				+ "OR (FROMID = " + branch2 + " AND TOID = " + toId + ")"
+				+ "GROUP BY GENOMEID)"
+				+ "WHERE C > 1";
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				genomes.add(rs.getInt(1));
+			}
+			return genomes;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	
 	/**
@@ -68,10 +88,10 @@ public class DatabaseReader {
 	 * @return an ArrayList of the number of genomes for each segment of the database
 	 */
 	
-	public ArrayList<String> getGenomesThroughSegment(int i) {
+	public ArrayList<String> getGenomesThroughSegment(int seg) {
 		ArrayList<Integer> segments = new ArrayList<Integer>();
 		String query = "SELECT GENOMEID "
-				+ "FROM GENOMESEGMENTLINK WHERE SEGMENTID = " + i;
+				+ "FROM GENOMESEGMENTLINK WHERE SEGMENTID = " + seg;
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
 				segments.add(rs.getInt(1));
@@ -127,6 +147,23 @@ public class DatabaseReader {
 		}
 	}
 	
+	public ArrayList<Integer> findGenomeId(ArrayList<String> names) {
+		ArrayList<Integer> genomeIds = new ArrayList<Integer>();
+		String query = "SELECT ID,NAME FROM GENOMES ";
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				String name = rs.getString(2);
+				if (names.contains(name)) {
+					genomeIds.add(rs.getInt(1));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return genomeIds;
+	}
+	
 	/**
 	 * Returns the amount of segments in the database
 	 * @return the amount of segments in the database
@@ -157,10 +194,32 @@ public class DatabaseReader {
 
 		List<int[]> bubbleList = new ArrayList<>();
 
-		String query = "SELECT * FROM BUBBLES";
+		String query = "SELECT DISTINCT FROMID, TOID FROM BUBBLES ORDER BY FROMID";
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
 				bubbleList.add(new int[]{rs.getInt(1),rs.getInt(2)});
+			 }
+			return bubbleList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<int[]> getBubbles(ArrayList<Integer> genomes) {
+
+		List<int[]> bubbleList = new ArrayList<>();
+		
+		String query = "SELECT DISTINCT FROMID, TOID, COUNT(*) FROM BUBBLES WHERE GENOMEID = "
+				+ genomes.get(0);
+		for (int i = 1; i < genomes.size(); i++) {
+			query = query + " OR GENOMEID = " + genomes.get(i);
+		}
+		query = query + " GROUP BY FROMID, TOID ORDER BY FROMID";
+
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				bubbleList.add(new int[]{rs.getInt(1),rs.getInt(2),rs.getInt(3)});
 			 }
 			return bubbleList;
 		} catch (SQLException e) {
@@ -176,7 +235,7 @@ public class DatabaseReader {
 	 * @return All id's of the segments that have one or more outgoing links.
 	 */
 	public ArrayList<Integer> getAllFromId() {
-		String query = "SELECT * FROM LINKS";
+		String query = "SELECT DISTINCT FROMID, TOID FROM LINKS";
 		ArrayList<Integer> fromIdList = new ArrayList<Integer>();
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
@@ -345,17 +404,19 @@ public class DatabaseReader {
 	 */
 	
 	public ArrayList<Integer> getAllCounts() {
-		String query = "SELECT * FROM LINKS";
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS GROUP BY FROMID, TOID";
 		ArrayList<Integer> toIdList = new ArrayList<Integer>();
+		
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
 				toIdList.add(rs.getInt(3));
-			 }
+			}
 			return toIdList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		
+		return toIdList;
 	}
 
 	
@@ -392,20 +453,99 @@ public class DatabaseReader {
 	 */
 	public ArrayList<ArrayList<Integer>> getLinks() {
 
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS GROUP BY FROMID, TOID";
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
-		for (int i = 0; i <= this.countSegments(); i++) {
+		
+		for (int i = 0; i < this.countSegments(); i++) {
 			linkList.add(new ArrayList<Integer>());
 		}
-
-		ArrayList<Integer> fromIDs = this.getAllFromId();
-		ArrayList<Integer> toIDs = this.getAllToId();
-
-		for (int i = 1; i <= fromIDs.size(); i++) {
-			int fromId = fromIDs.get(i - 1);
-			int toId = toIDs.get(i - 1);
-			linkList.get(fromId - 1).add(toId);
+		
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				linkList.get(rs.getInt(1) - 1).add(rs.getInt(2));
+			}
+			return linkList;
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		
 		return linkList;
+	}
+	
+	public ArrayList<ArrayList<Integer>> getLinks(ArrayList<Integer> genomes) {
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
+				+ genomes.get(0);
+		for (int i = 1; i < genomes.size(); i++) {
+			query = query + " OR GENOMEID = " + genomes.get(i);
+		}
+		query = query + " GROUP BY FROMID, TOID";
+		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
+		
+		for (int i = 0; i < this.countSegments(); i++) {
+			linkList.add(new ArrayList<Integer>());
+		}
+		
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				linkList.get(rs.getInt(1) - 1).add(rs.getInt(2));
+			}
+			return linkList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return linkList;
+	}
+	
+	public HashMap<Integer, ArrayList<Integer>> getGenomesPerLink() {
+
+		String query = "SELECT FROMID, TOID, GENOMEID FROM LINKS";
+		HashMap<Integer, ArrayList<Integer>> hash = new HashMap<Integer, ArrayList<Integer>>();
+		
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				int key = 100000 * rs.getInt(1) + rs.getInt(2);
+				ArrayList<Integer> link = hash.get(key);
+				if (link == null) {
+					link = new ArrayList<Integer>();
+				}
+				link.add(rs.getInt(3));
+				hash.put(key, link);
+			}
+			return hash;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return hash;
+	}
+	
+	public HashMap<Integer, ArrayList<Integer>> getGenomesPerLink(ArrayList<Integer> genomes) {
+
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
+				+ genomes.get(0);
+		for (int i = 1; i < genomes.size(); i++) {
+			query = query + " OR GENOMEID = " + genomes.get(i);
+		}
+		query = query + " GROUP BY FROMID, TOID";
+		HashMap<Integer, ArrayList<Integer>> hash = new HashMap<Integer, ArrayList<Integer>>();
+		
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				int key = 100000 * rs.getInt(1) + rs.getInt(2);
+				ArrayList<Integer> link = hash.get(key);
+				if (link == null) {
+					link = new ArrayList<Integer>();
+				}
+				link.add(rs.getInt(3));
+				hash.put(key, link);
+			}
+			return hash;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return hash;
 	}
 	
 	/**
@@ -416,21 +556,45 @@ public class DatabaseReader {
 	 */
 	
 	public ArrayList<ArrayList<Integer>> getLinkWeights() {
-
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS GROUP BY FROMID, TOID";
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
-		for (int i = 0; i <= this.countSegments(); i++) {
+		for (int i = 0; i < this.countSegments(); i++) {
 			linkList.add(new ArrayList<Integer>());
 		}
 		
-		ArrayList<Integer> fromIDs = this.getAllFromId();
-		ArrayList<Integer> weights = this.getAllCounts();
-		
-		
-		for (int i = 1; i <= fromIDs.size(); i++) {
-			int fromId = fromIDs.get(i - 1);
-			int toId = weights.get(i - 1);
-			linkList.get(fromId - 1).add(toId);
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				linkList.get(rs.getInt(1) - 1).add(rs.getInt(3));
+			}
+			return linkList;
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		
+		return linkList;
+	}
+	
+	public ArrayList<ArrayList<Integer>> getLinkWeights(ArrayList<Integer> genomes) {
+		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
+				+ genomes.get(0);
+		for (int i = 1; i < genomes.size(); i++) {
+			query = query + " OR GENOMEID = " + genomes.get(i);
+		}
+		query = query + " GROUP BY FROMID, TOID";
+		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
+		for (int i = 0; i < this.countSegments(); i++) {
+			linkList.add(new ArrayList<Integer>());
+		}
+		
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				linkList.get(rs.getInt(1) - 1).add(rs.getInt(3));
+			}
+			return linkList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return linkList;
 	}
 	
@@ -468,6 +632,25 @@ public class DatabaseReader {
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
 				genomeNames.add(rs.getString("NAME"));
+			}
+			return genomeNames;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return genomeNames;
+		}
+	}
+	
+	public ArrayList<String> getGenomeNames(ArrayList<Integer> genomes) {
+		String query = "SELECT NAME FROM GENOMES WHERE ID = "
+				+ genomes.get(0);
+		for (int i = 1; i < genomes.size(); i++) {
+			query = query + " OR ID = " + genomes.get(i);
+		}
+
+		ArrayList<String> genomeNames = new ArrayList<String>();
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				genomeNames.add(rs.getString(1));
 			}
 			return genomeNames;
 		} catch (SQLException e) {

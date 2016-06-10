@@ -78,10 +78,15 @@ public class CoordinateDetermination {
 			int alreadyDrawn = 0;
 			int leftToDraw = countGenomesInSeg(i);
 			Coordinate coords = coordinates[i - 1];
-			
 			ArrayList<Integer> outgoingedges = links.get(i - 1);
 			
 			for (int j = 0; j < outgoingedges.size(); j++) {
+				
+				if (outgoingedges.get(j) < 5) {
+					System.out.println(i);
+					System.out.println(j);
+					System.out.println(outgoingedges.get(j));
+				}
 				leftToDraw = leftToDraw - countGenomesInLink(i, outgoingedges.get(j));
 				int xc = coords.getX() + 100;
 				int yc = coords.getY() - 50 * leftToDraw + 50 * alreadyDrawn;

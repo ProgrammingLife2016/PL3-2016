@@ -104,30 +104,6 @@ public class SplashController implements Initializable{
         return listenerTask;
     }
 	
-    /**
-     * Performs the animation of fading out and when finished it calls launchMain.
-     */
-	@SuppressWarnings("restriction")
-	private void fadeOutSplash() {
-		Platform.runLater(new Runnable(){
-			@Override
-			public void run() {
-				progressBar.progressProperty().unbind();
-			    progressText.textProperty().unbind();
-				progressBar.setProgress(1);
-				progressString.removeListener(stringListener);
-				progressNum.removeListener(numberListener);
-			    FadeTransition fadeSplash = new FadeTransition(
-			    		Duration.seconds(1.0), verticalBox);
-			    fadeSplash.setFromValue(1.0);
-			    fadeSplash.setToValue(0.3);
-			    fadeSplash.setDelay(Duration.seconds(1.0));
-			    fadeSplash.setOnFinished(actionEvent -> launchMain());
-			    fadeSplash.play();
-			}
-		});
-    }
-	
 	/**
 	 * Loads up Main.fxml on the Java FX Application thread.
 	 * This shows up our main scene of our program.
