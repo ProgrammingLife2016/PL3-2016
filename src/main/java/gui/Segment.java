@@ -1,9 +1,7 @@
 package gui;
 
-import javafx.scene.shape.Line;
-
 import java.util.ArrayList;
-
+import javafx.scene.shape.Line;
 import javafx.scene.paint.Paint;
 
 public class Segment extends Line {
@@ -12,19 +10,19 @@ public class Segment extends Line {
 	private Line line;
 	private ArrayList<String> genomes;
 	
-	public Segment(Line l) {
-		line = l;
+	public Segment(Line line) {
+		this.line = line;
 	}
 	
-	public Segment(Line l, Paint c) {
-		line = l;
-		color = c;
+	public Segment(Line line, Paint color) {
+		this.line = line;
+		this.color = color;
 		line.setStroke(color);
 	}
 	
-	public Segment(double x1, double y1, double x2, double y2, Paint c) {
+	public Segment(double x1, double y1, double x2, double y2, Paint color) {
 		line = new Line(x1,y1,x2,y2);
-		color = c;
+		this.color = color;
 		line.setStroke(color);
 	}
 	
@@ -32,15 +30,15 @@ public class Segment extends Line {
 		return color;
 	}
 	
-	public void setColor(Paint c) {
-		line.setStroke(c);
+	public void setColor(Paint color) {
+		line.setStroke(color);
 	}
 	
 	public ArrayList<String> getGenomes() {
 		return genomes;
 	}
 	
-	public void setGenomes(ArrayList<String> g) {
-		genomes = g;
+	public void setGenomes(ArrayList<String> genomes) {
+		this.genomes = genomes;
 	}
 }

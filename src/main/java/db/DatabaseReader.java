@@ -88,10 +88,10 @@ public class DatabaseReader {
 	 * @return an ArrayList of the number of genomes for each segment of the database
 	 */
 	
-	public ArrayList<String> getGenomesThroughSegment(int i) {
+	public ArrayList<String> getGenomesThroughSegment(int seg) {
 		ArrayList<Integer> segments = new ArrayList<Integer>();
 		String query = "SELECT GENOMEID "
-				+ "FROM GENOMESEGMENTLINK WHERE SEGMENTID = " + i;
+				+ "FROM GENOMESEGMENTLINK WHERE SEGMENTID = " + seg;
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
 				segments.add(rs.getInt(1));
@@ -152,8 +152,8 @@ public class DatabaseReader {
 		String query = "SELECT ID,NAME FROM GENOMES ";
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
-				String k = rs.getString(2);
-				if (names.contains(k)) {
+				String name = rs.getString(2);
+				if (names.contains(name)) {
 					genomeIds.add(rs.getInt(1));
 				}
 			}
@@ -212,7 +212,7 @@ public class DatabaseReader {
 		
 		String query = "SELECT DISTINCT FROMID, TOID, COUNT(*) FROM BUBBLES WHERE GENOMEID = "
 				+ genomes.get(0);
-		for(int i = 1; i < genomes.size(); i++) {
+		for (int i = 1; i < genomes.size(); i++) {
 			query = query + " OR GENOMEID = " + genomes.get(i);
 		}
 		query = query + " GROUP BY FROMID, TOID ORDER BY FROMID";
@@ -456,7 +456,7 @@ public class DatabaseReader {
 		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS GROUP BY FROMID, TOID";
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
 		
-		for(int i = 0; i < this.countSegments(); i++) {
+		for (int i = 0; i < this.countSegments(); i++) {
 			linkList.add(new ArrayList<Integer>());
 		}
 		
@@ -475,13 +475,13 @@ public class DatabaseReader {
 	public ArrayList<ArrayList<Integer>> getLinks(ArrayList<Integer> genomes) {
 		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
 				+ genomes.get(0);
-		for(int i = 1; i < genomes.size(); i++) {
+		for (int i = 1; i < genomes.size(); i++) {
 			query = query + " OR GENOMEID = " + genomes.get(i);
 		}
 		query = query + " GROUP BY FROMID, TOID";
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
 		
-		for(int i = 0; i < this.countSegments(); i++) {
+		for (int i = 0; i < this.countSegments(); i++) {
 			linkList.add(new ArrayList<Integer>());
 		}
 		
@@ -506,7 +506,7 @@ public class DatabaseReader {
 			while (rs.next()) {
 				int key = 100000 * rs.getInt(1) + rs.getInt(2);
 				ArrayList<Integer> link = hash.get(key);
-				if(link == null) {
+				if (link == null) {
 					link = new ArrayList<Integer>();
 				}
 				link.add(rs.getInt(3));
@@ -524,7 +524,7 @@ public class DatabaseReader {
 
 		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
 				+ genomes.get(0);
-		for(int i = 1; i < genomes.size(); i++) {
+		for (int i = 1; i < genomes.size(); i++) {
 			query = query + " OR GENOMEID = " + genomes.get(i);
 		}
 		query = query + " GROUP BY FROMID, TOID";
@@ -534,7 +534,7 @@ public class DatabaseReader {
 			while (rs.next()) {
 				int key = 100000 * rs.getInt(1) + rs.getInt(2);
 				ArrayList<Integer> link = hash.get(key);
-				if(link == null) {
+				if (link == null) {
 					link = new ArrayList<Integer>();
 				}
 				link.add(rs.getInt(3));
@@ -558,7 +558,7 @@ public class DatabaseReader {
 	public ArrayList<ArrayList<Integer>> getLinkWeights() {
 		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS GROUP BY FROMID, TOID";
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
-		for(int i = 0; i < this.countSegments(); i++) {
+		for (int i = 0; i < this.countSegments(); i++) {
 			linkList.add(new ArrayList<Integer>());
 		}
 		
@@ -577,12 +577,12 @@ public class DatabaseReader {
 	public ArrayList<ArrayList<Integer>> getLinkWeights(ArrayList<Integer> genomes) {
 		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
 				+ genomes.get(0);
-		for(int i = 1; i < genomes.size(); i++) {
+		for (int i = 1; i < genomes.size(); i++) {
 			query = query + " OR GENOMEID = " + genomes.get(i);
 		}
 		query = query + " GROUP BY FROMID, TOID";
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
-		for(int i = 0; i < this.countSegments(); i++) {
+		for (int i = 0; i < this.countSegments(); i++) {
 			linkList.add(new ArrayList<Integer>());
 		}
 		
@@ -643,7 +643,7 @@ public class DatabaseReader {
 	public ArrayList<String> getGenomeNames(ArrayList<Integer> genomes) {
 		String query = "SELECT NAME FROM GENOMES WHERE ID = "
 				+ genomes.get(0);
-		for(int i = 1; i < genomes.size(); i++) {
+		for (int i = 1; i < genomes.size(); i++) {
 			query = query + " OR ID = " + genomes.get(i);
 		}
 

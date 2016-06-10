@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import gui.phylogeny.EventHandlers.NewickNodeMouseEventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
+
+import gui.phylogeny.EventHandlers.NewickNodeMouseEventHandler;
+
 
 /**
  * Class that is used to visualize a single node of a {@link NewickTree}
@@ -207,7 +207,7 @@ public class NewickNode extends Group {
 		ArrayList<String> names = new ArrayList<String>();
 		changed = true;
 		Iterator<NewickNode> iterator = selectedSet.iterator();
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			String name = iterator.next().getLabel().getText();
 			names.add(name);
 		}

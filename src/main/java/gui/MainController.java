@@ -14,12 +14,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 
 import db.DatabaseManager;
 import gui.phylogeny.model.NewickNode;
@@ -83,11 +82,12 @@ public class MainController implements Initializable {
 		tabPane.getSelectionModel().selectedItemProperty().addListener(
 			    new ChangeListener<Tab>() {
 			        @Override
-			        public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
-			        	if(t1.getText().startsWith("Main") && (NewickNode.changed)) {
+			        public void changed(ObservableValue<? extends Tab> ov, Tab t1, Tab t2) {
+			        	if (t2.getText().startsWith("Main") && NewickNode.changed) {
 			        		ArrayList<String> genomeNames = NewickNode.getSelectedGenomes();
-			        		ArrayList<Integer> genomeIds = Launcher.dbm.getDbReader().findGenomeId(genomeNames);
-			        		for(int i = 0; i < genomeIds.size(); i++) {
+			        		ArrayList<Integer> genomeIds = Launcher.dbm.getDbReader().
+			        				findGenomeId(genomeNames);
+			        		for (int i = 0; i < genomeIds.size(); i++) {
 			        			System.out.println(genomeIds.get(i));
 			        		}
 			        		ribbonTabController.setGenomeIds(genomeIds);

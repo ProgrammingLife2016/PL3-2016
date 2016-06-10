@@ -3,8 +3,6 @@ package gui.phylogeny.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import gui.Launcher;
-
 /**
  * 
  * Class to represent a Newick Tree

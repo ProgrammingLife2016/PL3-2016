@@ -2,7 +2,6 @@ package gui;
 
 import javafx.scene.paint.Paint;
 
-import java.awt.Color;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,21 +13,19 @@ import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Line;
+
 import parsers.XlsxParser;
 import db.DatabaseManager;
 import gui.phylogeny.NewickColourMatching;
-import gui.phylogeny.model.NewickNode;
 
 /**
  * Controller class for the Ribbon screen/tab.
@@ -94,8 +91,8 @@ public class RibbonController implements Initializable {
 					Group temp = new Group(collapsedGroup);
 					innerGroup.getChildren().addAll(temp.getChildren());
 					scrollPane.setHvalue(oldBarValue);
-				} else if ((prevScale < COLLAPSE && scale >= COLLAPSE) 
-						||(prevScale > GRAPH && scale <= GRAPH)) {
+				} else if (prevScale < COLLAPSE && scale >= COLLAPSE 
+						|| prevScale > GRAPH && scale <= GRAPH) {
 					System.out.println("switch to collapsed");
 					innerGroup.getChildren().clear();
 					Group temp = new Group(normalGroup);
@@ -112,11 +109,12 @@ public class RibbonController implements Initializable {
 				System.out.println(prevScale + "->" + scale);
 				double barValue = scrollPane.getHvalue();
 				innerGroup.setScaleX(scale);
+				scrollPane.setHvalue(barValue);
 				otherGroup.setScaleX(scale);
+				otherPane.setHvalue(barValue);
+				
 				annotationRibbonGroup.setScaleX(scale);
 				annotationGraphGroup.setScaleX(scale);
-				scrollPane.setHvalue(barValue);
-				otherPane.setHvalue(barValue);
 				annotationRibbonPane.setHvalue(barValue);
 				annotationGraphPane.setHvalue(barValue);
 				prevScale = scale;
@@ -168,12 +166,13 @@ public class RibbonController implements Initializable {
 			double barValue = scrollPane.getHvalue();
 			innerGroup.setScaleX(scale);
 			otherGroup.setScaleX(scale);
+			scrollPane.setHvalue(barValue);
+			otherPane.setHvalue(barValue);
 			annotationRibbonGroup.setScaleX(scale);
 			annotationRibbonPane.setPrefWidth(scrollPane.getPrefWidth());
 			annotationGraphGroup.setScaleX(scale);
 			annotationRibbonPane.setPrefWidth(scrollPane.getPrefWidth());
-			scrollPane.setHvalue(barValue);
-			otherPane.setHvalue(barValue);
+
 		}
 	};
     
@@ -261,36 +260,29 @@ public class RibbonController implements Initializable {
 	}
 	
 	private ArrayList<ArrayList<Paint>> calculateColours(ArrayList<ArrayList<Integer>> linkIds, ArrayList<Integer> genomes) {
-		ArrayList<ArrayList<Paint>> colours = new ArrayList<ArrayList<Paint>>();
-		for(int i = 0; i < dbm.getDbReader().countSegments(); i++) {
+		ArrayList<ArrayList<Paint>> colours = 
+				new ArrayList<ArrayList<Paint>>();
+		for (int i = 0; i < dbm.getDbReader().countSegments(); i++) {
 			colours.add(new ArrayList<Paint>());
 		}
 		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames(genomes);
 		System.out.println("Size: " + genomeNames.size());
 		
 		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink(genomes);
-		for(int i = 0; i < linkIds.size(); i++) {
-			for(int j = 0; j < linkIds.get(i).size(); j++) {
-				ArrayList<Integer> genomeIds = hash.get(100000 * (i + 1) + linkIds.get(i).get(j));
+		for (int i = 0; i < linkIds.size(); i++) {
+			for (int j = 0; j < linkIds.get(i).size(); j++) {
+				ArrayList<Integer> genomeIds = hash.get(100000 * (i + 1) + 
+						linkIds.get(i).get(j));
 				int id = genomeIds.get(0);
 				Paint colour = Paint.valueOf("0x000000ff");
 				String genome = genomeNames.get(id - 1);
-				if(!genome.startsWith("M")) {
-					colour = NewickColourMatching.getLineageColour(lineages.get(genome));
-					for(int k = 1; k < genomeIds.size(); k++) {
-						id = genomeIds.get(k);
-						genome = genomeNames.get(id - 1);
-						Paint nextColour = NewickColourMatching.getLineageColour(lineages.get(genome));
-						if(true) {
-							colour = Paint.valueOf("0x000000ff");
-						}
-					}
+				if (!genome.startsWith("M")) {
+					colour = NewickColourMatching
+							.getLineageColour(lineages.get(genome));
 				} 
-				
 				colours.get(i).add(colour);
 			}
 		}
-		
 		return colours;
 	}
 	
@@ -311,7 +303,6 @@ public class RibbonController implements Initializable {
 		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles(genomeIds));
 		
 		int countIdx = 0; // current index in the counts list.
-		int countIdy = 0;
 		
 		List<Integer> ignore = new LinkedList<>();
 		
@@ -324,7 +315,7 @@ public class RibbonController implements Initializable {
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
 				double width = bubble[2];
 				line.setStrokeWidth(2 * width);
-				line.setStroke(colours.get(fromId-1).get(0));
+				line.setStroke(colours.get(fromId - 1).get(0));
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
 			} else {
@@ -337,10 +328,12 @@ public class RibbonController implements Initializable {
 						break;
 					}
 					for (int j = 0; j < links.get(fromId - 1).size(); j++) {
-						Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
-								xcoords.get(toId - 1), ycoords.get(toId - 1));
+						Line line = new Line(xcoords.get(fromId - 1), 
+								ycoords.get(fromId - 1), 
+								xcoords.get(toId - 1), 
+								ycoords.get(toId - 1));
 						line.setStrokeWidth(2 * counts.get(fromId - 1).get(j));
-						line.setStroke(colours.get(fromId-1).get(j));
+						line.setStroke(colours.get(fromId - 1).get(j));
 						res.getChildren().add(line);
 					}
 				}
@@ -398,7 +391,7 @@ public class RibbonController implements Initializable {
 	
 	public ArrayList<Integer> createList() {
 		ArrayList<Integer> list = new ArrayList<Integer>();
-		for(int i = 0; i < 10; i++) {
+		for (int i = 0; i < 10; i++) {
 			list.add(i);
 		}
 		return list;

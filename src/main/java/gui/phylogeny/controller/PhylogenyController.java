@@ -11,6 +11,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
+
 import gui.Launcher;
 import gui.phylogeny.model.NewickAlgorithm;
 import gui.phylogeny.model.NewickNode;

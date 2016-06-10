@@ -82,7 +82,7 @@ public class CoordinateDetermination {
 			
 			for (int j = 0; j < outgoingedges.size(); j++) {
 				
-				if(outgoingedges.get(j) < 5) {
+				if (outgoingedges.get(j) < 5) {
 					System.out.println(i);
 					System.out.println(j);
 					System.out.println(outgoingedges.get(j));

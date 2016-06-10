@@ -19,7 +19,6 @@ import gui.SplashController;
 public class DatabaseProcessor {
 	private Statement db;
 	private DatabaseReader dbr;
-	private int noOfSegments;
 	
 	public DatabaseProcessor(Statement db, DatabaseReader dbr) {
 		this.db = db;
@@ -35,7 +34,7 @@ public class DatabaseProcessor {
 		SplashController.progressString.set("Saving segment coordinates");
 		for (int i = 1; i <= coordinates.length; i++) {
 			System.out.println(i);
-			System.out.println(coordinates[i-1]);
+			System.out.println(coordinates[i - 1]);
 			if ( (i % coordinates.length) / 10 == 0) {
 				SplashController.progressString
 					.set((i * 100 / coordinates.length) + "% Stored");
@@ -86,11 +85,13 @@ public class DatabaseProcessor {
 				if (secondChildEdge == firstChildEdge) {
 					try {
 						System.out.println("h");
-						ArrayList<Integer> genomeIds = dbr.getGenomesInBubble(segmentId, firstChildEdge, firstChildId, secondChildId);
+						ArrayList<Integer> genomeIds = dbr.getGenomesInBubble(segmentId, 
+								firstChildEdge, firstChildId, secondChildId);
 						System.out.println("i");
-						for(int i = 0; i < genomeIds.size(); i++) {
+						for (int i = 0; i < genomeIds.size(); i++) {
 							System.out.println("i: " + i);
-							this.db.executeUpdate(new BubbleTuple(segmentId, firstChildEdge, genomeIds.get(i))
+							this.db.executeUpdate(new BubbleTuple(segmentId, 
+									firstChildEdge, genomeIds.get(i))
 									.getInsertQuery());
 						}
 					} catch (SQLException e) {
@@ -126,10 +127,9 @@ public class DatabaseProcessor {
 	 */
 	
 	public void calculateLinkCounts() {
-		HashMap<Integer, Integer> hashmap = new HashMap<Integer, Integer>();
 		ArrayList<Integer> from = dbr.getAllFromId();
 		ArrayList<Integer> to = dbr.getAllToId();
-		noOfSegments = to.get(to.size() - 1);
+		int noOfSegments = to.get(to.size() - 1);
 		
 		ArrayList<ArrayList<Integer>> allLinks = new ArrayList<ArrayList<Integer>>();
 		

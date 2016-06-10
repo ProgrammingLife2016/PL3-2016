@@ -1,10 +1,9 @@
 package gui.phylogeny.EventHandlers;
 
-import gui.phylogeny.model.NewickNode;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Paint;
+
+import gui.phylogeny.model.NewickNode;
 
 /**
  * EventHandler for MouseEvents associated with the NewickNode.

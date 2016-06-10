@@ -9,13 +9,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import db.DatabaseManager;
 import gui.phylogeny.model.NewickTree;
 import parsers.GfaException;
 import parsers.GfaParser;
 import parsers.GffParser;
 import parsers.NewickTreeParser;
 import toolbar.RecentHandler;
+
+import db.DatabaseManager;
 
 /**
  * This launcher starts up our program.
