@@ -9,7 +9,7 @@ import javafx.scene.paint.Paint;
  * A map cointaining all colours for lineages
  */
 public class NewickColour {
-	public static final Map<String, Paint> colourMap;
+	static final Map<String, Paint> colourMap;
 	
     static {
         colourMap = new HashMap<String, Paint>();

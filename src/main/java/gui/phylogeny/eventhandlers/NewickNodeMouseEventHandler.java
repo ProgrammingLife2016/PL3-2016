@@ -14,13 +14,13 @@ public class NewickNodeMouseEventHandler implements EventHandler<MouseEvent> {
 	/**
 	 * NewickNode upon which this handler will take effect.
 	 */
-	private NewickNode newicknode;
+	private NewickNode newickNode;
 	
 	/**
 	 * The MouseEventHandler for a designated NewickNode.
 	 */
 	public NewickNodeMouseEventHandler(NewickNode node) {
-		newicknode = node;
+		newickNode = node;
 	}
 
 	/**
@@ -29,14 +29,14 @@ public class NewickNodeMouseEventHandler implements EventHandler<MouseEvent> {
 	@Override
 	public void handle(MouseEvent event) {
 		toggleActive();
-		NewickNode.changed = true;
+		newickNode.setChanged(true);
 	}
 	
 	/**
 	 * Makes a node appear active or non-active.
 	 */
 	public void toggleActive() {
-		newicknode.toggleSelected();
+		newickNode.toggleSelected();
 		toggleColour();
 	}
 	
@@ -44,10 +44,10 @@ public class NewickNodeMouseEventHandler implements EventHandler<MouseEvent> {
 	 * Adjusts the colour to an active or non-active state.
 	 */
 	private void toggleColour() {
-		if (newicknode.isSelected()) {
-			newicknode.setColoured();
+		if (newickNode.isSelected()) {
+			newickNode.setColoured();
 		} else {
-			newicknode.unsetColoured();
+			newickNode.unsetColoured();
 		}
 	}
 }

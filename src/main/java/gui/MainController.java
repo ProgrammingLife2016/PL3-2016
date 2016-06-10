@@ -21,7 +21,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 import db.DatabaseManager;
-import gui.phylogeny.model.NewickNode;
+import gui.phylogeny.controller.PhylogenyController;
 
 import org.apache.commons.io.FilenameUtils;
 import toolbar.ExistingHandler;
@@ -47,6 +47,7 @@ public class MainController implements Initializable {
 	@FXML private GraphController graphTabController;
 	@FXML private RibbonController ribbonTabController;
 	@FXML private AnnotationController annotationsController;
+	@FXML private PhylogenyController phyloTabController;
 	//@FXML private PhyloMenuController phyloMenuController;
 	//@FXML private GridPane phyloGridPane;
 	
@@ -82,8 +83,10 @@ public class MainController implements Initializable {
 			    new ChangeListener<Tab>() {
 			        @Override
 			        public void changed(ObservableValue<? extends Tab> ov, Tab t1, Tab t2) {
-			        	if (t2.getText().startsWith("Main") && NewickNode.changed) {
-			        		ArrayList<String> genomeNames = NewickNode.getSelectedGenomes();
+			        	if (t2.getText().startsWith("Main") && phyloTabController.getNewickNode()
+			        			.getChanged()) {
+			        		ArrayList<String> genomeNames = phyloTabController.getNewickNode()
+			        				.getSelectedGenomes();
 			        		ArrayList<Integer> genomeIds = Launcher.dbm.getDbReader()
 			        				.findGenomeId(genomeNames);
 			        		for (int i = 0; i < genomeIds.size(); i++) {
@@ -91,7 +94,7 @@ public class MainController implements Initializable {
 			        		}
 			        		ribbonTabController.setGenomeIds(genomeIds);
 			        		ribbonTabController.redraw();
-			        		NewickNode.changed = false;
+			        		phyloTabController.getNewickNode().setChanged(false);
 			        	}
 			        }
 			    }

@@ -37,7 +37,7 @@ public class NewickNode extends Group {
 	
 	private boolean isLeaf = false;
 	private boolean isSelected = true;
-	public static boolean changed = false;
+	private boolean changed = false;
 	
 	/**
 	 * Set of currently selected NewickNodes.
@@ -80,6 +80,14 @@ public class NewickNode extends Group {
 	
 	public String getName() {
 		return this.nodeName;
+	}
+	
+	public boolean getChanged() {
+		return changed;
+	}
+	
+	public void setChanged(boolean changed) {
+		this.changed = changed;
 	}
 	
 	/**
@@ -203,7 +211,7 @@ public class NewickNode extends Group {
 		return selectedSet;
 	}
 	
-	public static ArrayList<String> getSelectedGenomes() {
+	public ArrayList<String> getSelectedGenomes() {
 		ArrayList<String> names = new ArrayList<String>();
 		changed = true;
 		Iterator<NewickNode> iterator = selectedSet.iterator();
