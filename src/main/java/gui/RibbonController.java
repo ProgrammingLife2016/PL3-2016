@@ -28,6 +28,7 @@ import javafx.scene.shape.Line;
 import parsers.XlsxParser;
 import db.DatabaseManager;
 import gui.phylogeny.NewickColourMatching;
+import gui.phylogeny.model.NewickNode;
 
 /**
  * Controller class for the Ribbon screen/tab.
@@ -368,6 +369,14 @@ public class RibbonController implements Initializable {
 			}
 		}
 		return color;
+	}
+	
+	public void redraw() {
+		collapsedGroup = createCollapsedRibbons();
+		normalGroup = createNormalRibbons();
+		double maxY = dbm.getDbReader().getMaxYCoord();
+		innerGroup.setScaleY(720.0 / maxY);
+		innerGroup.setScaleX(MIN_SCALE);
 	}
 	
 	public ScrollPane getScrollPane() {

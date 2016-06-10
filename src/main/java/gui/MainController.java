@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,9 +17,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
 import db.DatabaseManager;
+import gui.phylogeny.model.NewickNode;
+
 import org.apache.commons.io.FilenameUtils;
 import toolbar.ExistingHandler;
 import toolbar.RecentHandler;
@@ -74,6 +79,18 @@ public class MainController implements Initializable {
 		ribbonTabController.setAnnotationGraphPane(annotationsGraphController.getScrollPane());
 		//phyloMenuController.setOuterPane(phyloGridPane);
 		tabPane.getTabs().get(2).setDisable(true);
+		tabPane.getSelectionModel().selectedItemProperty().addListener(
+			    new ChangeListener<Tab>() {
+			        @Override
+			        public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
+			        	if(t1.getText().startsWith("Main") && (NewickNode.changed)) {
+			        		ribbonTabController.redraw();
+			        		System.out.println("Changed");
+			        		NewickNode.changed = false;
+			        	}
+			        }
+			    }
+			);
 	}
 	
 	/**

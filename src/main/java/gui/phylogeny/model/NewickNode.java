@@ -1,7 +1,9 @@
 package gui.phylogeny.model;
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import gui.phylogeny.EventHandlers.NewickNodeMouseEventHandler;
@@ -35,6 +37,7 @@ public class NewickNode extends Group {
 	
 	private boolean isLeaf = false;
 	private boolean isSelected = true;
+	public static boolean changed = false;
 	
 	/**
 	 * Set of currently selected NewickNodes.
@@ -198,5 +201,16 @@ public class NewickNode extends Group {
 	
 	public static Set<NewickNode> getSelected() {
 		return selectedSet;
+	}
+	
+	public static ArrayList<String> getSelectedNames() {
+		ArrayList<String> names = new ArrayList<String>();
+		changed = true;
+		Iterator<NewickNode> iterator = selectedSet.iterator();
+		while(iterator.hasNext()) {
+			String name = iterator.next().getLabel().getText();
+			names.add(name);
+		}
+		return names;
 	}
 }
