@@ -1,10 +1,12 @@
 package gui.phylogeny;
 
 import javafx.scene.Group;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.VLineTo;
+
 
 /**
  * Class to represent a Path between two NewickNodes.
@@ -12,6 +14,8 @@ import javafx.scene.shape.VLineTo;
 public class NewickEdge extends Group {
 	
 	public boolean vertical;
+	private Line line = new Line();
+	private Line line2 = new Line();
 	
 	/**
 	 * Create a Path from the current position to the position of the
@@ -21,38 +25,34 @@ public class NewickEdge extends Group {
 	 * @param dst Destination node.
 	 */
 	public NewickEdge(NewickNode src, NewickNode dst) {
-		Line line = new Line();
-		
 		line.startXProperty().bind(src.layoutXProperty());
 		line.startYProperty().bind(src.layoutYProperty());
 		line.endYProperty().bind(dst.translateYProperty());
 		line.setStrokeWidth(1);
 		
-		Line line2 = new Line();
 		line2.startXProperty().bind(src.layoutXProperty());
 		line2.startYProperty().bind(dst.translateYProperty());
 		line2.endXProperty().bind(dst.translateXProperty());
 		line2.endYProperty().bind(dst.translateYProperty());
 		
 		this.getChildren().add(line);
-		this.getChildren().add(line2);
-		
-//		MoveTo moveTo = new MoveTo();
-//		
-//		moveTo.xProperty().bind(dst.getRectangle().translateXProperty().add(5));
-//		moveTo.yProperty().bind(dst.getRectangle().translateYProperty().add(5));
-//		this.getElements().add(moveTo);
-//
-//		// Add a horizontal line from the current position to the x-coordinate
-//		// of the destination.
-//		HLineTo horizontal = new HLineTo();
-//		horizontal.setX(horizontal.getX() + 5);
-//		this.getElements().add(horizontal);
-//
-//		// Add a vertical line from the current position to the y-coordinate of
-//		// the destination.
-//		VLineTo vertical = new VLineTo();
-//		vertical.setY(vertical.getY() + 5);
-//		this.getElements().add(vertical);
+		this.getChildren().add(line2);	
+	}
+	
+	/**
+	 * Sets edges to be coloured according to their lineage
+	 * @param lineagecolour
+	 */
+	public void setColoured(Paint lineagecolour) {
+		line.setStroke(lineagecolour);
+		line2.setStroke(lineagecolour);
+	}
+	
+	/**
+	 * Unset colour of this node (makes node appear gray).
+	 */
+	public void unSetColoured() {
+		line.setStroke(NewickColourMatching.getDeactivatedColour());
+		line2.setStroke(NewickColourMatching.getDeactivatedColour());
 	}
 }
