@@ -11,10 +11,10 @@ DNALab is a tool that can dynamically visualize DNA sequences and their mutation
 At the end of the development, DNALab will at least meet the following requirements:
 - [x] The application must enable the user to interactively explore a sequence graph representing genome architecture of multiple strains.
 - [x] The application must provide semantic zooming to enable useful visual interpretation at various zoom levels from whole-genome to individual mutations.
-- [ ] The application must be able to put the graph in the context of the evolutionary relationship between bacteria (phylogeny).
+- [x] The application must be able to put the graph in the context of the evolutionary relationship between bacteria (phylogeny).
 - [ ] The application must have visual encodings for different classes of mutations and the ability to filter on mutation class.
 - [ ] The application must be able to identify mutations and determine the type of variant (insertion/deletion/SNP) uniformly across the samples.
-- [ ] The application must put bubbles (mutations) in the graph in the context of well-known reference genomes with their gene annotations and integrate with other reference databases.
+- [x] The application must put bubbles (mutations) in the graph in the context of well-known reference genomes with their gene annotations and integrate with other reference databases.
 
 ## About our group
 

@@ -1,8 +1,10 @@
 package gui;
 
 import java.util.ArrayList;
-import javafx.scene.shape.Line;
+
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Line;
+
 
 public class Segment extends Line {
 	

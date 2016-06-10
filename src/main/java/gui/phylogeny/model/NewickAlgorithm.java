@@ -29,7 +29,7 @@ public class NewickAlgorithm {
 	 * Updates the ArrayList with the names of the genomes from the database.
 	 */
 	public void updateGenomeNames() {
-		genomeNames = Launcher.dbm.getDbReader().getGenomeNames();
+		genomeNames = Launcher.getDatabaseManager().getDbReader().getGenomeNames();
 	}
 	
 	/**

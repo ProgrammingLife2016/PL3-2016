@@ -209,15 +209,15 @@ public class DatabaseReader {
 	public List<int[]> getBubbles(ArrayList<Integer> genomes) {
 
 		List<int[]> bubbleList = new ArrayList<>();
-		
-		String query = "SELECT DISTINCT FROMID, TOID, COUNT(*) FROM BUBBLES WHERE GENOMEID = "
-				+ genomes.get(0);
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT DISTINCT FROMID, TOID, COUNT(*) FROM BUBBLES WHERE GENOMEID = "
+				+ genomes.get(0));
 		for (int i = 1; i < genomes.size(); i++) {
-			query = query + " OR GENOMEID = " + genomes.get(i);
+			sb.append(" OR GENOMEID = " + genomes.get(i));
 		}
-		query = query + " GROUP BY FROMID, TOID ORDER BY FROMID";
+		sb.append(" GROUP BY FROMID, TOID ORDER BY FROMID");
 
-		try (ResultSet rs = this.db.executeQuery(query)) {
+		try (ResultSet rs = this.db.executeQuery(sb.toString())) {
 			while (rs.next()) {
 				bubbleList.add(new int[]{rs.getInt(1),rs.getInt(2),rs.getInt(3)});
 			 }
@@ -473,19 +473,20 @@ public class DatabaseReader {
 	}
 	
 	public ArrayList<ArrayList<Integer>> getLinks(ArrayList<Integer> genomes) {
-		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
-				+ genomes.get(0);
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
+				+ genomes.get(0));
 		for (int i = 1; i < genomes.size(); i++) {
-			query = query + " OR GENOMEID = " + genomes.get(i);
+			sb.append(" OR GENOMEID = " + genomes.get(i));
 		}
-		query = query + " GROUP BY FROMID, TOID";
+		sb.append(" GROUP BY FROMID, TOID");
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
 		
 		for (int i = 0; i < this.countSegments(); i++) {
 			linkList.add(new ArrayList<Integer>());
 		}
 		
-		try (ResultSet rs = this.db.executeQuery(query)) {
+		try (ResultSet rs = this.db.executeQuery(sb.toString())) {
 			while (rs.next()) {
 				linkList.get(rs.getInt(1) - 1).add(rs.getInt(2));
 			}
@@ -521,16 +522,16 @@ public class DatabaseReader {
 	}
 	
 	public HashMap<Integer, ArrayList<Integer>> getGenomesPerLink(ArrayList<Integer> genomes) {
-
-		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
-				+ genomes.get(0);
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
+				+ genomes.get(0));
 		for (int i = 1; i < genomes.size(); i++) {
-			query = query + " OR GENOMEID = " + genomes.get(i);
+			sb.append(" OR GENOMEID = " + genomes.get(i));
 		}
-		query = query + " GROUP BY FROMID, TOID";
+		sb.append(" GROUP BY FROMID, TOID");
 		HashMap<Integer, ArrayList<Integer>> hash = new HashMap<Integer, ArrayList<Integer>>();
 		
-		try (ResultSet rs = this.db.executeQuery(query)) {
+		try (ResultSet rs = this.db.executeQuery(sb.toString())) {
 			while (rs.next()) {
 				int key = 100000 * rs.getInt(1) + rs.getInt(2);
 				ArrayList<Integer> link = hash.get(key);
@@ -575,18 +576,19 @@ public class DatabaseReader {
 	}
 	
 	public ArrayList<ArrayList<Integer>> getLinkWeights(ArrayList<Integer> genomes) {
-		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
-				+ genomes.get(0);
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
+				+ genomes.get(0));
 		for (int i = 1; i < genomes.size(); i++) {
-			query = query + " OR GENOMEID = " + genomes.get(i);
+			sb.append(" OR GENOMEID = " + genomes.get(i));
 		}
-		query = query + " GROUP BY FROMID, TOID";
+		sb.append(" GROUP BY FROMID, TOID");
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
 		for (int i = 0; i < this.countSegments(); i++) {
 			linkList.add(new ArrayList<Integer>());
 		}
 		
-		try (ResultSet rs = this.db.executeQuery(query)) {
+		try (ResultSet rs = this.db.executeQuery(sb.toString())) {
 			while (rs.next()) {
 				linkList.get(rs.getInt(1) - 1).add(rs.getInt(3));
 			}
@@ -641,14 +643,15 @@ public class DatabaseReader {
 	}
 	
 	public ArrayList<String> getGenomeNames(ArrayList<Integer> genomes) {
-		String query = "SELECT NAME FROM GENOMES WHERE ID = "
-				+ genomes.get(0);
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT NAME FROM GENOMES WHERE ID = "
+				+ genomes.get(0));
 		for (int i = 1; i < genomes.size(); i++) {
-			query = query + " OR ID = " + genomes.get(i);
+			sb.append(" OR ID = " + genomes.get(i));
 		}
 
 		ArrayList<String> genomeNames = new ArrayList<String>();
-		try (ResultSet rs = this.db.executeQuery(query)) {
+		try (ResultSet rs = this.db.executeQuery(sb.toString())) {
 			while (rs.next()) {
 				genomeNames.add(rs.getString(1));
 			}
