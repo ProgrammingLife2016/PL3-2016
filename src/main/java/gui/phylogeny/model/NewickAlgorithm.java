@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import gui.Launcher;
+import javafx.scene.shape.Rectangle;
 import parsers.XlsxParser;
 
 public class NewickAlgorithm {
@@ -55,6 +56,18 @@ public class NewickAlgorithm {
 		return getDrawableTreeInner(tree);
 	}
 	
+	private void activateNodeVisualisation(NewickNode root) {
+		for (Object child : root.getChildren()) {
+			if (child instanceof Rectangle) {
+				root.getChildren().remove((Rectangle) child);
+				root.getChildren().add(root.getRectangle());
+			}
+			if (child instanceof NewickNode) {
+				activateNodeVisualisation(((NewickNode) child));
+			}
+		}
+	}
+	
 	/**
 	 * Returns a (drawable) {@link NewickNode} that represents the given
 	 * {@link NewickTree}.
@@ -87,13 +100,17 @@ public class NewickAlgorithm {
 				childNode.hideRectangle();
 			}
 			
-			NewickEdge edge = new NewickEdge(childNode);
-			
-			
+			NewickEdge edge = new NewickEdge(root, childNode);
 			root.getChildren().add(edge);
+			childNode.getRectangle().toFront();
 			root.getChildren().add(childNode);
 			
-			childNode.setTranslateX(scale * child.getDistance());
+			double translate = scale * child.getDistance();
+			if (translate < 20) {
+				childNode.setTranslateX(20);
+			} else {
+				childNode.setTranslateX(translate);
+			}
 			childNode.setTranslateY(currentY);
 			
 			currentY += SPACING + childNode.boundsInLocalProperty().get().getHeight();

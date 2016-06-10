@@ -1,5 +1,6 @@
 package gui.phylogeny.model;
 
+import gui.phylogeny.NewickColourMatching;
 import javafx.scene.Group;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
@@ -24,7 +25,6 @@ public class NewickEdge extends Group {
 	 * 
 	 * @param dst Destination node.
 	 */
-<<<<<<< HEAD:src/main/java/gui/phylogeny/NewickEdge.java
 	public NewickEdge(NewickNode src, NewickNode dst) {
 		line.startXProperty().bind(src.layoutXProperty());
 		line.startYProperty().bind(src.layoutYProperty());
@@ -55,27 +55,5 @@ public class NewickEdge extends Group {
 	public void unSetColoured() {
 		line.setStroke(NewickColourMatching.getDeactivatedColour());
 		line2.setStroke(NewickColourMatching.getDeactivatedColour());
-=======
-	
-	public NewickEdge(NewickNode dst) {
-		
-
-		MoveTo moveTo = new MoveTo();
-		moveTo.xProperty().bind(dst.translateXProperty());
-		moveTo.yProperty().bind(dst.translateYProperty());
-
-		this.getElements().add(moveTo);
-		
-		// Add a horizontal line from the current position to the x-coordinate
-		// of the destination.
-		HLineTo horizontal = new HLineTo();
-		this.getElements().add(horizontal);
-		
-		// Add a vertical line from the current position to the y-coordinate of
-		// the destination.
-		VLineTo vertical = new VLineTo();
-		this.getElements().add(vertical);
-		
->>>>>>> refs/remotes/origin/master:src/main/java/gui/phylogeny/model/NewickEdge.java
 	}
 }

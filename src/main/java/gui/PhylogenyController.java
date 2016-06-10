@@ -18,9 +18,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 
 import gui.phylogeny.NewickColourMatching;
-import gui.phylogeny.NewickEdge;
-import gui.phylogeny.NewickNode;
-import newick.NewickTree;
+import gui.phylogeny.model.NewickAlgorithm;
+import gui.phylogeny.model.NewickEdge;
+import gui.phylogeny.model.NewickNode;
+import gui.phylogeny.model.NewickTree;
 import parsers.XlsxParser;
 
 /**
@@ -139,17 +140,17 @@ public class PhylogenyController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		parseLineages();
-		rootnode = getDrawableTree(Launcher.nwkTree);
-		rootnode.setParentLineages();
-		rootnode.hideNodes();
-		rootnode.setTranslateX(100);
-		rootnode.setTranslateY(100);
-	
+		NewickAlgorithm newickAlg = new NewickAlgorithm();
+		newickAlg.parseLineages();
+		NewickNode node = newickAlg.getDrawableTree(Launcher.nwkTree);
+		node.setColoured();
+		
+		node.setTranslateX(100);
+		node.setTranslateY(100);
+		
 		root = new Group();
-		root.getChildren().add(rootnode);	
+		root.getChildren().add(node);	
 		scrollPaneSetup();
-		//activateNodeVisualisation(rootnode);
 	}
 	
 	/**
@@ -262,82 +263,6 @@ public class PhylogenyController implements Initializable {
 			}
 		}
 		return count;
-	}
-	
-	/**
-	 * Returns a (drawable) {@link NewickNode} that represents the given
-	 * @param tree
-	 * @return
-	 */
-	public NewickNode getDrawableTree(NewickTree tree) {
-		updateGenomeNames();
-		while (!isPruned(tree)) {
-			pruneNewickTree(tree);
-		}
-		adjustScale(tree);
-		return getDrawableTreeInner(tree);
-	}
-	
-	/**
-	 * Returns a (drawable) {@link NewickNode} that represents the given
-	 * {@link NewickTree}.
-	 * 
-	 * @param tree
-	 *            The {@link NewickTree} to visualize
-	 * @return A drawable {@link NewickNode} that represents the given tree.
-	 */
-	public NewickNode getDrawableTreeInner(NewickTree tree) {
-		
-		if (tree == null) {
-			return new NewickNode();
-		}
-		
-		int currentY = 0;
-		
-		NewickNode root = new NewickNode();
-		
-		for (NewickTree child : tree.getChildren()) {
-			updateGenomeNames();
-			NewickNode childNode = null;
-			if (child.isLeaf()) {
-				String lineage = lineages.get(child.getName());
-				childNode = new NewickNode(child.getName(), lineage);
-				childNode.setIsLeaf(true);	
-			} else {
-				childNode = getDrawableTree(child);
-			}
-			if (child.getChildren().size() == 1) {
-				childNode.hideRectangle();
-			}
-			
-			NewickEdge edge = new NewickEdge(root, childNode);
-			root.getChildren().add(edge);
-			childNode.getRectangle().toFront();
-			root.getChildren().add(childNode);
-			
-			double translate = scale * child.getDistance();
-			if (translate < 20) {
-				childNode.setTranslateX(20);
-			} else {
-				childNode.setTranslateX(translate);
-			}
-			childNode.setTranslateY(currentY);
-			
-			currentY += SPACING + childNode.boundsInLocalProperty().get().getHeight();
-		}
-		return root;
-	}
-	
-	private void activateNodeVisualisation(NewickNode root) {
-		for (Object child : root.getChildren()) {
-			if (child instanceof Rectangle) {
-				root.getChildren().remove((Rectangle) child);
-				root.getChildren().add(root.getRectangle());
-			}
-			if (child instanceof NewickNode) {
-				activateNodeVisualisation(((NewickNode) child));
-			}
-		}
 	}
 	
 	public static NewickNode getRootNode() {

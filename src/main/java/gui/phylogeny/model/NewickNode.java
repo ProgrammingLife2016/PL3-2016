@@ -9,7 +9,6 @@ import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
-
 import gui.phylogeny.EventHandlers.NewickNodeMouseEventHandler;
 
 
@@ -73,6 +72,22 @@ public class NewickNode extends Group {
 	public NewickNode(String name, String lineage) {
 		this();
 		this.lineage = lineage;
+		this.nodeName = name;
+		this.setColoured();
+		this.addLabel(name);
+	}
+	
+	/**
+	 * Leafnode constructor that adds a label with the given name to a leaf node and colours it
+	 * accordingly.
+	 * 
+	 * @param name
+	 *            Text that the Label should display.
+	 * @param lineage
+	 * 			  Lineage of the specimen.
+	 */
+	public NewickNode(String name) {
+		this();
 		this.nodeName = name;
 		this.setColoured();
 		this.addLabel(name);
@@ -197,6 +212,49 @@ public class NewickNode extends Group {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Stores the lineages for the children for the parent to use.
+	 * @return
+	 */
+	public String setParentLineages() {
+		if (!this.isLeaf()) {
+			ArrayList<String> lineagelist = new ArrayList<String>();
+			for (Object child : this.getChildren()) {
+				if (child instanceof NewickNode) {
+					if (((NewickNode) child).isLeaf()) {
+						lineagelist.add(((NewickNode) child).getLineage());
+					} else { //if child not a leaf
+						lineagelist.add(((NewickNode) child).setParentLineages()); 
+					}
+				}
+			} //looped through all children, stored their lineages in list
+			if (isSameLineage(lineagelist)) {
+				this.setLineage(lineagelist.get(0));
+			} else {
+				this.setLineage("");
+			}
+		} else { //if rootnode is a leaf
+			return this.getLineage();
+		}
+		this.setColoured();
+		return this.getLineage();
+	}
+	
+	/**
+	 * Check if lineages in list are the same.
+	 * 
+	 * @param lineagelist
+	 * @return boolean
+	 */
+	public boolean isSameLineage(ArrayList<String> lineagelist) {
+		for (int i = 1; i < lineagelist.size(); i++) {
+			if (!lineagelist.get(0).equals(lineagelist.get(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public static Set<NewickNode> getSelected() {
