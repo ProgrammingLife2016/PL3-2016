@@ -50,6 +50,7 @@ public class RibbonController implements Initializable {
 
 
 	private HashMap<String, String> lineages = updateLineages();
+	private ArrayList<Integer> genomeIds = createList();
 	private Group collapsedGroup = createCollapsedRibbons();
 	private Group normalGroup = createNormalRibbons();
 	
@@ -209,6 +210,7 @@ public class RibbonController implements Initializable {
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(MIN_SCALE);
+		
 	}
 	
 	private HashMap<String, String> updateLineages() {
@@ -238,17 +240,13 @@ public class RibbonController implements Initializable {
 	public Group createNormalRibbons() {
 		System.out.println("Creating normal ribbons");
 		Group res = new Group();
-		ArrayList<Integer> genomestodraw = new ArrayList<Integer>();
-		genomestodraw.add(1);
-		genomestodraw.add(2);
-		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomestodraw);
-		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomestodraw);
-		ArrayList<ArrayList<Paint>> colours = calculateColours(links, genomestodraw);
+		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomeIds);
+		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomeIds);
+		ArrayList<ArrayList<Paint>> colours = calculateColours(links, genomeIds);
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
 		
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
-			System.out.println(fromId);
 			for (int j = 0; j < links.get(fromId - 1).size(); j++) {
 				int toId = links.get(fromId - 1).get(j);
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
@@ -267,7 +265,7 @@ public class RibbonController implements Initializable {
 		for(int i = 0; i < dbm.getDbReader().countSegments(); i++) {
 			colours.add(new ArrayList<Paint>());
 		}
-		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames();
+		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames(genomes);
 		System.out.println("Size: " + genomeNames.size());
 		
 		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink(genomes);
@@ -276,9 +274,17 @@ public class RibbonController implements Initializable {
 				ArrayList<Integer> genomeIds = hash.get(100000 * (i + 1) + linkIds.get(i).get(j));
 				int id = genomeIds.get(0);
 				Paint colour = Paint.valueOf("0x000000ff");
-				if(id != 5) {
-					String genome = genomeNames.get(id - 1);
+				String genome = genomeNames.get(id - 1);
+				if(!genome.startsWith("M")) {
 					colour = NewickColourMatching.getLineageColour(lineages.get(genome));
+					for(int k = 1; k < genomeIds.size(); k++) {
+						id = genomeIds.get(k);
+						genome = genomeNames.get(id - 1);
+						Paint nextColour = NewickColourMatching.getLineageColour(lineages.get(genome));
+						if(true) {
+							colour = Paint.valueOf("0x000000ff");
+						}
+					}
 				} 
 				
 				colours.get(i).add(colour);
@@ -297,15 +303,12 @@ public class RibbonController implements Initializable {
 	public Group createCollapsedRibbons() {
 		System.out.println("Creating collapsed ribbons");
 		Group res = new Group();
-		ArrayList<Integer> genomestodraw = new ArrayList<Integer>();
-		genomestodraw.add(1);
-		genomestodraw.add(2);
-		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomestodraw);
-		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomestodraw);
-		ArrayList<ArrayList<Paint>> colours = calculateColours(links, genomestodraw);
+		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomeIds);
+		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomeIds);
+		ArrayList<ArrayList<Paint>> colours = calculateColours(links, genomeIds);
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
-		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles(genomestodraw));
+		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles(genomeIds));
 		
 		int countIdx = 0; // current index in the counts list.
 		int countIdy = 0;
@@ -348,32 +351,10 @@ public class RibbonController implements Initializable {
 		return res;
 	}
 	
-	public Paint getLineColor(int from) {
-		Paint color = Paint.valueOf("0xff0000ff");
-		ArrayList<String> genomes1 = dbm.getDbReader().getGenomesThroughSegment(from);
-		for(String genome : genomes1) {
-			if(lineages.containsKey(genome)) {
-				return NewickColourMatching.getLineageColour(lineages.get(genome));
-			}
-		}
-		return color;
-	}
-	
-	public Paint getLineColor(int from, int to) {
-		Paint color = Paint.valueOf("0xff0000ff");
-		ArrayList<String> genomes1 = dbm.getDbReader().getGenomesThroughSegment(from);
-		ArrayList<String> genomes2 = dbm.getDbReader().getGenomesThroughSegment(to);
-		for(String genome : genomes2) {
-			if(lineages.containsKey(genome) && genomes1.contains(genome) && !genome.equals("MT_H37RV_BRD_V5.ref")) {
-				return NewickColourMatching.getLineageColour(lineages.get(genome));
-			}
-		}
-		return color;
-	}
-	
 	public void redraw() {
 		collapsedGroup = createCollapsedRibbons();
 		normalGroup = createNormalRibbons();
+		updateView();
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(MIN_SCALE);
@@ -409,5 +390,17 @@ public class RibbonController implements Initializable {
 	
 	public void setAnnotationGraphPane(ScrollPane scrollpane) {
 		annotationGraphPane = scrollpane;
+	}
+	
+	public void setGenomeIds(ArrayList<Integer> ids) {
+		genomeIds = ids;
+	}
+	
+	public ArrayList<Integer> createList() {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for(int i = 0; i < 10; i++) {
+			list.add(i);
+		}
+		return list;
 	}
 }

@@ -147,6 +147,23 @@ public class DatabaseReader {
 		}
 	}
 	
+	public ArrayList<Integer> findGenomeId(ArrayList<String> names) {
+		ArrayList<Integer> genomeIds = new ArrayList<Integer>();
+		String query = "SELECT ID,NAME FROM GENOMES ";
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				String k = rs.getString(2);
+				if (names.contains(k)) {
+					genomeIds.add(rs.getInt(1));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return genomeIds;
+	}
+	
 	/**
 	 * Returns the amount of segments in the database
 	 * @return the amount of segments in the database
@@ -193,7 +210,7 @@ public class DatabaseReader {
 
 		List<int[]> bubbleList = new ArrayList<>();
 		
-		String query = "SELECT FROMID, TOID, COUNT(*) FROM BUBBLES WHERE GENOMEID = "
+		String query = "SELECT DISTINCT FROMID, TOID, COUNT(*) FROM BUBBLES WHERE GENOMEID = "
 				+ genomes.get(0);
 		for(int i = 1; i < genomes.size(); i++) {
 			query = query + " OR GENOMEID = " + genomes.get(i);
@@ -615,6 +632,25 @@ public class DatabaseReader {
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
 				genomeNames.add(rs.getString("NAME"));
+			}
+			return genomeNames;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return genomeNames;
+		}
+	}
+	
+	public ArrayList<String> getGenomeNames(ArrayList<Integer> genomes) {
+		String query = "SELECT NAME FROM GENOMES WHERE ID = "
+				+ genomes.get(0);
+		for(int i = 1; i < genomes.size(); i++) {
+			query = query + " OR ID = " + genomes.get(i);
+		}
+
+		ArrayList<String> genomeNames = new ArrayList<String>();
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				genomeNames.add(rs.getString(1));
 			}
 			return genomeNames;
 		} catch (SQLException e) {

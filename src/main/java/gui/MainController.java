@@ -2,6 +2,7 @@ package gui;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
@@ -84,8 +85,13 @@ public class MainController implements Initializable {
 			        @Override
 			        public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
 			        	if(t1.getText().startsWith("Main") && (NewickNode.changed)) {
+			        		ArrayList<String> genomeNames = NewickNode.getSelectedGenomes();
+			        		ArrayList<Integer> genomeIds = Launcher.dbm.getDbReader().findGenomeId(genomeNames);
+			        		for(int i = 0; i < genomeIds.size(); i++) {
+			        			System.out.println(genomeIds.get(i));
+			        		}
+			        		ribbonTabController.setGenomeIds(genomeIds);
 			        		ribbonTabController.redraw();
-			        		System.out.println("Changed");
 			        		NewickNode.changed = false;
 			        	}
 			        }

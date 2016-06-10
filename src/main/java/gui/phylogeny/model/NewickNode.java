@@ -203,7 +203,7 @@ public class NewickNode extends Group {
 		return selectedSet;
 	}
 	
-	public static ArrayList<String> getSelectedNames() {
+	public static ArrayList<String> getSelectedGenomes() {
 		ArrayList<String> names = new ArrayList<String>();
 		changed = true;
 		Iterator<NewickNode> iterator = selectedSet.iterator();
