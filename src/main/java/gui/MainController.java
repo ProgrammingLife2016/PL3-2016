@@ -84,8 +84,8 @@ public class MainController implements Initializable {
 			        public void changed(ObservableValue<? extends Tab> ov, Tab t1, Tab t2) {
 			        	if (t2.getText().startsWith("Main") && NewickNode.changed) {
 			        		ArrayList<String> genomeNames = NewickNode.getSelectedGenomes();
-			        		ArrayList<Integer> genomeIds = Launcher.dbm.getDbReader().
-			        				findGenomeId(genomeNames);
+			        		ArrayList<Integer> genomeIds = Launcher.dbm.getDbReader()
+			        				.findGenomeId(genomeNames);
 			        		for (int i = 0; i < genomeIds.size(); i++) {
 			        			System.out.println(genomeIds.get(i));
 			        		}

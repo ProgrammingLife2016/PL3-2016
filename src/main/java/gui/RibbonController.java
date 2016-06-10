@@ -1,7 +1,5 @@
 package gui;
 
-import javafx.scene.paint.Paint;
-
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,6 +20,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 import parsers.XlsxParser;

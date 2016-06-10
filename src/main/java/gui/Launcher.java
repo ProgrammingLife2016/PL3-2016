@@ -9,6 +9,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import db.DatabaseManager;
 import gui.phylogeny.model.NewickTree;
 import parsers.GfaException;
 import parsers.GfaParser;
@@ -16,16 +18,14 @@ import parsers.GffParser;
 import parsers.NewickTreeParser;
 import toolbar.RecentHandler;
 
-import db.DatabaseManager;
-
 /**
  * This launcher starts up our program.
  * @author Björn Ho
  */
 public class Launcher extends Application {
-	public static DatabaseManager dbm;
+	static DatabaseManager dbm;
 	static Stage stage;
-	public static NewickTree nwkTree = null;
+	private static NewickTree nwkTree = null;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -109,6 +109,14 @@ public class Launcher extends Application {
 	private static void setStage(Stage stage, String title) {
 		Launcher.stage = stage;
 		Launcher.stage.setTitle(title);
+	}
+	
+	public static NewickTree getNewickTree() {
+		return nwkTree;
+	}
+	
+	public static DatabaseManager getDatabaseManager() {
+		return dbm;
 	}
 
 	/**

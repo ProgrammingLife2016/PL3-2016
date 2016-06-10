@@ -1,4 +1,4 @@
-package gui.phylogeny.EventHandlers;
+package gui.phylogeny.eventhandlers;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -29,7 +29,7 @@ public class NewickNodeMouseEventHandler implements EventHandler<MouseEvent> {
 	@Override
 	public void handle(MouseEvent event) {
 		toggleActive();
-		newicknode.changed = true;
+		NewickNode.changed = true;
 	}
 	
 	/**

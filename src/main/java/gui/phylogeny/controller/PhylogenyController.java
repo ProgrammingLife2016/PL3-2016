@@ -24,6 +24,7 @@ public class PhylogenyController implements Initializable {
 	@FXML GridPane pane;
 	@FXML ScrollPane scrollPane;
 	private Group root;
+	private NewickNode node;
 	
 	/**
 	 * The upper boundary for zooming.
@@ -116,7 +117,7 @@ public class PhylogenyController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		NewickAlgorithm newickAlg = new NewickAlgorithm();
 		newickAlg.parseLineages();
-		NewickNode node = newickAlg.getDrawableTree(Launcher.nwkTree);
+		node = newickAlg.getDrawableTree(Launcher.getNewickTree());
 		node.setColoured();
 		
 		node.setTranslateX(100);
@@ -125,6 +126,10 @@ public class PhylogenyController implements Initializable {
 		root = new Group();
 		root.getChildren().add(node);	
 		scrollPaneSetup();
+	}
+	
+	public NewickNode getNewickNode() {
+		return node;
 	}
 	
 	/**

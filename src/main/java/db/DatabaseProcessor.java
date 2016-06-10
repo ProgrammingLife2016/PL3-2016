@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import coordinates.Coordinate;
 import coordinates.CoordinateDetermination;
@@ -128,8 +127,6 @@ public class DatabaseProcessor {
 	
 	public void calculateLinkCounts() {
 		ArrayList<Integer> from = dbr.getAllFromId();
-		ArrayList<Integer> to = dbr.getAllToId();
-		int noOfSegments = to.get(to.size() - 1);
 		
 		ArrayList<ArrayList<Integer>> allLinks = new ArrayList<ArrayList<Integer>>();
 		
