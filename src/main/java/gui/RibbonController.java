@@ -259,6 +259,39 @@ public class RibbonController implements Initializable {
 		return res;
 	}
 	
+	public Paint getLineColor(int ff, int tt) {
+		Paint color = Paint.valueOf("0xff0000ff");
+		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(ff);
+		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(tt);
+		int size = 0;
+		if (from.size() > to.size()) {
+			for (int i = 0; i < to.size(); i++) {
+				String genome = to.get(i);
+				if (lineages.containsKey(genome) && from.contains(genome) 
+						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
+					return NewickColourMatching.getLineageColour(lineages.get(genome));
+				}
+			}
+		} else if (from.size() < to.size()) {
+			for (int i = 0; i < from.size(); i++) {
+				String genome = from.get(i);
+				if (lineages.containsKey(genome) && to.contains(genome) 
+						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
+					return NewickColourMatching.getLineageColour(lineages.get(genome));
+				}
+			}
+		} else {
+			for (int i = 0; i < from.size(); i++) {
+				String genome = from.get(i);
+				if (lineages.containsKey(genome) && to.contains(genome) 
+						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
+					return NewickColourMatching.getLineageColour(lineages.get(genome));
+				}
+			}
+		}
+		return color;
+	}
+	
 	private ArrayList<ArrayList<Paint>> calculateColours(ArrayList<ArrayList<Integer>> linkIds, 
 			ArrayList<Integer> genomes) {
 		ArrayList<ArrayList<Paint>> colours = 
@@ -275,7 +308,7 @@ public class RibbonController implements Initializable {
 				ArrayList<Integer> genomeIds = hash.get(100000 * (i + 1) 
 						+ linkIds.get(i).get(j));
 				int id = genomeIds.get(0);
-				Paint colour = Paint.valueOf("0x000000ff");
+				Paint colour = Paint.valueOf("0xff0000ff");
 				String genome = genomeNames.get(id - 1);
 				if (!genome.startsWith("M")) {
 					colour = NewickColourMatching
@@ -314,7 +347,7 @@ public class RibbonController implements Initializable {
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
 				double width = bubble[2];
 				line.setStrokeWidth(2 * width);
-				line.setStroke(colours.get(fromId - 1).get(0));
+				line.setStroke(getLineColor(fromId, bubble[1]));
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
 			} else {
