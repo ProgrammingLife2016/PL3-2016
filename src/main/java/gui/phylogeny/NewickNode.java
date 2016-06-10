@@ -194,6 +194,9 @@ public class NewickNode extends Group {
 			label.setTextFill(this.getColour());
 		} else {
 			for (Object child : this.getChildren()) {
+				if (child instanceof NewickEdge) {
+					((NewickEdge)child).setColoured(this.getColour());
+				}
 				if (child instanceof NewickNode) {
 					((NewickNode) child).setColoured();
 				}
@@ -211,6 +214,9 @@ public class NewickNode extends Group {
 			label.setTextFill(NewickColourMatching.getDeactivatedColour());
 		} else {
 			for (Object child : this.getChildren()) {
+				if (child instanceof NewickEdge) {
+					((NewickEdge)child).unSetColoured();
+				}
 				if (child instanceof NewickNode) {
 					((NewickNode) child).unsetColoured();
 				}
@@ -277,19 +283,4 @@ public class NewickNode extends Group {
 			this.hideRectangle();
 		}
 	}
-	
-	/**
-	 * Colors the edges of this node and all its children.
-	 */
-	public void colorEdges() {
-		for (Object child : this.getChildren()) {
-			if (child instanceof NewickNode) {
-				((NewickNode) child).colorEdges();
-			}
-			if (child instanceof NewickEdge) {
-				((NewickEdge) child).setStyle("#449955");
-			}
-		}
-	}
-	
 }
