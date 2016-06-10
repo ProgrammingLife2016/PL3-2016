@@ -347,7 +347,7 @@ public class RibbonController implements Initializable {
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
 				double width = bubble[2];
 				line.setStrokeWidth(2 * width);
-				line.setStroke(getLineColor(fromId, bubble[1]));
+				line.setStroke(colours.get(fromId - 1).get(0));
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
 			} else {
@@ -365,7 +365,7 @@ public class RibbonController implements Initializable {
 								xcoords.get(toId - 1), 
 								ycoords.get(toId - 1));
 						line.setStrokeWidth(2 * counts.get(fromId - 1).get(j));
-						line.setStroke(colours.get(fromId - 1).get(j));
+						line.setStroke(getLineColor(fromId, toId));
 						res.getChildren().add(line);
 					}
 				}
