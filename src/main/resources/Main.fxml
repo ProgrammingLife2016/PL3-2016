@@ -38,7 +38,7 @@
       </MenuBar>
 <TabPane fx:id="tabPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
   <tabs>
-    <Tab text="Ribbon view">
+    <Tab text="Main View">
                <content>
                   <GridPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" scaleShape="false">
                     <columnConstraints>
@@ -50,12 +50,27 @@
                     </rowConstraints>
                     <children>
                     	<fx:include fx:id="ribbonTab" source="RibbonLevel.fxml"/>
-                    	<fx:include fx:id="annotations" source="AnnotationLevel.fxml" GridPane.rowIndex="1" />
+                    	<fx:include fx:id="annotationsGraph" source="AnnotationLevel.fxml" GridPane.rowIndex="1" />
                     </children>
                   </GridPane>
                </content>
     </Tab>
-    <Tab text="Graph view">
+    <Tab text="Phylogenetic Tree">
+		    	<content>
+				  <GridPane alignment="CENTER" fx:id="phyloGridPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" scaleShape="false" >
+			        <columnConstraints>
+			          <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="1080.0" />
+			        </columnConstraints>
+			        <rowConstraints>
+			          <RowConstraints minHeight="100.0" prefHeight="900.0" vgrow="ALWAYS" />
+			        </rowConstraints>
+			        <children>
+			        	<fx:include fx:id="phyloTab" source="PhylogenyView.fxml" />
+			        </children>
+			      </GridPane>
+		      </content>
+    </Tab>
+    <Tab text="">
                <content>
                   <GridPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" scaleShape="false">
                     <columnConstraints>
@@ -67,15 +82,10 @@
                     </rowConstraints>
                     <children>
                     	<fx:include fx:id="graphTab" source="GraphLevel.fxml"/>
-                    	<fx:include fx:id="annotations" source="AnnotationLevel.fxml" GridPane.rowIndex="1" />
+                    	<fx:include fx:id="annotationsRibbon" source="AnnotationLevel.fxml" GridPane.rowIndex="1" />
                     </children>
                   </GridPane>
                </content>
-    </Tab>
-    <Tab text="Phylogenetic Tree">
-      <content>
-        <fx:include fx:id="phyloTab" source="PhylogenyView.fxml" />
-      </content>
     </Tab>
   </tabs>
 </TabPane>

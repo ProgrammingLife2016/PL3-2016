@@ -9,7 +9,7 @@ public class BubbleTable extends Table {
 	
 	public BubbleTable() {
 		this.name = "BUBBLES";
-		this.names = new String[]{"FROMID","TOID"};
-		this.types = new String[]{"INT","INT"};
+		this.names = new String[]{"FROMID","TOID","GENOMEID"};
+		this.types = new String[]{"INT","INT","INT"};
 	}
 }

@@ -139,7 +139,7 @@ public class ReadParseTest {
 	 */
 	@Test public void getAllToIdTest() {
 		ArrayList<Integer> toallids = dbm.getDbReader().getAllToId();
-		int[] expectedids = {2, 3, 4, 5, 6, 8, 7, 7, 8, 9, 9};
+		int[] expectedids = {2, 4, 4, 5, 6, 8, 7, 7, 8, 9, 9};
 		for (int i = 0; i < 2; i++) {
 			assertEquals(expectedids[i], (int)toallids.get(i));
 		}
@@ -176,7 +176,7 @@ public class ReadParseTest {
 	@Test
 	public void getToIDsTest() {
 		ArrayList<Integer> toids = dbm.getDbReader().getToIDs(1);
-		int[] expectedids = {2, 3};
+		int[] expectedids = {2, 2};
 		for (int i = 0; i < 2; i++) {
 			assertEquals(expectedids[i], (int)toids.get(i));
 		}
@@ -211,5 +211,6 @@ public class ReadParseTest {
 	@AfterClass
 	public static void after() throws GfaException {
 		dbm.closeDbConnection();
+		dbm.cleanDbDirectory();
 	}
 }

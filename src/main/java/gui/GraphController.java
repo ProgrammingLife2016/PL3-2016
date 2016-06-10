@@ -1,9 +1,13 @@
 package gui;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+
+
+import javafx.scene.paint.Paint;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,8 +20,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Line;
-
+import parsers.XlsxParser;
 import db.DatabaseManager;
+import gui.phylogeny.NewickColourMatching;
 
 /**
  * @author hugokooijman
@@ -33,12 +38,15 @@ public class GraphController implements Initializable {
 	@FXML private ScrollPane scrollPane;
 	private ScrollPane otherPane;
 	
+//	@FXML private CheckBox checkboxSnp;
+//	@FXML private CheckBox checkboxInsert;
+	
 	private Group innerGroup;
 	private Group outerGroup;
 	private Group otherGroup;
 	
-    private static final double MAX_SCALE = 3.0d;
-    private static final double MIN_SCALE = .0035d;
+	private static final double MAX_SCALE = 1.0d;
+    private static final double MIN_SCALE = .003d;
     
 	private DatabaseManager dbm;
 	
@@ -55,7 +63,17 @@ public class GraphController implements Initializable {
 	private ArrayList<Integer> graphxcoords;
 	private ArrayList<Integer> graphycoords;
 	private ArrayList<String> segmentdna;
+    
+	/**
+	 * Location of metadata.xlsx
+	 */
+	private static String xlsxpath = System.getProperty("user.dir") + File.separator + "Data"
+			+ File.separator + "TB10" + File.separator + "metadata" + ".xlsx";
 	
+	/**
+	 * HashMap containing the lineages of the specimens.
+	 */
+	private HashMap<String, String> lineages = updateLineages();
 	
 	/**
 	 * Handles the scroll wheel event handler for zooming in and zooming out.
@@ -133,10 +151,27 @@ public class GraphController implements Initializable {
 				return;
 			}
 			innerGroup.setScaleY(scale);
-			innerGroup.setScaleX(scale);
+			innerGroup.setScaleX(MIN_SCALE);
+		}
+		
+		private HashMap<String, String> updateLineages() {
+			XlsxParser xlsxparser = new XlsxParser();
+			xlsxparser.parse(xlsxpath);
+			return xlsxparser.getLineages();
 		}
 	};
 
+
+	
+	/**
+	 * Parse lineages of the specimens.
+	 */
+	public HashMap<String, String> updateLineages() {
+		XlsxParser xlsxparser = new XlsxParser();
+		xlsxparser.parse(xlsxpath);
+		return xlsxparser.getLineages();
+	}
+	
 	/**
 	 * Initialize fxml file.
 	 */
@@ -230,9 +265,13 @@ public class GraphController implements Initializable {
 	 * are located, how they are related and what their DNA strand is.
 	 */
 	public Group getGraph() {
+		System.out.println("Starting graph calculations");
 		Group res = new Group();
+		System.out.println("Calculating graph edges");
 		res.getChildren().add(getGraphEdges());
+		System.out.println("Calculating graph segments");
 		res.getChildren().add(getGraphSegments());
+		System.out.println("Finished calculating graph");
 		return res;
 	}
 	
@@ -241,6 +280,8 @@ public class GraphController implements Initializable {
 	 */
 	private Group getGraphEdges() {
 		Group res = new Group();
+		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
+		int countIdx = 0;
 		for (int i = 0; i < from.size(); i++) {
 			int fromId = from.get(i);
 			int toId = to.get(i);
@@ -253,9 +294,12 @@ public class GraphController implements Initializable {
 			
 			Line line = new Line(fromX, fromsegment.getLayoutY() + fromsegment.getRadius(),
 					toX, tosegment.getLayoutY() + tosegment.getRadius());
-	        line.setStrokeWidth(1);
+
+			line.setStrokeWidth(1 + counts.get(countIdx++));
+			//line.setStroke(getLineColor(fromId, toId));
 	        res.getChildren().add(line);
 		}
+		System.out.println("Finished creating graph edges");
 		return res;
 	}
 	
@@ -284,6 +328,36 @@ public class GraphController implements Initializable {
 			xcoords.add(i, newc);
 		}
 		return xcoords;
+	}
+	
+	public Paint getLineColor(int f, int t) {
+		Paint color = Paint.valueOf("0xff0000ff");
+		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(f);
+		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(t);
+		int size = 0;
+		if(from.size() > to.size()) {
+			for(int i = 0; i < to.size(); i++) {
+				String genome = to.get(i);
+				if(lineages.containsKey(genome) && from.contains(genome) && !genome.equals("MT_H37RV_BRD_V5.ref")) {
+					return NewickColourMatching.getLineageColour(lineages.get(genome));
+				}
+			}
+		} else if(from.size() < to.size()) {
+			for(int i = 0; i < from.size(); i++) {
+				String genome = from.get(i);
+				if(lineages.containsKey(genome) && to.contains(genome) && !genome.equals("MT_H37RV_BRD_V5.ref")) {
+					return NewickColourMatching.getLineageColour(lineages.get(genome));
+				}
+			}
+		} else {
+			for(int i = 0; i < from.size(); i++) {
+				String genome = from.get(i);
+				if(lineages.containsKey(genome) && to.contains(genome) && !genome.equals("MT_H37RV_BRD_V5.ref")) {
+					return NewickColourMatching.getLineageColour(lineages.get(genome));
+				}
+			}
+		}
+		return color;
 	}
 	
 	/**
