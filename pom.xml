@@ -127,6 +127,9 @@
 							<exclude>**/gui/*</exclude>
 							<exclude>**/custommain/*</exclude>
 							<exclude>**/gui/phylogeny/*</exclude>
+							<exclude>**/gui/phylogeny/controller/*</exclude>
+							<exclude>**/gui/phylogeny/model/*</exclude>
+							<exclude>**/gui/phylogeny/EventHandlers/*</exclude>
 						</excludes>
 					</instrumentation>
 
