@@ -53,7 +53,7 @@ public class RibbonController implements Initializable {
 	private HashMap<String, String> lineages = updateLineages();
 	private ArrayList<Integer> genomeIds = createList();
 	private Group collapsedGroup = createCollapsedRibbons();
-	private Group normalGroup = createNormalRibbons();
+	private Group normalGroup = highLightSnips();
 	
     private static final double MAX_SCALE = 1.0d;
     private static final double MIN_SCALE = .003d;
@@ -246,7 +246,95 @@ public class RibbonController implements Initializable {
 		scrollPane.setContent(outerGroup);
 	}
 	
-
+	/**
+	 * Given a from and toId from a bubble. It determines if the bubble is a snip or not.
+	 * This means that between the fromId and toId there is a single nucleotide that is different
+	 * compared to another genome. It is not a snip if one of the toIds from the fromId is equal to 
+	 * the toId. This means that there is a deletion. It is not a snip if the length of one of the 
+	 * toIds is greater than 1, this means that the difference is not only a single nucleotide. It 
+	 * is also not a snip if one segment from the toIds does not contain the toId. This means that 
+	 * there is something in between that segment and the toId.
+	 * 
+	 * @param fromId	the starting segment of the bubble
+	 * @param toId		the ending segment of the bubble
+	 * @return			returns true if it is a snip else false
+	 */
+	public boolean isSnip(int fromId, int toId) {
+		ArrayList<Integer> toIds = dbm.getDbReader().getToIDs(fromId);
+		for (int current : toIds) {
+			if (dbm.getDbReader().getContent(current).equals(dbm.getDbReader().getContent(toId))) {
+				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
+				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
+				System.out.println("in/del detected");
+				return false;
+			}
+			if (dbm.getDbReader().getContent(current).length() > 1) {
+				System.out.println("current content: " + dbm.getDbReader().getContent(current) + " is longer than 1");
+				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
+				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
+				System.out.println("from: " + fromId + " to: " + toId +" is not a snip");
+				return false;
+			}
+			if (!dbm.getDbReader().getToIDs(current).contains(toId)) {
+				System.out.println("does not contain destination");
+				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
+				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
+				System.out.println("from: " + fromId + " to: " + toId +" is not a snip");
+				return false;
+			}
+		}
+		
+		System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
+		System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
+		System.out.println("from: " + fromId + " to: " + toId +" is a snip");
+		return true;
+	}
+	
+	public Group highLightSnips() {
+		System.out.println("highLighting snips");
+		Group res = new Group();
+		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomeIds);
+		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomeIds);
+		ArrayList<ArrayList<Paint>> colours = calculateColours(links, genomeIds);
+		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
+		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
+		List<int[]> bubblesList = dbm.getDbReader().getBubbles();
+		
+		
+		for (int fromId = 1; fromId <= links.size(); fromId++) {
+			for (int j = 0; j < links.get(fromId - 1).size(); j++) {
+				int toId = links.get(fromId - 1).get(j);
+				
+				
+				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
+						xcoords.get(toId - 1), ycoords.get(toId - 1));
+				line.setStrokeWidth(counts.get(fromId - 1).get(j));
+				
+				if (toId != links.size() && !links.get(toId).isEmpty()) {
+					int toId2 = links.get(toId).get(0);
+					
+					if (isSnip(fromId, toId2)) {
+						line.setStroke(NewickColourMatching.getDeactivatedColour());
+					}
+					
+					else
+						line.setStroke(colours.get(fromId - 1).get(j));
+				}
+				
+				else
+					line.setStroke(colours.get(fromId - 1).get(j));
+				
+		        res.getChildren().add(line);
+			}
+		}
+		
+		
+		System.out.println("Finished snips");
+		return res;
+		
+	}
+	
+	
 	/**
 	 * Creates all paths that make up the ribbons and returns a {@link Group}
 	 * containing those paths.
