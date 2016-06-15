@@ -12,7 +12,6 @@ import javafx.scene.shape.Rectangle;
 
 import gui.phylogeny.eventhandlers.NewickNodeMouseEventHandler;
 
-
 /**
  * Class that is used to visualize a single node of a {@link NewickTree}
  */
@@ -37,7 +36,7 @@ public class NewickNode extends Group {
 	
 	private boolean isLeaf = false;
 	private boolean isSelected = true;
-	private boolean changed = false;
+	private static boolean changed = false;
 	
 	/**
 	 * Set of currently selected NewickNodes.
@@ -78,6 +77,22 @@ public class NewickNode extends Group {
 		this.addLabel(name);
 	}
 	
+	/**
+	 * Leafnode constructor that adds a label with the given name to a leaf node and colours it
+	 * accordingly.
+	 * 
+	 * @param name
+	 *            Text that the Label should display.
+	 * @param lineage
+	 * 			  Lineage of the specimen.
+	 */
+	public NewickNode(String name) {
+		this();
+		this.nodeName = name;
+		this.setColoured();
+		this.addLabel(name);
+	}
+	
 	public String getName() {
 		return this.nodeName;
 	}
@@ -86,8 +101,8 @@ public class NewickNode extends Group {
 		return changed;
 	}
 	
-	public void setChanged(boolean changed) {
-		this.changed = changed;
+	public static void setChanged(boolean change) {
+		changed = change;
 	}
 	
 	/**
@@ -176,6 +191,10 @@ public class NewickNode extends Group {
 			selectedSet.add((NewickNode) this);
 		} else {
 			for (Object child : this.getChildren()) {
+				if (child instanceof NewickEdge) {
+					((NewickEdge)child)
+						.setColoured(NewickColour.colourMap.get(this.lineage));
+				}
 				if (child instanceof NewickNode) {
 					if (((NewickNode) child).getName() != null) {
 						selectedSet.add(((NewickNode) child));
@@ -197,6 +216,9 @@ public class NewickNode extends Group {
 			selectedSet.remove(((NewickNode) this));
 		} else {
 			for (Object child : this.getChildren()) {
+				if (child instanceof NewickEdge) {
+					((NewickEdge)child).unSetColoured();
+				}
 				if (child instanceof NewickNode) {
 					if (((NewickNode) child).getName() != null) {
 						selectedSet.remove(((NewickNode) child));
@@ -207,13 +229,55 @@ public class NewickNode extends Group {
 		}
 	}
 	
+	/**
+	 * Stores the lineages for the children for the parent to use.
+	 * @return
+	 */
+	public String setParentLineages() {
+		if (!this.isLeaf()) {
+			ArrayList<String> lineagelist = new ArrayList<String>();
+			for (Object child : this.getChildren()) {
+				if (child instanceof NewickNode) {
+					if (((NewickNode) child).isLeaf()) {
+						lineagelist.add(((NewickNode) child).getLineage());
+					} else { //if child not a leaf
+						lineagelist.add(((NewickNode) child).setParentLineages()); 
+					}
+				}
+			} //looped through all children, stored their lineages in list
+			if (isSameLineage(lineagelist)) {
+				this.setLineage(lineagelist.get(0));
+			} else {
+				this.setLineage("");
+			}
+		} else { //if rootnode is a leaf
+			return this.getLineage();
+		}
+		this.setColoured();
+		return this.getLineage();
+	}
+	
+	/**
+	 * Check if lineages in list are the same.
+	 * 
+	 * @param lineagelist
+	 * @return boolean
+	 */
+	public boolean isSameLineage(ArrayList<String> lineagelist) {
+		for (int i = 1; i < lineagelist.size(); i++) {
+			if (!lineagelist.get(0).equals(lineagelist.get(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public static Set<NewickNode> getSelected() {
 		return selectedSet;
 	}
 	
 	public ArrayList<String> getSelectedGenomes() {
 		ArrayList<String> names = new ArrayList<String>();
-		changed = true;
 		Iterator<NewickNode> iterator = selectedSet.iterator();
 		while (iterator.hasNext()) {
 			String name = iterator.next().getLabel().getText();

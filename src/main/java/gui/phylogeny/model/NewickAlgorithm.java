@@ -64,13 +64,10 @@ public class NewickAlgorithm {
 	 * @return A drawable {@link NewickNode} that represents the given tree.
 	 */
 	public NewickNode getDrawableTreeInner(NewickTree tree) {
-		
 		if (tree == null) {
 			return new NewickNode();
 		}
-		
 		int currentY = 0;
-		
 		NewickNode root = new NewickNode();
 		
 		for (NewickTree child : tree.getChildren()) {
@@ -86,16 +83,18 @@ public class NewickAlgorithm {
 			if (child.getChildren().size() == 1) {
 				childNode.hideRectangle();
 			}
-			
-			NewickEdge edge = new NewickEdge(childNode);
-			
-			
+			NewickEdge edge = new NewickEdge(root, childNode);
 			root.getChildren().add(edge);
+			childNode.getRectangle().toFront();
 			root.getChildren().add(childNode);
 			
-			childNode.setTranslateX(scale * child.getDistance());
+			double translate = scale * child.getDistance();
+			if (translate < 20) {
+				childNode.setTranslateX(20);
+			} else {
+				childNode.setTranslateX(translate);
+			}
 			childNode.setTranslateY(currentY);
-			
 			currentY += SPACING + childNode.boundsInLocalProperty().get().getHeight();
 		}
 		return root;
@@ -107,7 +106,6 @@ public class NewickAlgorithm {
 	 * @return
 	 */
 	public void pruneNewickTree(NewickTree tree) {
-		
 		if (tree == null) {
 			return;
 		}
@@ -115,7 +113,6 @@ public class NewickAlgorithm {
 		ArrayList<NewickTree> tobeRemoved = new ArrayList<NewickTree>();
 		
 		for (NewickTree child : tree.getChildren()) {
-			
 			if (child.isLeaf() 
 					&& (genomeNames.contains(child.getName()) == false 
 					|| child.getName() == null)) {

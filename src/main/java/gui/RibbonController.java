@@ -90,27 +90,23 @@ public class RibbonController implements Initializable {
 					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
 				if (prevScale > COLLAPSE && scale <= COLLAPSE) {
-					System.out.println("switch to normal");
 					innerGroup.getChildren().clear();
 					Group temp = new Group(collapsedGroup);
 					innerGroup.getChildren().addAll(temp.getChildren());
 					scrollPane.setHvalue(oldBarValue);
 				} else if (prevScale < COLLAPSE && scale >= COLLAPSE 
 						|| prevScale > GRAPH && scale <= GRAPH) {
-					System.out.println("switch to collapsed");
 					innerGroup.getChildren().clear();
 					Group temp = new Group(normalGroup);
 					innerGroup.getChildren().addAll(temp.getChildren());
 					scrollPane.setHvalue(oldBarValue);
 				} else if (prevScale < GRAPH && scale >= GRAPH) {
-					System.out.println("switch to graph");
 					innerGroup.getChildren().clear();
 					Group temp = new Group(otherGroup);
 					innerGroup.getChildren().addAll(temp.getChildren());
 					scrollPane.setHvalue(oldBarValue);
 				}
 				
-				System.out.println(prevScale + "->" + scale);
 				double barValue = scrollPane.getHvalue();
 				innerGroup.setScaleX(scale);
 				scrollPane.setHvalue(barValue);
@@ -404,7 +400,6 @@ public class RibbonController implements Initializable {
 			colours.add(new ArrayList<Paint>());
 		}
 		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames(genomes);
-		System.out.println("Size: " + genomeNames.size());
 		
 		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink(genomes);
 		for (int i = 0; i < linkIds.size(); i++) {
@@ -469,7 +464,7 @@ public class RibbonController implements Initializable {
 								xcoords.get(toId - 1), 
 								ycoords.get(toId - 1));
 						line.setStrokeWidth(2 * counts.get(fromId - 1).get(j));
-						line.setStroke(getLineColor(fromId, toId));
+						line.setStroke(colours.get(fromId - 1).get(j));
 						res.getChildren().add(line);
 					}
 				}
