@@ -117,7 +117,9 @@ public class PhylogenyController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		NewickAlgorithm newickAlg = new NewickAlgorithm();
 		newickAlg.parseLineages();
+
 		node = newickAlg.getDrawableTree(Launcher.getNewickTree());
+		node.setParentLineages();
 		node.setColoured();
 		
 		node.setTranslateX(100);
