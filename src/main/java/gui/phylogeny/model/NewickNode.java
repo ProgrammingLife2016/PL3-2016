@@ -37,7 +37,7 @@ public class NewickNode extends Group {
 	
 	private boolean isLeaf = false;
 	private boolean isSelected = true;
-	private boolean changed = false;
+	private static boolean changed = false;
 	
 	/**
 	 * Set of currently selected NewickNodes.
