@@ -22,6 +22,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 import db.DatabaseManager;
 import gui.phylogeny.controller.PhylogenyController;
+import gui.phylogeny.model.NewickNode;
 
 import org.apache.commons.io.FilenameUtils;
 import toolbar.ExistingHandler;
@@ -83,18 +84,15 @@ public class MainController implements Initializable {
 			    new ChangeListener<Tab>() {
 			        @Override
 			        public void changed(ObservableValue<? extends Tab> ov, Tab t1, Tab t2) {
-			        	if (t2.getText().startsWith("Main") && phyloTabController.getNewickNode()
+			        	if (t2.getText().startsWith("M") && phyloTabController.getNewickNode()
 			        			.getChanged()) {
 			        		ArrayList<String> genomeNames = phyloTabController.getNewickNode()
 			        				.getSelectedGenomes();
 			        		ArrayList<Integer> genomeIds = Launcher.dbm.getDbReader()
 			        				.findGenomeId(genomeNames);
-			        		for (int i = 0; i < genomeIds.size(); i++) {
-			        			System.out.println(genomeIds.get(i));
-			        		}
 			        		ribbonTabController.setGenomeIds(genomeIds);
 			        		ribbonTabController.redraw();
-			        		phyloTabController.getNewickNode().setChanged(false);
+			        		NewickNode.setChanged(false);
 			        	}
 			        }
 			    }
