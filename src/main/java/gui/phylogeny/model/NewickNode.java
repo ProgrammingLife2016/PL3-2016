@@ -183,6 +183,10 @@ public class NewickNode extends Group {
 			selectedSet.add((NewickNode) this);
 		} else {
 			for (Object child : this.getChildren()) {
+				if (child instanceof NewickEdge) {
+					((NewickEdge)child)
+						.setColoured(NewickColour.colourMap.get(this.lineage));
+				}
 				if (child instanceof NewickNode) {
 					if (((NewickNode) child).getName() != null) {
 						selectedSet.add(((NewickNode) child));
@@ -204,6 +208,9 @@ public class NewickNode extends Group {
 			selectedSet.remove(((NewickNode) this));
 		} else {
 			for (Object child : this.getChildren()) {
+				if (child instanceof NewickEdge) {
+					((NewickEdge)child).unSetColoured();
+				}
 				if (child instanceof NewickNode) {
 					if (((NewickNode) child).getName() != null) {
 						selectedSet.remove(((NewickNode) child));
