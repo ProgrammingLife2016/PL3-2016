@@ -22,6 +22,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 import db.DatabaseManager;
 import gui.phylogeny.controller.PhylogenyController;
+import gui.phylogeny.model.NewickNode;
 
 import org.apache.commons.io.FilenameUtils;
 import toolbar.ExistingHandler;
@@ -91,7 +92,7 @@ public class MainController implements Initializable {
 			        				.findGenomeId(genomeNames);
 			        		ribbonTabController.setGenomeIds(genomeIds);
 			        		ribbonTabController.redraw();
-			        		phyloTabController.getNewickNode().setChanged(false);
+			        		NewickNode.setChanged(false);
 			        	}
 			        }
 			    }

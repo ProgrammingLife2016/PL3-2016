@@ -86,8 +86,8 @@ public class NewickNode extends Group {
 		return changed;
 	}
 	
-	public void setChanged(boolean changed) {
-		this.changed = changed;
+	public static void setChanged(boolean change) {
+		changed = change;
 	}
 	
 	/**
@@ -213,7 +213,6 @@ public class NewickNode extends Group {
 	
 	public ArrayList<String> getSelectedGenomes() {
 		ArrayList<String> names = new ArrayList<String>();
-		changed = true;
 		Iterator<NewickNode> iterator = selectedSet.iterator();
 		while (iterator.hasNext()) {
 			String name = iterator.next().getLabel().getText();
