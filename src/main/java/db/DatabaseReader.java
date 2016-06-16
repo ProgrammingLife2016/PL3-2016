@@ -523,37 +523,13 @@ public class DatabaseReader {
 		return linkList;
 	}
 	
-	public HashMap<Integer, ArrayList<Integer>> getGenomesPerLink() {
-
-		String query = "SELECT FROMID, TOID, GENOMEID FROM LINKS";
-		HashMap<Integer, ArrayList<Integer>> hash = new HashMap<Integer, ArrayList<Integer>>();
-		
-		try (ResultSet rs = this.db.executeQuery(query)) {
-			while (rs.next()) {
-				int key = 100000 * rs.getInt(1) + rs.getInt(2);
-				ArrayList<Integer> link = hash.get(key);
-				if (link == null) {
-					link = new ArrayList<Integer>();
-				}
-				link.add(rs.getInt(3));
-				hash.put(key, link);
-			}
-			return hash;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return hash;
-	}
-	
 	public HashMap<Integer, ArrayList<Integer>> getGenomesPerLink(ArrayList<Integer> genomes) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
+		sb.append("SELECT FROMID, TOID, GENOMEID FROM LINKS WHERE GENOMEID = "
 				+ genomes.get(0));
 		for (int i = 1; i < genomes.size(); i++) {
 			sb.append(" OR GENOMEID = " + genomes.get(i));
 		}
-		sb.append(" GROUP BY FROMID, TOID");
 		HashMap<Integer, ArrayList<Integer>> hash = new HashMap<Integer, ArrayList<Integer>>();
 		
 		try (ResultSet rs = this.db.executeQuery(sb.toString())) {

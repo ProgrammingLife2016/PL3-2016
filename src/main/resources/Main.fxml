@@ -82,7 +82,6 @@
                     </rowConstraints>
                     <children>
                     	<fx:include fx:id="graphTab" source="GraphLevel.fxml" />
-                    	<fx:include fx:id="annotations" source="AnnotationLevel.fxml" GridPane.rowIndex="1" />
                     </children>
                   </GridPane>
                </content>
