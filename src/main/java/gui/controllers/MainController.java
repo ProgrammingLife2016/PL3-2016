@@ -95,7 +95,7 @@ public class MainController implements Initializable {
 			        		ArrayList<Integer> genomeIds = 
 			        				Launcher.getDatabaseManager().getDbReader()
 			        				.findGenomeId(genomeNames);
-			        		ribbonTabController.setGenomeIds(genomeIds);
+			        		ribbonTabController.getRibbonView().setGenomeIds(genomeIds);
 			        		ribbonTabController.redraw();
 			        		NewickNode.setChanged(false);
 			        	}
