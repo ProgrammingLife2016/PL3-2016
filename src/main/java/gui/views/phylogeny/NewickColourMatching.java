@@ -44,7 +44,8 @@ public class NewickColourMatching {
 				return Paint.valueOf(lineagecolour);
 			}
 		}
-		return Paint.valueOf(lineagecolour);
+		System.out.println(lineage);
+		return Paint.valueOf("#000000");
 	}
 	
 	/**

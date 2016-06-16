@@ -22,10 +22,11 @@ public class RibbonView {
 	
 	private DatabaseManager dbm;
 	private HashMap<String, String> lineages = updateLineages();
-	private ArrayList<Integer> genomeIds = createList();
+	private ArrayList<Integer> genomeIds;
 	
 	public RibbonView(DatabaseManager dbm) {
 		this.dbm = dbm;
+		genomeIds = createList();
 	}
 	
 	private HashMap<String, String> updateLineages() {
@@ -39,8 +40,10 @@ public class RibbonView {
 	}
 	
 	public ArrayList<Integer> createList() {
+		int noOfGenomes = dbm.getDbReader().countGenomes();
+		System.out.println(noOfGenomes);
 		ArrayList<Integer> list = new ArrayList<Integer>();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < noOfGenomes; i++) {
 			list.add(i);
 		}
 		return list;

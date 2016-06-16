@@ -40,10 +40,11 @@ public class GraphView {
 	private ArrayList<Integer> graphxcoords;
 	private ArrayList<Integer> graphycoords;
 	private ArrayList<String> segmentdna;
-	private ArrayList<Integer> genomeIds = createList();
+	private ArrayList<Integer> genomeIds;
 	
 	public GraphView(DatabaseManager dbManager) {
 		this.dbm = dbManager;
+		genomeIds = createList();
 	}
 	
 	/**
@@ -153,8 +154,9 @@ public class GraphView {
 	}
 	
 	public ArrayList<Integer> createList() {
+		int noOfGenomes = dbm.getDbReader().countGenomes();
 		ArrayList<Integer> list = new ArrayList<Integer>();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < noOfGenomes; i++) {
 			list.add(i);
 		}
 		return list;
