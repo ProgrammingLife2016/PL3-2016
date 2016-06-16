@@ -117,7 +117,7 @@ public class RibbonView {
 						+ linkIds.get(i).get(j));
 				int id = genomeIds.get(0);
 				Paint colour = Paint.valueOf("0xff0000ff");
-				String genome = genomeNames.get(id - 1);
+				String genome = genomeNames.get(0);
 				if (!genome.startsWith("M")) {
 					colour = NewickColourMatching
 							.getLineageColour(lineages.get(genome));
