@@ -229,9 +229,6 @@ public class RibbonController implements Initializable {
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(MIN_SCALE);
-		
-		Text reminder1 = new Text("Hold Shift to scroll vertically");
-		Text reminder2 = new Text("Hold Control to scroll horizontally");
 	}
 	
 

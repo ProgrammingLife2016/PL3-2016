@@ -74,21 +74,6 @@ public class GraphController implements Initializable {
 				return;
 			}
 			
-
-//			double deltaY = event.getDeltaY();
-//			double deltaX = event.getDeltaX();
-//
-//			if (deltaY < 0) {
-//				scrollPane.setHvalue(Math.min(1, scrollPane.getHvalue() + 0.0007));
-//			} else if (deltaY > 0) {
-//				scrollPane.setHvalue(Math.max(0, scrollPane.getHvalue() - 0.0007));
-//			}
-//			if (deltaX < 0) {
-//				scrollPane.setVvalue(Math.min(1, scrollPane.getVvalue() + 0.05));
-//			} else if (deltaX > 0) {
-//				scrollPane.setVvalue(Math.max(0, scrollPane.getVvalue() - 0.05));
-//			}
-			
 		}
 	};
 	
@@ -162,8 +147,6 @@ public class GraphController implements Initializable {
 			//For now, we just print a line. Should be toggling the SNPs
 			System.out.println("You pressed the SNP checkbox")
 		);
-		
-		double maxY = dbm.getDbReader().getMaxYCoord();
 		innerGroup.setScaleX(0.4);
 	}
 	
@@ -179,7 +162,6 @@ public class GraphController implements Initializable {
 		innerGroup = new Group(graphView.getGraph());
 		outerGroup = new Group(innerGroup);
 		scrollPane.setContent(outerGroup);
-//		System.out.println("Number of genomes: " + genomeIds.size());
 	}
 	
 	public void redraw() {
