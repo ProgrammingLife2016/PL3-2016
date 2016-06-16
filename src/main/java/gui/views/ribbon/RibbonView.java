@@ -177,9 +177,9 @@ public class RibbonView {
 				line.setStrokeWidth(calculateLineWidth(counts.get(fromId - 1).get(j)));
 				if (snipSet.contains(fromId) && snipSet.contains(toId)) {
 					line.setStroke(colours.get(fromId - 1).get(j));
-				}
-				else
+				} else {
 					line.setStroke(NewickColourMatching.getDeactivatedColour());
+				}
 		        res.getChildren().add(line);
 			}
 		}
@@ -213,9 +213,9 @@ public class RibbonView {
 				line.setStrokeWidth(calculateLineWidth(counts.get(fromId - 1).get(j)));
 				if (inDelSet.contains(fromId) && inDelSet.contains(toId)) {
 					line.setStroke(colours.get(fromId - 1).get(j));
-				}
-				else
+				} else {
 					line.setStroke(NewickColourMatching.getDeactivatedColour());
+				}
 		        res.getChildren().add(line);
 			}
 		}
@@ -306,7 +306,7 @@ public class RibbonView {
 	 */
 	private ArrayList<Paint> getColorList(ArrayList<String> genomeNames) {
 		ArrayList<Paint> colors = new ArrayList<Paint>();
-		for(String genome : genomeNames) {
+		for (String genome : genomeNames) {
 			if (!genome.startsWith("M")) {
 				colors.add(NewickColourMatching
 						.getLineageColour(lineages.get(genome)));
@@ -358,7 +358,8 @@ public class RibbonView {
 								ycoords.get(fromId - 1), 
 								xcoords.get(toId - 1), 
 								ycoords.get(toId - 1));
-						line.setStrokeWidth(calculateLineWidth(2 * counts.get(fromId - 1).get(j)));
+						line.setStrokeWidth(
+								calculateLineWidth(2 * counts.get(fromId - 1).get(j)));
 						line.setStroke(getLineColor(fromId, toId));
 						res.getChildren().add(line);
 					}
