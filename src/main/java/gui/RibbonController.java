@@ -285,14 +285,6 @@ public class RibbonController implements Initializable {
 					return NewickColourMatching.getLineageColour(lineages.get(genome));
 				}
 			}
-		} else if (from.size() < to.size()) {
-			for (int i = 0; i < from.size(); i++) {
-				String genome = from.get(i);
-				if (lineages.containsKey(genome) && to.contains(genome) 
-						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
-					return NewickColourMatching.getLineageColour(lineages.get(genome));
-				}
-			}
 		} else {
 			for (int i = 0; i < from.size(); i++) {
 				String genome = from.get(i);

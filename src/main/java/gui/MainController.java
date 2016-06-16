@@ -91,9 +91,10 @@ public class MainController implements Initializable {
 			        		ArrayList<Integer> genomeIds = Launcher.dbm.getDbReader()
 			        				.findGenomeId(genomeNames);
 			        		ribbonTabController.setGenomeIds(genomeIds);
-			        		ribbonTabController.redraw();
 			        		graphTabController.setGenomeIds(genomeIds);
 			        		graphTabController.redraw();
+			        		ribbonTabController.setGraphGroup(graphTabController.getInnerGroup());
+			        		ribbonTabController.redraw();
 			        		NewickNode.setChanged(false);
 			        	}
 			        }
