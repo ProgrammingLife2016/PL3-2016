@@ -19,8 +19,13 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 import db.DatabaseManager;
 import gui.phylogeny.NewickColourMatching;
@@ -319,27 +324,12 @@ public class GraphController implements Initializable {
 	 */
 	private Group getGraphSegments() {
 		Group res = new Group();
+		ArrayList<GraphSegment> k = new ArrayList<GraphSegment>();
 		for (int i = 1; i <= segments.size(); i++) {
-			System.out.println(i);
-			res.getChildren().add(segments.get(i));
+			res.getChildren().add(createEllipse(i));
+			res.getChildren().add(visualizeDnaContent(i));
 		}
 		return res;
-	}
-	
-	/**
-	 * Scales and re-uses the x-coordinates calculated for the ribbon visualization.
-	 * 
-	 * @param xcoords
-	 * 			x-coordinates of ribbons.
-	 * @return xcoords
-	 * 			x-coordinates of graph segments.
-	 */
-	public ArrayList<Integer> scaleRibbonToGraphCoordsX(ArrayList<Integer> xcoords) {
-		for (int i = 0; i < xcoords.size(); i++) {
-			int newc = xcoords.remove(i) * 100;
-			xcoords.add(i, newc);
-		}
-		return xcoords;
 	}
 	
 	public Paint getLineColor(int fromId, int toId) {
@@ -409,5 +399,37 @@ public class GraphController implements Initializable {
 			list.add(i);
 		}
 		return list;
+	}
+	
+	public Ellipse createEllipse(int segmentId) {
+		String content = segmentdna.get(segmentId - 1);
+		double xcoord = graphxcoords.get(segmentId - 1);
+		double ycoord = graphycoords.get(segmentId - 1);
+		double xradius = 30 + 2 * Math.log(content.length());
+		Ellipse node = new Ellipse(xcoord, ycoord, xradius, 30);
+	    node.setFill(Color.DODGERBLUE);
+	    node.setStroke(Color.BLACK);
+	    node.setStrokeType(StrokeType.INSIDE);
+		return node;
+	}
+	
+	private Text visualizeDnaContent(Integer segmentId) {
+		String content = segmentdna.get(segmentId - 1);
+		double xcoord = graphxcoords.get(segmentId - 1);
+		double ycoord = graphycoords.get(segmentId - 1);
+		StringBuilder sb = new StringBuilder();
+		for (int j = 0; j < content.length() && j <= 4; j++) {
+			sb.append(content.substring(j, j + 1));
+		}
+		if ( content.length() > 5) {
+			sb.append("...");
+		}
+		Text dnatext = new Text();
+		dnatext.setTextAlignment(TextAlignment.CENTER);
+		dnatext.setText(sb.toString());
+		double width = dnatext.getLayoutBounds().getWidth();
+		dnatext.setLayoutX(xcoord - 0.5 * width);
+		dnatext.setLayoutY(ycoord + 5);
+		return dnatext;
 	}
 }
