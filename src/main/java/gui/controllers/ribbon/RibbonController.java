@@ -43,6 +43,7 @@ public class RibbonController implements Initializable {
 	private Group collapsedGroup = ribbonView.createCollapsedRibbons();
 	private Group normalGroup = ribbonView.createNormalRibbons();
 	private Group snpGroup = ribbonView.createSnips();
+	private Group indelGroup = ribbonView.createInDels();
 	
     private static final double MAX_SCALE = 1.0d;
     private static final double MIN_SCALE = .003d;
@@ -83,6 +84,10 @@ public class RibbonController implements Initializable {
 					if (checkboxSnp.isSelected()) {
 						innerGroup.getChildren().clear();
 						Group temp = new Group(snpGroup);
+						innerGroup.getChildren().addAll(temp.getChildren());
+					} else if (checkboxInsert.isSelected()) {
+						innerGroup.getChildren().clear();
+						Group temp = new Group(indelGroup);
 						innerGroup.getChildren().addAll(temp.getChildren());
 					} else {
 						innerGroup.getChildren().clear();
@@ -193,9 +198,30 @@ public class RibbonController implements Initializable {
 		});
 
 		checkboxInsert.selectedProperty().addListener(
-				(ChangeListener<Boolean>) (observable, oldValue, newValue) -> 
-				//For now, we just print a line. Should be toggling the insertions
-				System.out.println("You pressed the insert checkbox")
+				(ChangeListener<Boolean>) (observable, oldValue, newValue) -> { 
+					
+					double scale = innerGroup.getScaleX();
+					double scroll = scrollPane.getHvalue();
+					
+					if (scale >= COLLAPSE && scale <= GRAPH) {
+						if (oldValue == false) {
+							if (checkboxSnp.isSelected()) {
+								checkboxSnp.selectedProperty().setValue(false);
+								checkboxSnp.setSelected(false);
+							}
+							innerGroup.getChildren().clear();
+							Group temp = new Group(indelGroup);
+							innerGroup.getChildren().addAll(temp.getChildren());
+						} else if (oldValue == true) {
+							innerGroup.getChildren().clear();
+							Group temp = new Group(normalGroup);
+							innerGroup.getChildren().addAll(temp.getChildren());
+						}
+					} 
+					
+					innerGroup.setScaleX(scale);
+					scrollPane.setHvalue(scroll);
+				}
 			);
 			
 		checkboxSnp.selectedProperty().addListener(
@@ -206,6 +232,10 @@ public class RibbonController implements Initializable {
 					
 					if (scale >= COLLAPSE && scale <= GRAPH) {
 						if (oldValue == false) {
+							if (checkboxInsert.isSelected()) {
+								checkboxInsert.selectedProperty().setValue(false);
+								checkboxInsert.setSelected(false);
+							}
 							innerGroup.getChildren().clear();
 							Group temp = new Group(snpGroup);
 							innerGroup.getChildren().addAll(temp.getChildren());
