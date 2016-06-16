@@ -1,4 +1,4 @@
-package gui.phylogeny.model;
+package gui.views.phylogeny;
 
 import java.util.HashMap;
 import java.util.Map;

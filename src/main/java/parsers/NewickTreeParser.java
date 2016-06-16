@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
-import gui.phylogeny.model.NewickTree;
+import models.phylogeny.NewickTree;
 
 /**
  * 

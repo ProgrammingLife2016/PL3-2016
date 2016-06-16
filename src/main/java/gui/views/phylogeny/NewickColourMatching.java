@@ -1,4 +1,4 @@
-package gui.phylogeny;
+package gui.views.phylogeny;
 
 import javafx.scene.paint.Paint;
 
@@ -44,7 +44,7 @@ public class NewickColourMatching {
 				return Paint.valueOf(lineagecolour);
 			}
 		}
-		return Paint.valueOf(lineagecolour);
+		return Paint.valueOf("0x000000ff");
 	}
 	
 	/**

@@ -1,10 +1,11 @@
-package gui.phylogeny.model;
+package gui.views.phylogeny;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import gui.Launcher;
+import models.phylogeny.NewickTree;
 import parsers.XlsxParser;
 
 public class NewickAlgorithm {

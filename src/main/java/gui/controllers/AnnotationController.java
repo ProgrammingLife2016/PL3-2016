@@ -1,4 +1,4 @@
-package gui;
+package gui.controllers;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -18,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import db.DatabaseManager;
+import gui.Launcher;
 
 /**
  * @author RobKapel
@@ -168,7 +169,7 @@ public class AnnotationController implements Initializable {
 	 * Load in the necessary data for the annotations.
 	 */
 	private void loadData() {
-		this.dbm = Launcher.dbm;
+		this.dbm = Launcher.getDatabaseManager();
 		startLocations = dbm.getDbReader().getAllAnnotationStartLocations();
 		endLocations = dbm.getDbReader().getAllAnnotationEndLocations();
 		names = dbm.getDbReader().getAllAnnotationNames();

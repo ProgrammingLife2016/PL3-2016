@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import coordinates.Coordinate;
 import coordinates.CoordinateDetermination;
 import db.tuples.BubbleTuple;
-import gui.SplashController;
+import gui.controllers.SplashController;
 
 /**
  * @author Rob Kapel

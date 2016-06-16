@@ -115,21 +115,13 @@
 				    <version>2.7</version>
 				    <configuration>
 					<instrumentation>
-						<ignores>
-							<ignore>gui.*</ignore>
-							<ignore>gui.phylogeny.*</ignore>
-							<ignore>gui.phylogeny.model.*</ignore>
-							<ignore>gui.phylogeny.controller.*</ignore>
-							<ignore>gui.phylogeny.EventHandlers.*</ignore>
-							<ignore>custommain.*</ignore>
-						</ignores>
+						<ignoreTrivial>true</ignoreTrivial>
 						<excludes>
-							<exclude>**/gui/*</exclude>
 							<exclude>**/custommain/*</exclude>
-							<exclude>**/gui/phylogeny/*</exclude>
-							<exclude>**/gui/phylogeny/controller/*</exclude>
-							<exclude>**/gui/phylogeny/model/*</exclude>
-							<exclude>**/gui/phylogeny/EventHandlers/*</exclude>
+							<exclude>**/gui/*</exclude>
+							<exclude>**/gui/**/*</exclude>
+							<exclude>**/gui/**/**/*</exclude>
+							<exclude>**/models/**/*</exclude>
 						</excludes>
 					</instrumentation>
 

@@ -1,4 +1,4 @@
-package gui;
+package gui.controllers;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,6 +18,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.VBox;
+
+import gui.Launcher;
 
 /**
  * Manages the splash screen when loading the program.
@@ -108,7 +110,7 @@ public class SplashController implements Initializable{
 	 */
 	@SuppressWarnings("restriction")
 	private void launchMain() {
-		Platform.runLater(new Runnable(){
+		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				Parent root;
@@ -116,10 +118,10 @@ public class SplashController implements Initializable{
 					root = FXMLLoader.load(
 							getClass().getClassLoader().getResource("Main.fxml"));
 			        Scene scene = new Scene(root);
-			        Launcher.stage.setScene(scene);
-			        Launcher.stage.setMaximized(false);
-			        Launcher.stage.setMaximized(true);
-			        Launcher.stage.show();
+			        Launcher.getStage().setScene(scene);
+			        Launcher.getStage().setMaximized(false);
+			        Launcher.getStage().setMaximized(true);
+			        Launcher.getStage().show();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

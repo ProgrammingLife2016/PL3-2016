@@ -1,4 +1,4 @@
-package gui.phylogeny.controller;
+package gui.controllers.phylogeny;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -13,8 +13,8 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 
 import gui.Launcher;
-import gui.phylogeny.model.NewickAlgorithm;
-import gui.phylogeny.model.NewickNode;
+import gui.views.phylogeny.NewickAlgorithm;
+import gui.views.phylogeny.NewickNode;
 
 /**
  * Controller class for the Phylogenetic tree view.
