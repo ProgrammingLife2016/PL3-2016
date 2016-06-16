@@ -82,40 +82,6 @@ public class RibbonView {
 	}
 	
 	
-	
-
-			
-			
-			
-//			if (dbm.getDbReader().getContent(current).equals(dbm.getDbReader().getContent(toId))) {
-////				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
-////				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
-////				System.out.println("in/del detected");
-//				return false;
-//			}
-//			if (dbm.getDbReader().getContent(current).length() > 1) {
-////				System.out.println("current content: " + dbm.getDbReader().getContent(current) + " is longer than 1");
-////				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
-////				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
-////				System.out.println("from: " + fromId + " to: " + toId +" is not a snip");
-//				return false;
-//			}
-//			if (!dbm.getDbReader().getToIDs(current).contains(toId)) {
-////				System.out.println("does not contain destination");
-////				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
-////				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
-////				System.out.println("from: " + fromId + " to: " + toId +" is not a snip");
-//				return false;
-//			}
-//		}
-		
-//		System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
-//		System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
-//		System.out.println("from: " + fromId + " to: " + toId +" is a snip");
-//		return true;
-	
-	
-	
 	/**
 	 * Determines if a bubble is a snip or not
 	 * @param startBubble - the start of the bubble
@@ -231,6 +197,30 @@ public class RibbonView {
 		return colours;
 	}
 	
+	public Paint getLineColor(int ff, int tt) {
+		Paint color = Paint.valueOf("0xff0000ff");
+		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(ff);
+		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(tt);
+		if (from.size() > to.size()) {
+			for (int i = 0; i < to.size(); i++) {
+				String genome = to.get(i);
+				if (lineages.containsKey(genome) && from.contains(genome) 
+						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
+					return NewickColourMatching.getLineageColour(lineages.get(genome));
+				}
+			}
+		} else {
+			for (int i = 0; i < from.size(); i++) {
+				String genome = from.get(i);
+				if (lineages.containsKey(genome) && to.contains(genome) 
+						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
+					return NewickColourMatching.getLineageColour(lineages.get(genome));
+				}
+			}
+		}
+		return color;
+	}
+	
 	/**
 	 * Calculates the majority color that is present in all the genomes that are provided.
 	 * @param genomeNames
@@ -290,7 +280,7 @@ public class RibbonView {
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
 				line.setStrokeWidth(calculateLineWidth(2 * bubble[2]));
-				line.setStroke(colours.get(fromId - 1).get(0));
+				line.setStroke(getLineColor(fromId, bubble[1]));
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
 			} else {
@@ -308,7 +298,7 @@ public class RibbonView {
 								xcoords.get(toId - 1), 
 								ycoords.get(toId - 1));
 						line.setStrokeWidth(calculateLineWidth(2 * counts.get(fromId - 1).get(j)));
-						line.setStroke(colours.get(fromId - 1).get(j));
+						line.setStroke(getLineColor(fromId, toId));
 						res.getChildren().add(line);
 					}
 				}
