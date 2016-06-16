@@ -80,7 +80,7 @@ public class RibbonView {
 		System.out.println("Finished normal ribbons");
 		return res;
 	}
-		
+
 	/**
 	 * Determines if a bubble is a snip or not
 	 * @param startBubble - the start of the bubble
@@ -242,7 +242,6 @@ public class RibbonView {
 		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames(genomes);
 		
 		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink(genomes);
-		System.out.println(hash);
 		for (int i = 0; i < linkIds.size(); i++) {
 			for (int j = 0; j < linkIds.get(i).size(); j++) {
 				ArrayList<Integer> genomeIds = hash.get(100000 * (i + 1) 
@@ -257,6 +256,30 @@ public class RibbonView {
 			}
 		}
 		return colours;
+	}
+	
+	public Paint getLineColor(int ff, int tt) {
+		Paint color = Paint.valueOf("0xff0000ff");
+		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(ff);
+		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(tt);
+		if (from.size() > to.size()) {
+			for (int i = 0; i < to.size(); i++) {
+				String genome = to.get(i);
+				if (lineages.containsKey(genome) && from.contains(genome) 
+						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
+					return NewickColourMatching.getLineageColour(lineages.get(genome));
+				}
+			}
+		} else {
+			for (int i = 0; i < from.size(); i++) {
+				String genome = from.get(i);
+				if (lineages.containsKey(genome) && to.contains(genome) 
+						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
+					return NewickColourMatching.getLineageColour(lineages.get(genome));
+				}
+			}
+		}
+		return color;
 	}
 	
 	/**
@@ -318,7 +341,7 @@ public class RibbonView {
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
 				line.setStrokeWidth(calculateLineWidth(2 * bubble[2]));
-				line.setStroke(colours.get(fromId - 1).get(0));
+				line.setStroke(getLineColor(fromId, bubble[1]));
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
 			} else {
@@ -336,7 +359,7 @@ public class RibbonView {
 								xcoords.get(toId - 1), 
 								ycoords.get(toId - 1));
 						line.setStrokeWidth(calculateLineWidth(2 * counts.get(fromId - 1).get(j)));
-						line.setStroke(colours.get(fromId - 1).get(j));
+						line.setStroke(getLineColor(fromId, toId));
 						res.getChildren().add(line);
 					}
 				}
