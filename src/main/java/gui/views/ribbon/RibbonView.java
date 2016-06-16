@@ -108,7 +108,7 @@ public class RibbonView {
 		for (int i = 0; i < dbm.getDbReader().countSegments(); i++) {
 			colours.add(new ArrayList<Paint>());
 		}
-		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames(genomes);
+		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames();
 		
 		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink(genomes);
 		for (int i = 0; i < linkIds.size(); i++) {
@@ -117,7 +117,7 @@ public class RibbonView {
 						+ linkIds.get(i).get(j));
 				int id = genomeIds.get(0);
 				Paint colour = Paint.valueOf("0xff0000ff");
-				String genome = genomeNames.get(0);
+				String genome = genomeNames.get(id - 1);
 				if (!genome.startsWith("M")) {
 					colour = NewickColourMatching
 							.getLineageColour(lineages.get(genome));
