@@ -60,12 +60,13 @@ public class RibbonController implements Initializable {
 	private final EventHandler<ScrollEvent> scrollEventHandler = new EventHandler<ScrollEvent>() {
 		@Override
 		public void handle(ScrollEvent event) {
-			event.consume();
 			if (event.isControlDown()) {
+				event.consume();
 				double deltaY = event.getDeltaY();
 				double delta = 1.2;
 				double scale = innerGroup.getScaleX();
-				double oldBarValue = scrollPane.getHvalue();
+				double oldHBarValue = scrollPane.getHvalue();
+				double oldVBarValue = scrollPane.getVvalue();
 
 				if (deltaY < 0) {
 					scale /= Math.pow(delta, -event.getDeltaY() / 20);
@@ -78,18 +79,21 @@ public class RibbonController implements Initializable {
 					innerGroup.getChildren().clear();
 					Group temp = new Group(collapsedGroup);
 					innerGroup.getChildren().addAll(temp.getChildren());
-					scrollPane.setHvalue(oldBarValue);
+					scrollPane.setHvalue(oldHBarValue);
+					scrollPane.setVvalue(oldVBarValue);
 				} else if (prevScale < COLLAPSE && scale >= COLLAPSE 
 						|| prevScale > GRAPH && scale <= GRAPH) {
 					innerGroup.getChildren().clear();
 					Group temp = new Group(normalGroup);
 					innerGroup.getChildren().addAll(temp.getChildren());
-					scrollPane.setHvalue(oldBarValue);
+					scrollPane.setHvalue(oldHBarValue);
+					scrollPane.setVvalue(oldVBarValue);
 				} else if (prevScale < GRAPH && scale >= GRAPH) {
 					innerGroup.getChildren().clear();
 					Group temp = new Group(otherGroup);
 					innerGroup.getChildren().addAll(temp.getChildren());
-					scrollPane.setHvalue(oldBarValue);
+					scrollPane.setHvalue(oldHBarValue);
+					scrollPane.setVvalue(oldVBarValue);
 				}
 				
 				double barValue = scrollPane.getHvalue();
@@ -103,6 +107,23 @@ public class RibbonController implements Initializable {
 				annotationRibbonPane.setHvalue(barValue);
 				annotationGraphPane.setHvalue(barValue);
 				prevScale = scale;
+				return;
+			} else if (event.isShiftDown()) {
+				event.consume();
+				double deltaY = event.getDeltaX();
+				double delta = 1.1;
+				double scale = innerGroup.getScaleY();
+				if (deltaY < 0) {
+					scale = scale / Math.pow(delta, -event.getDeltaX() / 20);
+				} else if (deltaY > 0) {
+					scale *= Math.pow(delta, event.getDeltaX() / 20);
+				}
+				
+				double barValue = scrollPane.getVvalue();
+				innerGroup.setScaleY(scale);
+//				otherGroup.setScaleY(scale);
+				scrollPane.setVvalue(barValue);
+				otherPane.setVvalue(barValue);
 				return;
 			}
 
@@ -181,7 +202,8 @@ public class RibbonController implements Initializable {
 		});
 		
 		scrollPane.setHvalue(0);
-		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 		scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, 
@@ -205,7 +227,6 @@ public class RibbonController implements Initializable {
 		);
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
-		System.out.println("MaxY in the graph controller = " + maxY);
 		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(MIN_SCALE);
 		

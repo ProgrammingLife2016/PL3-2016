@@ -73,20 +73,21 @@ public class GraphController implements Initializable {
 				otherPane.setHvalue(barValue);
 				return;
 			}
+			
 
-			double deltaY = event.getDeltaY();
-			double deltaX = event.getDeltaX();
-
-			if (deltaY < 0) {
-				scrollPane.setHvalue(Math.min(1, scrollPane.getHvalue() + 0.0007));
-			} else if (deltaY > 0) {
-				scrollPane.setHvalue(Math.max(0, scrollPane.getHvalue() - 0.0007));
-			}
-			if (deltaX < 0) {
-				scrollPane.setVvalue(Math.min(1, scrollPane.getVvalue() + 0.05));
-			} else if (deltaX > 0) {
-				scrollPane.setVvalue(Math.max(0, scrollPane.getVvalue() - 0.05));
-			}
+//			double deltaY = event.getDeltaY();
+//			double deltaX = event.getDeltaX();
+//
+//			if (deltaY < 0) {
+//				scrollPane.setHvalue(Math.min(1, scrollPane.getHvalue() + 0.0007));
+//			} else if (deltaY > 0) {
+//				scrollPane.setHvalue(Math.max(0, scrollPane.getHvalue() - 0.0007));
+//			}
+//			if (deltaX < 0) {
+//				scrollPane.setVvalue(Math.min(1, scrollPane.getVvalue() + 0.05));
+//			} else if (deltaX > 0) {
+//				scrollPane.setVvalue(Math.max(0, scrollPane.getVvalue() - 0.05));
+//			}
 			
 		}
 	};
@@ -140,7 +141,8 @@ public class GraphController implements Initializable {
 		    scrollPane.setPrefHeight(newValue.getHeight());
 		});
 		scrollPane.setHvalue(0);
-		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 		scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, 
@@ -162,7 +164,6 @@ public class GraphController implements Initializable {
 		);
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
-		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(0.4);
 	}
 	

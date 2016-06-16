@@ -41,7 +41,6 @@ public class RibbonView {
 	
 	public ArrayList<Integer> createList() {
 		int noOfGenomes = dbm.getDbReader().countGenomes();
-		System.out.println(noOfGenomes);
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < noOfGenomes; i++) {
 			list.add(i);
