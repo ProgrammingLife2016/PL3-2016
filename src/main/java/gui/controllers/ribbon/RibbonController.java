@@ -14,6 +14,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 import db.DatabaseManager;
 import gui.Launcher;
@@ -121,7 +122,6 @@ public class RibbonController implements Initializable {
 				
 				double barValue = scrollPane.getVvalue();
 				innerGroup.setScaleY(scale);
-//				otherGroup.setScaleY(scale);
 				scrollPane.setVvalue(barValue);
 				otherPane.setVvalue(barValue);
 				return;
@@ -230,6 +230,8 @@ public class RibbonController implements Initializable {
 		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(MIN_SCALE);
 		
+		Text reminder1 = new Text("Hold Shift to scroll vertically");
+		Text reminder2 = new Text("Hold Control to scroll horizontally");
 	}
 	
 
