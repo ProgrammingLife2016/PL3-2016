@@ -79,37 +79,7 @@ public class RibbonView {
 	
 	
 	
-	
-	
-	/**
-	 * Given a from and toId from a bubble. It determines if the bubble is a snip or not.
-	 * This means that between the fromId and toId there is a single nucleotide that is different
-	 * compared to another genome. It is not a snip if one of the toIds from the fromId is equal to 
-	 * the toId. This means that there is a deletion. It is not a snip if the length of one of the 
-	 * toIds is greater than 1, this means that the difference is not only a single nucleotide. It 
-	 * is also not a snip if one segment from the toIds does not contain the toId. This means that 
-	 * there is something in between that segment and the toId.
-	 * 
-	 * @param fromId	the starting segment of the bubble
-	 * @param toId		the ending segment of the bubble
-	 * @return			returns true if it is a snip else false
-	 */
-	public boolean isSnip(int fromId, int toId) {
-		ArrayList<Integer> toIds = dbm.getDbReader().getToIDs(fromId);
-		for (int current : toIds) {
-			String currentContent = dbm.getDbReader().getContent(current);
-			String toIdContent = dbm.getDbReader().getContent(toId);
-			if (currentContent.length() > 1)
-				return false;
-			else if (currentContent.equals(toIdContent))
-				return false;
-			else {
-				if (!dbm.getDbReader().getToIDs(current).contains(toId))
-					return false;
-				else return true;
-			}
-		}
-		return false;
+
 			
 			
 			
@@ -139,11 +109,11 @@ public class RibbonView {
 //		System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
 //		System.out.println("from: " + fromId + " to: " + toId +" is a snip");
 //		return true;
-	}
 	
 	
 	
-	public boolean snipTest(int startBubble, int endBubble, Set<Integer> set) {
+	
+	public boolean isSnip(int startBubble, int endBubble, Set<Integer> set) {
 		int current = startBubble + 1;
 		while (current != endBubble) {
 			if (!set.contains(current)) {
@@ -156,18 +126,15 @@ public class RibbonView {
 	
 	
 	public Set<Integer> calculateSnipSegments() {
-		//Set<Integer> snipSet = new HashSet<Integer>();
 		List<int[]> bubblesList = dbm.getDbReader().getBubbles();
-		Set<Integer> set = dbm.getDbReader().fakeTest();
+		Set<Integer> set = dbm.getDbReader().getSnipMaterial();
 		Set<Integer> set2 = new HashSet<Integer>();
 		
 		for (int i = 0; i < bubblesList.size(); ++i) {
-			//System.out.println(i +"/" + bubblesList.size());
-			
 			int startBubble = bubblesList.get(i)[0];
 			int endBubble = bubblesList.get(i)[1];
 			if (endBubble - startBubble > 2) {
-				if (snipTest(startBubble, endBubble, set)) {
+				if (isSnip(startBubble, endBubble, set)) {
 					int current = startBubble;
 					while (current != endBubble +1) {
 						set2.add(current);
@@ -178,13 +145,11 @@ public class RibbonView {
 			}
 		}
 		
-
-		
 		System.out.println("DONE SNIP SEGMENTS CALC");
 		return set2;
 	}
 	
-	public Group highLightSnips() {
+	public Group createSnips() {
 		System.out.println("highLighting snips");
 		Group res = new Group();
 		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomeIds);

@@ -208,10 +208,8 @@ public class DatabaseReader {
 		}
 	}
 	
-	public Set fakeTest() {
-		
+	public Set<Integer> getSnipMaterial() {
 		Set<Integer> set = new LinkedHashSet<Integer>();
-		
 		String query = "SELECT ID FROM SEGMENTS WHERE LENGTH(CONTENT) = 1";
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
