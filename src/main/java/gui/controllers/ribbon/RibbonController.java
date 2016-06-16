@@ -205,6 +205,7 @@ public class RibbonController implements Initializable {
 		);
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
+		System.out.println("MaxY in the graph controller = " + maxY);
 		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(MIN_SCALE);
 		
@@ -222,6 +223,7 @@ public class RibbonController implements Initializable {
 		outerGroup = new Group(innerGroup);
 		scrollPane.setContent(outerGroup);
 	}
+
 
 	public void redraw() {
 		collapsedGroup = ribbonView.createCollapsedRibbons();

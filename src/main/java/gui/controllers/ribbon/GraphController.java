@@ -131,6 +131,7 @@ public class GraphController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		graphView.loadSegmentData();
 		updateView();	
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
 		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
@@ -169,13 +170,28 @@ public class GraphController implements Initializable {
 	 * Updates the view. Used when changing database files so the graph
 	 * will have to adjust to the new file.
 	 */
+	/**
+	 * Updates the view. Used when changing database files so the graph
+	 * will have to adjust to the new file.
+	 */
 	public void updateView() {
-		this.dbm = Launcher.getDatabaseManager();
-		graphView.loadSegmentData();
-		graphView.constructSegmentMap();
-		innerGroup = graphView.getGraph();
+		innerGroup = new Group(graphView.getGraph());
 		outerGroup = new Group(innerGroup);
 		scrollPane.setContent(outerGroup);
+//		System.out.println("Number of genomes: " + genomeIds.size());
+	}
+	
+	public void redraw() {
+		System.out.println("Redrawing the graph");
+		innerGroup = new Group(graphView.getGraph());
+		updateView();
+		double maxY = dbm.getDbReader().getMaxYCoord();
+		innerGroup.setScaleY(1020.0 / maxY);
+		innerGroup.setScaleX(MIN_SCALE);
+	}
+	
+	public GraphView getGraphView() {
+		return graphView;
 	}
 	
 	public ScrollPane getScrollPane() {
