@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -324,10 +325,11 @@ public class GraphController implements Initializable {
 	 */
 	private Group getGraphSegments() {
 		Group res = new Group();
-		ArrayList<GraphSegment> k = new ArrayList<GraphSegment>();
-		for (int i = 1; i <= segments.size(); i++) {
-			res.getChildren().add(createEllipse(i));
-			res.getChildren().add(visualizeDnaContent(i));
+		Iterator<Integer> iterator = segmentIds.iterator();
+		while(iterator.hasNext()) {
+			int segmentId = iterator.next();
+			res.getChildren().add(createEllipse(segmentId));
+			res.getChildren().add(visualizeDnaContent(segmentId));
 		}
 		return res;
 	}
@@ -401,6 +403,10 @@ public class GraphController implements Initializable {
 		return list;
 	}
 	
+	/**
+	 * Returns a visualization of a graph segment
+	 */
+	
 	public Ellipse createEllipse(int segmentId) {
 		String content = segmentdna.get(segmentId - 1);
 		double xcoord = graphxcoords.get(segmentId - 1);
@@ -413,7 +419,12 @@ public class GraphController implements Initializable {
 		return node;
 	}
 	
-	private Text visualizeDnaContent(Integer segmentId) {
+	/**
+	 * Returns a Text object displaying the DNA strand.
+	 * DNA strands with more than 5 nucleotides only have the first 5 nucleotides displayed.
+	 */
+	
+	private Text visualizeDnaContent(int segmentId) {
 		String content = segmentdna.get(segmentId - 1);
 		double xcoord = graphxcoords.get(segmentId - 1);
 		double ycoord = graphycoords.get(segmentId - 1);
