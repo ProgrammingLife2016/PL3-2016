@@ -1,4 +1,4 @@
-package gui;
+package gui.controllers.ribbon;
 
 import java.io.File;
 import java.net.URL;
@@ -25,7 +25,8 @@ import javafx.scene.shape.Line;
 
 import parsers.XlsxParser;
 import db.DatabaseManager;
-import gui.phylogeny.NewickColourMatching;
+import gui.Launcher;
+import gui.views.phylogeny.NewickColourMatching;
 
 /**
  * Controller class for the Ribbon screen/tab.
@@ -41,7 +42,7 @@ public class RibbonController implements Initializable {
 	@FXML private CheckBox checkboxSnp;
 	@FXML private CheckBox checkboxInsert;
 	
-	private DatabaseManager dbm = Launcher.dbm;
+	private DatabaseManager dbm = Launcher.getDatabaseManager();
 	
 	private Group innerGroup;
 	private Group outerGroup;

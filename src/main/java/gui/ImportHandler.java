@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 
 import parsers.GfaParser;
 import db.DatabaseManager;
+import gui.controllers.SplashController;
 
 /**
  * Class used to handle importing a new .gfa file.

@@ -1,4 +1,4 @@
-package gui.phylogeny.model;
+package models.phylogeny;
 
 import java.util.ArrayList;
 import java.util.List;

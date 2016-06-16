@@ -1,10 +1,10 @@
-package gui.phylogeny.model;
+package gui.views.phylogeny;
 
 import javafx.scene.Group;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
-import gui.phylogeny.NewickColourMatching;
+import gui.views.phylogeny.NewickColourMatching;
 
 /**
  * Class to represent a Path between two NewickNodes.

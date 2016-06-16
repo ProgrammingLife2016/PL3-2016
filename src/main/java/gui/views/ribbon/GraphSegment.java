@@ -1,4 +1,4 @@
-package gui;
+package gui.views.ribbon;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;

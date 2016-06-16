@@ -1,4 +1,4 @@
-package gui;
+package gui.controllers.ribbon;
 
 import java.io.File;
 import java.net.URL;
@@ -21,7 +21,9 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 import db.DatabaseManager;
-import gui.phylogeny.NewickColourMatching;
+import gui.Launcher;
+import gui.views.phylogeny.NewickColourMatching;
+import gui.views.ribbon.GraphSegment;
 import parsers.XlsxParser;
 
 /**
@@ -210,7 +212,7 @@ public class GraphController implements Initializable {
 	 * will have to adjust to the new file.
 	 */
 	public void updateView() {
-		this.dbm = Launcher.dbm;
+		this.dbm = Launcher.getDatabaseManager();
 		loadSegmentData();
 		constructSegmentMap();
 		innerGroup = getGraph();

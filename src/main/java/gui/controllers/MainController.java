@@ -1,4 +1,4 @@
-package gui;
+package gui.controllers;
 
 import java.io.File;
 import java.net.URL;
@@ -21,8 +21,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 import db.DatabaseManager;
-import gui.phylogeny.controller.PhylogenyController;
-import gui.phylogeny.model.NewickNode;
+import gui.ImportHandler;
+import gui.Launcher;
+import gui.controllers.phylogeny.PhylogenyController;
+import gui.controllers.ribbon.GraphController;
+import gui.controllers.ribbon.RibbonController;
+import gui.views.phylogeny.NewickNode;
 
 import org.apache.commons.io.FilenameUtils;
 import toolbar.ExistingHandler;
@@ -88,7 +92,8 @@ public class MainController implements Initializable {
 			        			.getChanged()) {
 			        		ArrayList<String> genomeNames = phyloTabController.getNewickNode()
 			        				.getSelectedGenomes();
-			        		ArrayList<Integer> genomeIds = Launcher.dbm.getDbReader()
+			        		ArrayList<Integer> genomeIds = 
+			        				Launcher.getDatabaseManager().getDbReader()
 			        				.findGenomeId(genomeNames);
 			        		ribbonTabController.setGenomeIds(genomeIds);
 			        		ribbonTabController.redraw();
@@ -138,7 +143,7 @@ public class MainController implements Initializable {
 			 if (new ExistingHandler().buildExistingMap().get(fileName) == null) {
 				 recent.buildRecent(dbPath, fileName);
 				 ImportHandler importer = new ImportHandler(
-						 Launcher.stage, file.getAbsolutePath(), fileName);
+						 Launcher.getStage(), file.getAbsolutePath(), fileName);
 				 importer.startImport();
 				 updateExisting();
 			 } else {
@@ -155,8 +160,8 @@ public class MainController implements Initializable {
 	  * @param name
 	  */
 	 private void openExisting(String dbPath, String name) {
-		Launcher.dbm.closeDbConnection();
-		Launcher.dbm = new DatabaseManager(dbPath);
+		Launcher.getDatabaseManager().closeDbConnection();
+		Launcher.setDatabaseManager(new DatabaseManager(dbPath));
 		updateRecent(dbPath, name);
 		ribbonTabController.updateView();
 		graphTabController.updateView();

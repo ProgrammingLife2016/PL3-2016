@@ -3,7 +3,7 @@ package coordinates;
 import java.util.ArrayList;
 
 import db.DatabaseReader;
-import gui.SplashController;
+import gui.controllers.SplashController;
 
 /**
  * @author Rob Kapel

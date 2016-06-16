@@ -1,9 +1,10 @@
-package gui;
+package gui.controllers;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import gui.Launcher;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -116,10 +117,10 @@ public class SplashController implements Initializable{
 					root = FXMLLoader.load(
 							getClass().getClassLoader().getResource("Main.fxml"));
 			        Scene scene = new Scene(root);
-			        Launcher.stage.setScene(scene);
-			        Launcher.stage.setMaximized(false);
-			        Launcher.stage.setMaximized(true);
-			        Launcher.stage.show();
+			        Launcher.getStage().setScene(scene);
+			        Launcher.getStage().setMaximized(false);
+			        Launcher.getStage().setMaximized(true);
+			        Launcher.getStage().show();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

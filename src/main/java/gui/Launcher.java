@@ -11,7 +11,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import db.DatabaseManager;
-import gui.phylogeny.model.NewickTree;
+import gui.controllers.SplashController;
+import models.phylogeny.NewickTree;
 import parsers.GfaException;
 import parsers.GfaParser;
 import parsers.GffParser;
@@ -128,5 +129,13 @@ public class Launcher extends Application {
 	 */
 	public static void main(String[] args) {
 		launch(args);
+	}
+
+	public static void setDatabaseManager(DatabaseManager databaseManager) {
+		dbm = databaseManager;
+	}
+
+	public static Stage getStage() {
+		return stage;
 	}
 }

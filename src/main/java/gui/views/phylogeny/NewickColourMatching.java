@@ -1,4 +1,4 @@
-package gui.phylogeny;
+package gui.views.phylogeny;
 
 import javafx.scene.paint.Paint;
 

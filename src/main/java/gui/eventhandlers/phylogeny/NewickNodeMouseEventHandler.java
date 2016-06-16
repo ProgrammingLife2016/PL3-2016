@@ -1,9 +1,9 @@
-package gui.phylogeny.eventhandlers;
+package gui.eventhandlers.phylogeny;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
-import gui.phylogeny.model.NewickNode;
+import gui.views.phylogeny.NewickNode;
 
 /**
  * EventHandler for MouseEvents associated with the NewickNode.
@@ -29,7 +29,7 @@ public class NewickNodeMouseEventHandler implements EventHandler<MouseEvent> {
 	@Override
 	public void handle(MouseEvent event) {
 		toggleActive();
-		newickNode.setChanged(true);
+		NewickNode.setChanged(true);
 	}
 	
 	/**
