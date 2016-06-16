@@ -82,10 +82,16 @@ public class RibbonController implements Initializable {
 					scrollPane.setHvalue(oldBarValue);
 				} else if (prevScale < COLLAPSE && scale >= COLLAPSE 
 						|| prevScale > GRAPH && scale <= GRAPH) {
-					innerGroup.getChildren().clear();
-					Group temp = new Group(normalGroup);
-					innerGroup.getChildren().addAll(temp.getChildren());
-					scrollPane.setHvalue(oldBarValue);
+					if (checkboxSnp.isSelected()) {
+						innerGroup.getChildren().clear();
+						Group temp = new Group(snpGroup);
+						innerGroup.getChildren().addAll(temp.getChildren());
+					} else {
+						innerGroup.getChildren().clear();
+						Group temp = new Group(normalGroup);
+						innerGroup.getChildren().addAll(temp.getChildren());
+						scrollPane.setHvalue(oldBarValue);
+					}
 				} else if (prevScale < GRAPH && scale >= GRAPH) {
 					innerGroup.getChildren().clear();
 					Group temp = new Group(otherGroup);
