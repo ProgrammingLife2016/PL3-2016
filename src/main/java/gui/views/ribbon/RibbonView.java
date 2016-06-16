@@ -2,12 +2,16 @@ package gui.views.ribbon;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javafx.scene.Group;
 import javafx.scene.paint.Paint;
@@ -68,7 +72,7 @@ public class RibbonView {
 				int toId = links.get(fromId - 1).get(j);
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(toId - 1), ycoords.get(toId - 1));
-				line.setStrokeWidth(counts.get(fromId - 1).get(j));
+				line.setStrokeWidth(calculateLineWidth(counts.get(fromId - 1).get(j)));
 				line.setStroke(colours.get(fromId - 1).get(j));
 		        res.getChildren().add(line);
 			}
@@ -112,7 +116,13 @@ public class RibbonView {
 	
 	
 	
-	
+	/**
+	 * Determines if a bubble is a snip or not
+	 * @param startBubble - the start of the bubble
+	 * @param endBubble - the end of the bubble
+	 * @param set
+	 * @return
+	 */
 	public boolean isSnip(int startBubble, int endBubble, Set<Integer> set) {
 		int current = startBubble + 1;
 		while (current != endBubble) {
@@ -124,7 +134,10 @@ public class RibbonView {
 		return true;
 	}
 	
-	
+	/**
+	 * Calculates the segments that belong to a snip.
+	 * @return
+	 */
 	public Set<Integer> calculateSnipSegments() {
 		List<int[]> bubblesList = dbm.getDbReader().getBubbles();
 		Set<Integer> set = dbm.getDbReader().getSnipMaterial();
@@ -149,6 +162,10 @@ public class RibbonView {
 		return set2;
 	}
 	
+	/**
+	 * Creates the snips.
+	 * @return
+	 */
 	public Group createSnips() {
 		System.out.println("highLighting snips");
 		Group res = new Group();
@@ -165,7 +182,7 @@ public class RibbonView {
 				int toId = links.get(fromId - 1).get(j);
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(toId - 1), ycoords.get(toId - 1));
-				line.setStrokeWidth(counts.get(fromId - 1).get(j));
+				line.setStrokeWidth(calculateLineWidth(counts.get(fromId - 1).get(j)));
 				if (snipSet.contains(fromId) && snipSet.contains(toId)) {
 					line.setStroke(colours.get(fromId - 1).get(j));
 				}
@@ -181,38 +198,12 @@ public class RibbonView {
 		
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	public Paint getLineColor(int ff, int tt) {
-		Paint color = Paint.valueOf("0xff0000ff");
-		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(ff);
-		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(tt);
-		if (from.size() > to.size()) {
-			for (int i = 0; i < to.size(); i++) {
-				String genome = to.get(i);
-				if (lineages.containsKey(genome) && from.contains(genome) 
-						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
-					return NewickColourMatching.getLineageColour(lineages.get(genome));
-				}
-			}
-		} else {
-			for (int i = 0; i < from.size(); i++) {
-				String genome = from.get(i);
-				if (lineages.containsKey(genome) && to.contains(genome) 
-						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
-					return NewickColourMatching.getLineageColour(lineages.get(genome));
-				}
-			}
-		}
-		return color;
-	}
-	
+	/**
+	 * Calculates the colors for all of the links.
+	 * @param linkIds
+	 * @param genomes
+	 * @return
+	 */
 	private ArrayList<ArrayList<Paint>> calculateColours(ArrayList<ArrayList<Integer>> linkIds, 
 			ArrayList<Integer> genomes) {
 		ArrayList<ArrayList<Paint>> colours = 
@@ -231,13 +222,45 @@ public class RibbonView {
 				Paint colour = Paint.valueOf("0xff0000ff");
 				String genome = genomeNames.get(id - 1);
 				if (!genome.startsWith("M")) {
-					colour = NewickColourMatching
-							.getLineageColour(lineages.get(genome));
+					colour = getMajorityColor(genomeNames);
 				} 
 				colours.get(i).add(colour);
 			}
 		}
 		return colours;
+	}
+	
+	/**
+	 * Calculates the majority color that is present in all the genomes that are provided.
+	 * @param genomeNames
+	 * @return
+	 */
+	private Paint getMajorityColor(ArrayList<String> genomeNames) {
+		ArrayList<Paint> colors = getColorList(genomeNames);
+		Map<Paint, Long> map = colors.stream()
+		        .collect(Collectors.groupingBy(w -> w, Collectors.counting()));
+
+		List<Entry<Paint, Long>> result = map.entrySet().stream()
+		        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+		        .limit(1)
+		        .collect(Collectors.toList());
+		return result.get(0).getKey();
+	}
+	
+	/**
+	 * Creates a list of colors from the list of genome names.
+	 * @param genomeNames
+	 * @return
+	 */
+	private ArrayList<Paint> getColorList(ArrayList<String> genomeNames) {
+		ArrayList<Paint> colors = new ArrayList<Paint>();
+		for(String genome : genomeNames) {
+			if (!genome.startsWith("M")) {
+				colors.add(NewickColourMatching
+						.getLineageColour(lineages.get(genome)));
+			} 
+		}
+		return colors;
 	}
 	
 	/**
@@ -265,8 +288,7 @@ public class RibbonView {
 				int[] bubble = bubbles.poll();
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
-				double width = bubble[2];
-				line.setStrokeWidth(2 * width);
+				line.setStrokeWidth(calculateLineWidth(2 * bubble[2]));
 				line.setStroke(colours.get(fromId - 1).get(0));
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
@@ -284,7 +306,7 @@ public class RibbonView {
 								ycoords.get(fromId - 1), 
 								xcoords.get(toId - 1), 
 								ycoords.get(toId - 1));
-						line.setStrokeWidth(2 * counts.get(fromId - 1).get(j));
+						line.setStrokeWidth(calculateLineWidth(2 * counts.get(fromId - 1).get(j)));
 						line.setStroke(colours.get(fromId - 1).get(j));
 						res.getChildren().add(line);
 					}
@@ -294,5 +316,15 @@ public class RibbonView {
 		System.out.println("Finished collapsed ribbons");
 		
 		return res;
+	}
+	private double calculateLineWidth(double width) {
+		double minimum = 3;
+		double maximum = 20;
+		if (width < minimum) {
+			return minimum;
+		} else if (width > maximum) {
+			return maximum;
+		}
+		return width;
 	}
 }
