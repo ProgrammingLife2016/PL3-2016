@@ -117,9 +117,11 @@
 					<instrumentation>
 						<ignoreTrivial>true</ignoreTrivial>
 						<excludes>
-							<exclude>**/gui/**</exclude>
 							<exclude>**/custommain/*</exclude>
-							<exclude>**/models/**</exclude>
+							<exclude>**/gui/*</exclude>
+							<exclude>**/gui/**/*</exclude>
+							<exclude>**/gui/**/**/*</exclude>
+							<exclude>**/models/**/*</exclude>
 						</excludes>
 					</instrumentation>
 
