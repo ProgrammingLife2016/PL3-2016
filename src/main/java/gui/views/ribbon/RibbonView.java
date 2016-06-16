@@ -214,6 +214,7 @@ public class RibbonView {
 		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames(genomes);
 		
 		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink(genomes);
+		System.out.println(hash);
 		for (int i = 0; i < linkIds.size(); i++) {
 			for (int j = 0; j < linkIds.get(i).size(); j++) {
 				ArrayList<Integer> genomeIds = hash.get(100000 * (i + 1) 
@@ -317,6 +318,12 @@ public class RibbonView {
 		
 		return res;
 	}
+	
+	/**
+	 * calculates if the width of the line is acceptable.
+	 * @param width
+	 * @return
+	 */
 	private double calculateLineWidth(double width) {
 		double minimum = 3;
 		double maximum = 20;
