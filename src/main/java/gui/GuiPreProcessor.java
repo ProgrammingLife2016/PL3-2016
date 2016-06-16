@@ -8,6 +8,7 @@ public class GuiPreProcessor {
 	private Group collapsedGroup;
 	private Group normalGroup;
 	private Group snpGroup;
+	private Group inDelGroup;
 	
 	public void createCollapsedRibbons() {
 		collapsedGroup = ribbonView.createCollapsedRibbons();
@@ -20,6 +21,10 @@ public class GuiPreProcessor {
 	public void createSnips() {
 		snpGroup = ribbonView.createSnips();
 	}
+	
+	public void createInDels() {
+		inDelGroup = ribbonView.createInDels();
+	}
 
 	public Group getCollapsedGroup() {
 		return this.collapsedGroup;
@@ -31,5 +36,9 @@ public class GuiPreProcessor {
 	
 	public Group getSnpGroup() {
 		return this.snpGroup;
+	}
+	
+	public Group getInDelGroup() {
+		return this.inDelGroup;
 	}
 }

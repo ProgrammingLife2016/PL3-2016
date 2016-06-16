@@ -99,6 +99,9 @@ public class Launcher extends Application {
         			SplashController.progressNum.set(70);
         			SplashController.progressString.set("Creating snips");
         			preProcessor.createSnips();
+        			SplashController.progressNum.set(80);
+        			SplashController.progressString.set("Creating indels... Almost done");
+        			preProcessor.createInDels();
         			SplashController.progressNum.set(100);
         		} else {
         			dbm = new DatabaseManager(dbPath);
@@ -109,8 +112,11 @@ public class Launcher extends Application {
         			SplashController.progressString.set("Creating normal ribbons");
         			preProcessor.createNormalRibbons();
         			SplashController.progressNum.set(70);
-        			SplashController.progressString.set("Creating snips... Almost done");
+        			SplashController.progressString.set("Creating snips");
         			preProcessor.createSnips();
+        			SplashController.progressNum.set(80);
+        			SplashController.progressString.set("Creating indels... Almost done");
+        			preProcessor.createInDels();
         			SplashController.progressNum.set(100);
         		}
                 return null ;

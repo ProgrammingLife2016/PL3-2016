@@ -46,7 +46,7 @@ public class RibbonController implements Initializable {
 	private Group collapsedGroup = preProcessor.getCollapsedGroup();
 	private Group normalGroup = preProcessor.getNormalGroup();
 	private Group snpGroup = preProcessor.getSnpGroup();
-	private Group indelGroup = ribbonView.createInDels();
+	private Group indelGroup = preProcessor.getInDelGroup();
 
     private static final double MAX_SCALE = 1.0d;
     private static final double MIN_SCALE = .003d;
