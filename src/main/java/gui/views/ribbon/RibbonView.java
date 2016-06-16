@@ -80,48 +80,13 @@ public class RibbonView {
 		System.out.println("Finished normal ribbons");
 		return res;
 	}
-	
-	
-	
-
-			
-			
-			
-//			if (dbm.getDbReader().getContent(current).equals(dbm.getDbReader().getContent(toId))) {
-////				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
-////				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
-////				System.out.println("in/del detected");
-//				return false;
-//			}
-//			if (dbm.getDbReader().getContent(current).length() > 1) {
-////				System.out.println("current content: " + dbm.getDbReader().getContent(current) + " is longer than 1");
-////				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
-////				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
-////				System.out.println("from: " + fromId + " to: " + toId +" is not a snip");
-//				return false;
-//			}
-//			if (!dbm.getDbReader().getToIDs(current).contains(toId)) {
-////				System.out.println("does not contain destination");
-////				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
-////				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
-////				System.out.println("from: " + fromId + " to: " + toId +" is not a snip");
-//				return false;
-//			}
-//		}
 		
-//		System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
-//		System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
-//		System.out.println("from: " + fromId + " to: " + toId +" is a snip");
-//		return true;
-	
-	
-	
 	/**
 	 * Determines if a bubble is a snip or not
 	 * @param startBubble - the start of the bubble
 	 * @param endBubble - the end of the bubble
-	 * @param set
-	 * @return
+	 * @param set	A set of snip segments.
+	 * @return	returns true if it is a snip and false otherwise.
 	 */
 	public boolean isSnip(int startBubble, int endBubble, Set<Integer> set) {
 		int current = startBubble + 1;
@@ -135,11 +100,12 @@ public class RibbonView {
 	}
 	
 	/**
-	 * Calculates the segments that belong to a snip.
-	 * @return
+	 * Calculates the segments that belong to a snip. Returns that as a set.
+	 * @return	returns a set of integers of segments that are in a snip.
 	 */
 	public Set<Integer> calculateSnipSegments() {
 		List<int[]> bubblesList = dbm.getDbReader().getBubbles();
+		
 		Set<Integer> set = dbm.getDbReader().getSnipMaterial();
 		Set<Integer> set2 = new HashSet<Integer>();
 		
@@ -149,7 +115,7 @@ public class RibbonView {
 			if (endBubble - startBubble > 2) {
 				if (isSnip(startBubble, endBubble, set)) {
 					int current = startBubble;
-					while (current != endBubble +1) {
+					while (current != endBubble + 1) {
 						set2.add(current);
 						++current;
 					}
@@ -163,10 +129,37 @@ public class RibbonView {
 	}
 	
 	/**
+	 * This method makes a set of all InDels
+	 * @return	return a set of segment numbers that are in InDels.
+	 */
+	public Set<Integer> calculateInDelSegments() {
+		List<int[]> bubblesList = dbm.getDbReader().getBubbles();
+		Set<Integer> set = new HashSet<Integer>();
+		
+		for (int i = 0; i < bubblesList.size(); ++i) {
+			int endBubble = bubblesList.get(i)[1];
+			if (i + 1 < bubblesList.size()) {
+				int nextStartBubble = bubblesList.get(i + 1)[0];
+				if (nextStartBubble - endBubble == 2) {
+					int current = endBubble;
+					while (current != nextStartBubble + 1) {
+						set.add(current);
+						++current;
+						
+					}
+				}
+			}
+		}
+		System.out.println("DONE IN DEL SEGMENTS CALC");
+		return set;
+	}
+	
+	/**
 	 * Creates the snips.
 	 * @return
 	 */
 	public Group createSnips() {
+		calculateInDelSegments();
 		System.out.println("highLighting snips");
 		Group res = new Group();
 		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomeIds);
@@ -175,7 +168,6 @@ public class RibbonView {
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
 		Set<Integer> snipSet = calculateSnipSegments();
-		
 		
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
 			for (int j = 0; j < links.get(fromId - 1).size(); j++) {
@@ -197,6 +189,42 @@ public class RibbonView {
 		return res;
 		
 	}
+	
+	/**
+	 * creates inDel
+	 * @return
+	 */
+	public Group createInDels() {
+		System.out.println("highLighting inDel");
+		Group res = new Group();
+		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomeIds);
+		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomeIds);
+		ArrayList<ArrayList<Paint>> colours = calculateColours(links, genomeIds);
+		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
+		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
+		Set<Integer> inDelSet = calculateInDelSegments();
+		
+		
+		for (int fromId = 1; fromId <= links.size(); fromId++) {
+			for (int j = 0; j < links.get(fromId - 1).size(); j++) {
+				int toId = links.get(fromId - 1).get(j);
+				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
+						xcoords.get(toId - 1), ycoords.get(toId - 1));
+				line.setStrokeWidth(calculateLineWidth(counts.get(fromId - 1).get(j)));
+				if (inDelSet.contains(fromId) && inDelSet.contains(toId)) {
+					line.setStroke(colours.get(fromId - 1).get(j));
+				}
+				else
+					line.setStroke(NewickColourMatching.getDeactivatedColour());
+		        res.getChildren().add(line);
+			}
+		}
+		
+		System.out.println("Finished InDel");
+		return res;
+	}
+	
+	
 	
 	/**
 	 * Calculates the colors for all of the links.
