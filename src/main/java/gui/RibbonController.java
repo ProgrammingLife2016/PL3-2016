@@ -4,10 +4,13 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -259,32 +262,125 @@ public class RibbonController implements Initializable {
 	public boolean isSnip(int fromId, int toId) {
 		ArrayList<Integer> toIds = dbm.getDbReader().getToIDs(fromId);
 		for (int current : toIds) {
-			if (dbm.getDbReader().getContent(current).equals(dbm.getDbReader().getContent(toId))) {
-				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
-				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
-				System.out.println("in/del detected");
+			String currentContent = dbm.getDbReader().getContent(current);
+			String toIdContent = dbm.getDbReader().getContent(toId);
+			if (currentContent.length() > 1)
+				return false;
+			else if (currentContent.equals(toIdContent))
+				return false;
+			else {
+				if (!dbm.getDbReader().getToIDs(current).contains(toId))
+					return false;
+				else return true;
+			}
+		}
+		return false;
+			
+			
+			
+//			if (dbm.getDbReader().getContent(current).equals(dbm.getDbReader().getContent(toId))) {
+////				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
+////				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
+////				System.out.println("in/del detected");
+//				return false;
+//			}
+//			if (dbm.getDbReader().getContent(current).length() > 1) {
+////				System.out.println("current content: " + dbm.getDbReader().getContent(current) + " is longer than 1");
+////				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
+////				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
+////				System.out.println("from: " + fromId + " to: " + toId +" is not a snip");
+//				return false;
+//			}
+//			if (!dbm.getDbReader().getToIDs(current).contains(toId)) {
+////				System.out.println("does not contain destination");
+////				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
+////				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
+////				System.out.println("from: " + fromId + " to: " + toId +" is not a snip");
+//				return false;
+//			}
+//		}
+		
+//		System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
+//		System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
+//		System.out.println("from: " + fromId + " to: " + toId +" is a snip");
+//		return true;
+	}
+	
+	
+	
+	public boolean snipTest(int startBubble, int endBubble, Set<Integer> set) {
+		int current = startBubble + 1;
+		while (current != endBubble) {
+			if (!set.contains(current)) {
 				return false;
 			}
-			if (dbm.getDbReader().getContent(current).length() > 1) {
-				System.out.println("current content: " + dbm.getDbReader().getContent(current) + " is longer than 1");
-				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
-				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
-				System.out.println("from: " + fromId + " to: " + toId +" is not a snip");
-				return false;
-			}
-			if (!dbm.getDbReader().getToIDs(current).contains(toId)) {
-				System.out.println("does not contain destination");
-				System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
-				System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
-				System.out.println("from: " + fromId + " to: " + toId +" is not a snip");
-				return false;
+			++current;
+		}
+		return true;
+	}
+	
+	
+	public Set<Integer> calculateSnipSegments() {
+		//Set<Integer> snipSet = new HashSet<Integer>();
+		List<int[]> bubblesList = dbm.getDbReader().getBubbles();
+		Set<Integer> set = dbm.getDbReader().fakeTest();
+		Set<Integer> set2 = new HashSet<Integer>();
+		
+		for (int i = 0; i < bubblesList.size(); ++i) {
+			//System.out.println(i +"/" + bubblesList.size());
+			
+			int startBubble = bubblesList.get(i)[0];
+			int endBubble = bubblesList.get(i)[1];
+			if (endBubble - startBubble > 2) {
+				if (snipTest(startBubble, endBubble, set)) {
+					int current = startBubble;
+					while (current != endBubble +1) {
+						set2.add(current);
+						++current;
+					}
+				}
+
 			}
 		}
 		
-		System.out.println("from content is: " + dbm.getDbReader().getContent(fromId));
-		System.out.println("to content is: " + dbm.getDbReader().getContent(toId));
-		System.out.println("from: " + fromId + " to: " + toId +" is a snip");
-		return true;
+		
+//		for (int[] element : bubblesList) {
+//			System.out.println("FROM: " + element[0]);
+//			System.out.println("TO : " +element[1]);
+//			System.out.println("IS SNIP? : " +isSnip(element[0], element[1]));
+//		}
+		
+		
+		
+		
+
+		
+	
+		
+		
+		
+		
+//		int counter = 0;
+//		for (int[] element : bubblesList) {
+//			int startSegment = element[0];
+//			int endSegment = element[1];
+//			if (isSnip(startSegment, endSegment)) {
+//				while (startSegment != endSegment) {
+//					snipSet.add(startSegment);
+//					System.out.println("START: " + startSegment);
+//					System.out.println("END: " + endSegment);
+//					startSegment++;
+//					counter++;
+//				}
+//				snipSet.add(endSegment);
+//				if (counter % 10 == 0) {
+//					System.out.println(element[0] +"/" + bubblesList.size());
+//				}
+//			}
+//		}
+		
+		System.out.println("DONE SNIP SEGMENTS CALC");
+		return set2;
 	}
 	
 	public Group highLightSnips() {
@@ -295,32 +391,20 @@ public class RibbonController implements Initializable {
 		ArrayList<ArrayList<Paint>> colours = calculateColours(links, genomeIds);
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
-		List<int[]> bubblesList = dbm.getDbReader().getBubbles();
+		Set<Integer> snipSet = calculateSnipSegments();
 		
 		
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
 			for (int j = 0; j < links.get(fromId - 1).size(); j++) {
 				int toId = links.get(fromId - 1).get(j);
-				
-				
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(toId - 1), ycoords.get(toId - 1));
 				line.setStrokeWidth(counts.get(fromId - 1).get(j));
-				
-				if (toId != links.size() && !links.get(toId).isEmpty()) {
-					int toId2 = links.get(toId).get(0);
-					
-					if (isSnip(fromId, toId2)) {
-						line.setStroke(NewickColourMatching.getDeactivatedColour());
-					}
-					
-					else
-						line.setStroke(colours.get(fromId - 1).get(j));
-				}
-				
-				else
+				if (snipSet.contains(fromId) && snipSet.contains(toId)) {
 					line.setStroke(colours.get(fromId - 1).get(j));
-				
+				}
+				else
+					line.setStroke(NewickColourMatching.getDeactivatedColour());
 		        res.getChildren().add(line);
 			}
 		}

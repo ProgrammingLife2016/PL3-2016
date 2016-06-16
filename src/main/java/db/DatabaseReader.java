@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Björn Ho, Daniel van de Berg, Rob Kapel
@@ -206,6 +208,23 @@ public class DatabaseReader {
 		}
 	}
 	
+	public Set fakeTest() {
+		
+		Set<Integer> set = new LinkedHashSet<Integer>();
+		
+		String query = "SELECT ID FROM SEGMENTS WHERE LENGTH(CONTENT) = 1";
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				set.add(rs.getInt(1));
+			 }
+			return set;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
 	public List<int[]> getBubbles(ArrayList<Integer> genomes) {
 
 		List<int[]> bubbleList = new ArrayList<>();
@@ -227,6 +246,14 @@ public class DatabaseReader {
 			return null;
 		}
 	}
+	
+	
+
+	
+	
+	
+	
+	
 	
 	/**
 	 * Returns all id's of the segments that have one or more outgoing links.
