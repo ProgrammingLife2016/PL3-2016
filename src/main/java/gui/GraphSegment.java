@@ -46,7 +46,7 @@ public class GraphSegment extends StackPane {
 	 */
 	public GraphSegment(int segmentid, int childcount, char[] dnacontent, int xcoord, int ycoord) {
 		this(segmentid, childcount, dnacontent);
-		this.setLayoutCoords(xcoord + 1000, ycoord);
+		this.setLayoutCoords(xcoord - 30, ycoord - 30);
 	}
 	
 	/**
