@@ -12,7 +12,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 import db.DatabaseManager;
-import gui.Launcher;
 import gui.views.phylogeny.NewickColourMatching;
 import parsers.XlsxParser;
 
@@ -21,7 +20,7 @@ public class RibbonView {
 	private static String xlsxpath = System.getProperty("user.dir") + File.separator + "Data"
 			+ File.separator + "TB10" + File.separator + "metadata" + ".xlsx";
 	
-	private DatabaseManager dbm = Launcher.getDatabaseManager();
+	private DatabaseManager dbm;
 	private HashMap<String, String> lineages = updateLineages();
 	private ArrayList<Integer> genomeIds = createList();
 	
