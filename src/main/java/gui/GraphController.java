@@ -4,7 +4,10 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -17,8 +20,13 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 import db.DatabaseManager;
 import gui.phylogeny.NewickColourMatching;
@@ -53,16 +61,16 @@ public class GraphController implements Initializable {
 	/**
 	 * Map of all GraphSegments.
 	 */
-	private HashMap<Integer, GraphSegment> segments;
 	
 	/**
-	 * 5 lists of required data for constructing GraphSegments.
+	 * 4 lists of required data for constructing GraphSegments.
 	 */
-	private ArrayList<Integer> from;
-	private ArrayList<Integer> to;
 	private ArrayList<Integer> graphxcoords;
 	private ArrayList<Integer> graphycoords;
 	private ArrayList<String> segmentdna;
+	private ArrayList<Integer> genomeIds = createList();
+	
+	Set<Integer> segmentIds = new HashSet<Integer>();
     
 	/**
 	 * Location of metadata.xlsx
@@ -171,6 +179,8 @@ public class GraphController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		this.dbm = Launcher.dbm;
+		loadSegmentData();
 		updateView();	
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
 		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
@@ -201,7 +211,8 @@ public class GraphController implements Initializable {
 		);
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
-		innerGroup.setScaleY(720.0 / maxY);
+		System.out.println("MaxY in the graph controller = " + maxY);
+		innerGroup.setScaleY(1020.0 / maxY);
 		innerGroup.setScaleX(0.4);
 	}
 	
@@ -210,58 +221,22 @@ public class GraphController implements Initializable {
 	 * will have to adjust to the new file.
 	 */
 	public void updateView() {
-		this.dbm = Launcher.dbm;
-		loadSegmentData();
-		constructSegmentMap();
-		innerGroup = getGraph();
+		innerGroup = new Group(getGraph());
 		outerGroup = new Group(innerGroup);
 		scrollPane.setContent(outerGroup);
+		System.out.println("Number of genomes: " + genomeIds.size());
 	}
 	
 	/**
 	 * Load in all necessary information from the database.
 	 */
 	private void loadSegmentData() {
-		
-		from = dbm.getDbReader().getAllFromId();
-		to = dbm.getDbReader().getAllToId();
 		graphxcoords = dbm.getDbReader().getAllXCoord();
 		graphycoords = dbm.getDbReader().getAllYCoord();
-		segments = new HashMap<Integer, GraphSegment>((int) Math.ceil(to.size() / 0.75));
 		segmentdna = new ArrayList<String>();
 		
 		for (int i = 1; i <= dbm.getDbReader().countSegments(); i++) {
 			segmentdna.add(dbm.getDbReader().getContent(i));
-		}
-	}
-	
-	/**
-	 * Creates a hash map of all segments, by storing their information in GraphSegment
-	 * objects.
-	 */
-	public void constructSegmentMap() {
-		int linkpointer = 1;
-		
-		for (int i = 1; i <= dbm.getDbReader().countSegments(); i++) {
-			int childcount = 0;
-			
-			while (linkpointer <= from.size() && i == from.get(linkpointer - 1)) {
-				childcount++;
-				linkpointer++;
-			}
-			linkpointer -= childcount;
-			
-			GraphSegment segment = new GraphSegment(i, childcount,
-					segmentdna.get(i - 1).toCharArray(), graphxcoords.get(i - 1),
-					graphycoords.get(i - 1));
-			
-			int childindex = 0;
-			while (linkpointer <= from.size() && i == from.get(linkpointer - 1)) {
-				segment.getSegmentChildren()[childindex] = to.get(linkpointer - 1);
-				linkpointer++;
-				childindex++;
-			}
-			segments.put(i, segment);
 		}
 	}
 	
@@ -272,6 +247,7 @@ public class GraphController implements Initializable {
 	 */
 	public Group getGraph() {
 		System.out.println("Starting graph calculations");
+		segmentIds.clear();
 		Group res = new Group();
 		System.out.println("Calculating graph edges");
 		res.getChildren().add(getGraphEdges());
@@ -286,24 +262,21 @@ public class GraphController implements Initializable {
 	 */
 	private Group getGraphEdges() {
 		Group res = new Group();
-		ArrayList<Integer> counts = dbm.getDbReader().getAllCounts();
-		int countIdx = 0;
-		for (int i = 0; i < from.size(); i++) {
-			int fromId = from.get(i);
-			int toId = to.get(i);
-			GraphSegment fromsegment = segments.get(fromId);
-			GraphSegment tosegment = segments.get(toId);
-			double fromX = fromsegment.getLayoutX() + 2 * Math.log(fromsegment.getContentSize()) 
-				+ fromsegment.getRadius();
-			double toX = tosegment.getLayoutX() + 2 * Math.log(tosegment.getContentSize()) 
-				+ tosegment.getRadius();
-			
-			Line line = new Line(fromX, fromsegment.getLayoutY() + fromsegment.getRadius(),
-					toX, tosegment.getLayoutY() + tosegment.getRadius());
-
-			line.setStrokeWidth(1 + counts.get(countIdx++));
-			//line.setStroke(getLineColor(fromId, toId));
-	        res.getChildren().add(line);
+		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomeIds);
+		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomeIds);
+		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
+		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
+		
+		for (int fromId = 1; fromId <= links.size(); fromId++) {
+			for (int j = 0; j < links.get(fromId - 1).size(); j++) {
+				int toId = links.get(fromId - 1).get(j);
+				segmentIds.add(fromId);
+				segmentIds.add(toId);
+				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
+						xcoords.get(toId - 1), ycoords.get(toId - 1));
+				line.setStrokeWidth(counts.get(fromId - 1).get(j));
+		        res.getChildren().add(line);
+			}
 		}
 		System.out.println("Finished creating graph edges");
 		return res;
@@ -314,26 +287,13 @@ public class GraphController implements Initializable {
 	 */
 	private Group getGraphSegments() {
 		Group res = new Group();
-		for (int i = 1; i <= segments.size(); i++) {
-			res.getChildren().add(segments.get(i));
+		Iterator<Integer> iterator = segmentIds.iterator();
+		while (iterator.hasNext()) {
+			int segmentId = iterator.next();
+			res.getChildren().add(createEllipse(segmentId));
+			res.getChildren().add(visualizeDnaContent(segmentId));
 		}
 		return res;
-	}
-	
-	/**
-	 * Scales and re-uses the x-coordinates calculated for the ribbon visualization.
-	 * 
-	 * @param xcoords
-	 * 			x-coordinates of ribbons.
-	 * @return xcoords
-	 * 			x-coordinates of graph segments.
-	 */
-	public ArrayList<Integer> scaleRibbonToGraphCoordsX(ArrayList<Integer> xcoords) {
-		for (int i = 0; i < xcoords.size(); i++) {
-			int newc = xcoords.remove(i) * 100;
-			xcoords.add(i, newc);
-		}
-		return xcoords;
 	}
 	
 	public Paint getLineColor(int fromId, int toId) {
@@ -344,14 +304,6 @@ public class GraphController implements Initializable {
 			for (int i = 0; i < to.size(); i++) {
 				String genome = to.get(i);
 				if (lineages.containsKey(genome) && from.contains(genome) 
-						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
-					return NewickColourMatching.getLineageColour(lineages.get(genome));
-				}
-			}
-		} else if (from.size() < to.size()) {
-			for (int i = 0; i < from.size(); i++) {
-				String genome = from.get(i);
-				if (lineages.containsKey(genome) && to.contains(genome) 
 						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
 					return NewickColourMatching.getLineageColour(lineages.get(genome));
 				}
@@ -368,20 +320,13 @@ public class GraphController implements Initializable {
 		return color;
 	}
 	
-	/**
-	 * Scales and re-uses the x-coordinates calculated for the ribbon visualization.
-	 * 
-	 * @param ycoords
-	 * 			y-coordinates of ribbons.
-	 * @return ycoords
-	 * 			y-coordinates of graph segments.
-	 */
-	public ArrayList<Integer> scaleRibbonToGraphCoordsY(ArrayList<Integer> ycoords) {
-		for (int i = 0; i < ycoords.size(); i++) {
-			int newc = ycoords.remove(i) * 50;
-			ycoords.add(i, newc);
-		}
-		return ycoords;
+	public void redraw() {
+		System.out.println("Redrawing the graph");
+		innerGroup = new Group(getGraph());
+		updateView();
+		double maxY = dbm.getDbReader().getMaxYCoord();
+		innerGroup.setScaleY(1020.0 / maxY);
+		innerGroup.setScaleX(MIN_SCALE);
 	}
 	
 	public ScrollPane getScrollPane() {
@@ -398,5 +343,59 @@ public class GraphController implements Initializable {
 	
 	public void setRibbonGroup(Group group) {
 		otherGroup = group;
+	}
+	
+	public void setGenomeIds(ArrayList<Integer> ids) {
+		genomeIds = ids;
+	}
+	
+	public ArrayList<Integer> createList() {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for (int i = 0; i < 10; i++) {
+			list.add(i);
+		}
+		return list;
+	}
+	
+	/**
+	 * Returns a visualization of a graph segment
+	 */
+	
+	public Ellipse createEllipse(int segmentId) {
+		String content = segmentdna.get(segmentId - 1);
+		double xcoord = graphxcoords.get(segmentId - 1);
+		double ycoord = graphycoords.get(segmentId - 1);
+		double xradius = 30 + 2 * Math.log(content.length());
+		Ellipse node = new Ellipse(xcoord, ycoord, xradius, 30);
+	    node.setFill(Color.DODGERBLUE);
+	    node.setStroke(Color.BLACK);
+	    node.setStrokeType(StrokeType.INSIDE);
+		return node;
+	}
+	
+	/**
+	 * Returns a Text object displaying the DNA strand.
+	 * DNA strands with more than 5 nucleotides only have the first 5 nucleotides displayed.
+	 */
+	
+	private Text visualizeDnaContent(int segmentId) {
+		String content = segmentdna.get(segmentId - 1);
+		StringBuilder sb = new StringBuilder();
+		for (int j = 0; j < content.length() && j <= 4; j++) {
+			sb.append(content.substring(j, j + 1));
+		}
+		if ( content.length() > 5) {
+			sb.append("...");
+		}
+		Text dnatext = new Text();
+		dnatext.setTextAlignment(TextAlignment.CENTER);
+		dnatext.setText(sb.toString());
+		
+		double xcoord = graphxcoords.get(segmentId - 1);
+		double ycoord = graphycoords.get(segmentId - 1);
+		double width = dnatext.getLayoutBounds().getWidth();
+		dnatext.setLayoutX(xcoord - 0.5 * width);
+		dnatext.setLayoutY(ycoord + 5);
+		return dnatext;
 	}
 }

@@ -220,6 +220,7 @@ public class RibbonController implements Initializable {
 		);
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
+		System.out.println("MaxY in the graph controller = " + maxY);
 		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(MIN_SCALE);
 		
@@ -280,14 +281,6 @@ public class RibbonController implements Initializable {
 			for (int i = 0; i < to.size(); i++) {
 				String genome = to.get(i);
 				if (lineages.containsKey(genome) && from.contains(genome) 
-						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
-					return NewickColourMatching.getLineageColour(lineages.get(genome));
-				}
-			}
-		} else if (from.size() < to.size()) {
-			for (int i = 0; i < from.size(); i++) {
-				String genome = from.get(i);
-				if (lineages.containsKey(genome) && to.contains(genome) 
 						&& !genome.equals("MT_H37RV_BRD_V5.ref")) {
 					return NewickColourMatching.getLineageColour(lineages.get(genome));
 				}
