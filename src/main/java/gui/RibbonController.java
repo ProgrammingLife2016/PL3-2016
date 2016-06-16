@@ -220,6 +220,7 @@ public class RibbonController implements Initializable {
 		);
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
+		System.out.println("MaxY in the graph controller = " + maxY);
 		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(MIN_SCALE);
 		

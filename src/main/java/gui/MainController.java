@@ -92,6 +92,8 @@ public class MainController implements Initializable {
 			        				.findGenomeId(genomeNames);
 			        		ribbonTabController.setGenomeIds(genomeIds);
 			        		ribbonTabController.redraw();
+			        		graphTabController.setGenomeIds(genomeIds);
+			        		graphTabController.redraw();
 			        		NewickNode.setChanged(false);
 			        	}
 			        }
