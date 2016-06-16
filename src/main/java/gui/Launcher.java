@@ -27,6 +27,7 @@ public class Launcher extends Application {
 	static DatabaseManager dbm;
 	static Stage stage;
 	private static NewickTree nwkTree = null;
+	private static GuiPreProcessor preProcessor;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -75,6 +76,8 @@ public class Launcher extends Application {
             		Launcher.setDbManager(new DatabaseManager(dbPath));
         			GfaParser parser = new GfaParser(dbm);
         			GffParser gffparser = new GffParser(dbm);
+        			preProcessor = new GuiPreProcessor();
+        			
         			SplashController.progressNum.set(10);
         			SplashController.progressString.set("Start Parsing");
         			try {
@@ -85,12 +88,29 @@ public class Launcher extends Application {
         			}
         			SplashController.progressString.set("Start Calculating");
         			dbm.getDbProcessor().calculateLinkCounts();
-        			SplashController.progressNum.set(60);
+        			SplashController.progressNum.set(20);
         			dbm.getDbProcessor().updateCoordinates();
         			dbm.getDbProcessor().locateBubbles();	
+        			SplashController.progressNum.set(30);
+        			SplashController.progressString.set("Creating collapsed ribbons");
+        			preProcessor.createCollapsedRibbons();
+        			SplashController.progressString.set("Creating normal ribbons");
+        			preProcessor.createNormalRibbons();
+        			SplashController.progressNum.set(70);
+        			SplashController.progressString.set("Creating snips");
+        			preProcessor.createSnips();
         			SplashController.progressNum.set(100);
         		} else {
         			dbm = new DatabaseManager(dbPath);
+        			preProcessor = new GuiPreProcessor();
+        			SplashController.progressNum.set(30);
+        			SplashController.progressString.set("Creating collapsed ribbons");
+        			preProcessor.createCollapsedRibbons();
+        			SplashController.progressString.set("Creating normal ribbons");
+        			preProcessor.createNormalRibbons();
+        			SplashController.progressNum.set(70);
+        			SplashController.progressString.set("Creating snips... Almost done");
+        			preProcessor.createSnips();
         			SplashController.progressNum.set(100);
         		}
                 return null ;
@@ -118,6 +138,10 @@ public class Launcher extends Application {
 	
 	public static DatabaseManager getDatabaseManager() {
 		return dbm;
+	}
+	
+	public static GuiPreProcessor getPreprocessor() {
+		return preProcessor;
 	}
 
 	/**

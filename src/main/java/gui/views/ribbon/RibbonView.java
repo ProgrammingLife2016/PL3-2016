@@ -18,6 +18,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
 import db.DatabaseManager;
+import gui.controllers.SplashController;
 import gui.views.phylogeny.NewickColourMatching;
 import parsers.XlsxParser;
 
@@ -334,6 +335,17 @@ public class RibbonView {
 		List<Integer> ignore = new LinkedList<>();
 		
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
+			
+			if (fromId == links.size()/4) {
+				SplashController.progressNum.set(40);
+			}
+			else if(fromId == links.size()/4 * 2) {
+				SplashController.progressNum.set(50);
+			}
+			else if(fromId == links.size()/4 * 3) {
+				SplashController.progressNum.set(60);
+			}
+			
 			List<Integer> edges = links.get(fromId - 1);
 			
 			if (!bubbles.isEmpty() && fromId == bubbles.peek()[0]) {

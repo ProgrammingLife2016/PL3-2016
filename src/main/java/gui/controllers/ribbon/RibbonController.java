@@ -16,6 +16,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 
 import db.DatabaseManager;
+import gui.GuiPreProcessor;
 import gui.Launcher;
 import gui.views.ribbon.RibbonView;
 
@@ -40,9 +41,11 @@ public class RibbonController implements Initializable {
 	private DatabaseManager dbm = Launcher.getDatabaseManager();
 	private RibbonView ribbonView = new RibbonView(dbm);
 	
-	private Group collapsedGroup = ribbonView.createCollapsedRibbons();
-	private Group normalGroup = ribbonView.createNormalRibbons();
-	private Group snpGroup = ribbonView.createSnips();
+	private GuiPreProcessor preProcessor = Launcher.getPreprocessor();
+	
+	private Group collapsedGroup = preProcessor.getCollapsedGroup();
+	private Group normalGroup = preProcessor.getNormalGroup();
+	private Group snpGroup = preProcessor.getSnpGroup();
 	
     private static final double MAX_SCALE = 1.0d;
     private static final double MIN_SCALE = .003d;
