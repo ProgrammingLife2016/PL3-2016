@@ -180,7 +180,6 @@ public class RibbonView {
 		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames(genomes);
 		
 		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink(genomes);
-		System.out.println(hash);
 		for (int i = 0; i < linkIds.size(); i++) {
 			for (int j = 0; j < linkIds.get(i).size(); j++) {
 				ArrayList<Integer> genomeIds = hash.get(100000 * (i + 1) 
