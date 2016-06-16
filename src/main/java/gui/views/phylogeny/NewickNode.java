@@ -6,11 +6,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import gui.eventhandlers.phylogeny.NewickNodeMouseEventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
+
+import gui.eventhandlers.phylogeny.NewickNodeMouseEventHandler;
 
 /**
  * Class that is used to visualize a single node of a {@link NewickTree}

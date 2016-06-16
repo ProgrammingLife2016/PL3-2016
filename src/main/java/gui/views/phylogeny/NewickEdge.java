@@ -4,8 +4,6 @@ import javafx.scene.Group;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
-import gui.views.phylogeny.NewickColourMatching;
-
 /**
  * Class to represent a Path between two NewickNodes.
  */
