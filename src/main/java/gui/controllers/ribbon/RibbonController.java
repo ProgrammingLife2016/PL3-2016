@@ -44,6 +44,7 @@ public class RibbonController implements Initializable {
 	
 	private Group collapsedGroup = ribbonView.createCollapsedRibbons();
 	private Group normalGroup = ribbonView.createNormalRibbons();
+	private Group snpGroup = ribbonView.createSnips();
 	
     private static final double MAX_SCALE = 1.0d;
     private static final double MIN_SCALE = .003d;
@@ -199,10 +200,27 @@ public class RibbonController implements Initializable {
 			);
 			
 		checkboxSnp.selectedProperty().addListener(
-			(ChangeListener<Boolean>) (observable, oldValue, newValue) -> 
-			//For now, we just print a line. Should be toggling the SNPs
-			System.out.println("You pressed the SNP checkbox")
-		);
+			(ChangeListener<Boolean>) (observable, oldValue, newValue) -> { 
+					
+					double scale = innerGroup.getScaleX();
+					double scroll = scrollPane.getHvalue();
+					
+					if (scale >= COLLAPSE && scale <= GRAPH) {
+						if (oldValue == false) {
+							innerGroup.getChildren().clear();
+							Group temp = new Group(snpGroup);
+							innerGroup.getChildren().addAll(temp.getChildren());
+						} else if (oldValue == true) {
+							innerGroup.getChildren().clear();
+							Group temp = new Group(normalGroup);
+							innerGroup.getChildren().addAll(temp.getChildren());
+						}
+					} 
+					
+					innerGroup.setScaleX(scale);
+					scrollPane.setHvalue(scroll);
+				}
+			);
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
 		System.out.println("MaxY in the graph controller = " + maxY);

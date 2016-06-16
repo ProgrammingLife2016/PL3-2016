@@ -222,7 +222,7 @@ public class RibbonView {
 				Paint colour = Paint.valueOf("0xff0000ff");
 				String genome = genomeNames.get(id - 1);
 				if (!genome.startsWith("M")) {
-					colour = getMajorityColor(genomeNames);
+					colour = getMajorityColor(dbm.getDbReader().getGenomeNames(genomeIds));
 				} 
 				colours.get(i).add(colour);
 			}
