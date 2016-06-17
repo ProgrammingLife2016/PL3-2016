@@ -12,6 +12,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
@@ -152,6 +154,53 @@ public class MainController implements Initializable {
 			 }	
          }
 	 }
+	 
+	/**
+	 * Shows a popup displaying information about DNA Lab.
+	 * 
+	 * @param event
+	 *            The ActionEvent that has caused this method call
+	 */
+	public void popupAbout(ActionEvent event) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("About");
+		alert.setHeaderText("DNA Lab");
+		String info = "Java version: " + System.getProperty("java.version") + "\n\n"
+				+ "DNA Lab is a tool that can dynamically "
+				+ "visualize DNA sequences and their mutations."
+				+ "It uses .gfa files as its format for DNA sequences."
+				+ "The newicktree format (.nwk) is used "
+				+ "to store the phylogenetic tree of the genomes.\n\n"
+				+ "This application was developed as part of the \'Programming Life\' "
+				+ "context project at the Delft University of Technology.";
+		alert.setContentText(info);
+		alert.getDialogPane().setPrefSize(480, 320);
+
+		alert.showAndWait();
+	}
+	 
+	/**
+	 * Shows a popup displaying information about the controls.
+	 * 
+	 * @param event
+	 *            The ActionEvent that has caused this method call
+	 */
+	public void popupControls(ActionEvent event) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Controls");
+		alert.setHeaderText("Using DNA Lab");
+		String info = "Use the scrollwheel to move to the left and right in the graph.\n"
+				+ "Use the scrollwheel while holding Ctrl to zoom in and out.\n"
+				+ "Use the scrollwheel while holding Shift to scroll vertically.\n\n"
+				+ "In the phylogeny tab, (de)select strains by clicking on the nodes.\n"
+				+ "When switching back to the graph, " + "the selection will be shown.\n\n"
+				+ "In the file menu in the upper toolbar, "
+				+ "new gfa files can be imported and existing database files can be opened.";
+		alert.setContentText(info);
+		alert.getDialogPane().setPrefSize(480, 320);
+
+		alert.showAndWait();
+	}
 	 
 	 /**
 	  * Used to open an existing database. It will first close the existing database
