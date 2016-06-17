@@ -12,6 +12,10 @@ import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 import javafx.scene.Group;
 import javafx.scene.paint.Paint;
@@ -74,6 +78,7 @@ public class RibbonView {
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(toId - 1), ycoords.get(toId - 1));
 				line.setStrokeWidth(calculateLineWidth(counts.get(fromId - 1).get(j)));
+
 				line.setStroke(colours.get(fromId - 1).get(j));
 		        res.getChildren().add(line);
 			}
@@ -233,32 +238,6 @@ public class RibbonView {
 	 * @param genomes
 	 * @return
 	 */
-	private ArrayList<ArrayList<Paint>> calculateColours(ArrayList<ArrayList<Integer>> linkIds, 
-			ArrayList<Integer> genomes) {
-		ArrayList<ArrayList<Paint>> colours = 
-				new ArrayList<ArrayList<Paint>>();
-		for (int i = 0; i < dbm.getDbReader().countSegments(); i++) {
-			colours.add(new ArrayList<Paint>());
-		}
-		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames(genomes);
-		
-		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink(genomes);
-		for (int i = 0; i < linkIds.size(); i++) {
-			for (int j = 0; j < linkIds.get(i).size(); j++) {
-				ArrayList<Integer> genomeIds = hash.get(100000 * (i + 1) 
-						+ linkIds.get(i).get(j));
-				int id = genomeIds.get(0);
-				Paint colour = Paint.valueOf("0xff0000ff");
-				String genome = genomeNames.get(id - 1);
-				if (!genome.startsWith("M")) {
-					colour = getMajorityColor(dbm.getDbReader().getGenomeNames(genomeIds));
-				} 
-				colours.get(i).add(colour);
-			}
-		}
-		return colours;
-	}
-	
 	public Paint getLineColor(int ff, int tt) {
 		Paint color = Paint.valueOf("0xff0000ff");
 		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(ff);
@@ -281,6 +260,33 @@ public class RibbonView {
 			}
 		}
 		return color;
+	}
+	
+	private ArrayList<ArrayList<Paint>> calculateColours(ArrayList<ArrayList<Integer>> linkIds, 
+			ArrayList<Integer> genomes) {
+		ArrayList<ArrayList<Paint>> colours = 
+				new ArrayList<ArrayList<Paint>>();
+		for (int i = 0; i < dbm.getDbReader().countSegments(); i++) {
+			colours.add(new ArrayList<Paint>());
+		}
+		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames(genomes);
+		
+		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink(genomes);
+		for (int i = 0; i < linkIds.size(); i++) {
+			for (int j = 0; j < linkIds.get(i).size(); j++) {
+				ArrayList<Integer> genomeIds = hash.get(100000 * (i + 1) 
+						+ linkIds.get(i).get(j));
+				int id = genomeIds.get(0);
+				Paint colour = Paint.valueOf("0xff0000ff");
+				String genome = genomeNames.get(id - 1);
+				if (!genome.startsWith("M")) {
+					colour = getMajorityColor(dbm.getDbReader().getGenomeNames(genomeIds));
+
+				} 
+				colours.get(i).add(colour);
+			}
+		}
+		return colours;
 	}
 	
 	/**
@@ -345,7 +351,6 @@ public class RibbonView {
 			else if(fromId == links.size()/4 * 3) {
 				SplashController.progressNum.set(60);
 			}
-			
 			List<Integer> edges = links.get(fromId - 1);
 			
 			if (!bubbles.isEmpty() && fromId == bubbles.peek()[0]) {
