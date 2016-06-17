@@ -80,8 +80,6 @@ public class MainController implements Initializable {
 		ribbonTabController.setGraphGroup(graphTabController.getInnerGroup());
 		ribbonTabController.setAnnotationRibbonGroup(annotationsController.getInnerGroup());
 		ribbonTabController.setAnnotationRibbonPane(annotationsController.getScrollPane());
-		ribbonTabController.setAnnotationGraphGroup(annotationsController.getInnerGroup());
-		ribbonTabController.setAnnotationGraphPane(annotationsController.getScrollPane());
 		//phyloMenuController.setOuterPane(phyloGridPane);
 		tabPane.getTabs().get(2).setDisable(true);
 		tabPane.getSelectionModel().selectedItemProperty().addListener(

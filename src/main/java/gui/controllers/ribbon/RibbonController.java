@@ -29,7 +29,6 @@ public class RibbonController implements Initializable {
 	private ScrollPane otherPane;
 
 	private ScrollPane annotationRibbonPane;
-	private ScrollPane annotationGraphPane;
 
 	@FXML private CheckBox checkboxSnp;
 	@FXML private CheckBox checkboxInsert;
@@ -38,7 +37,6 @@ public class RibbonController implements Initializable {
 	private Group outerGroup;
 	private Group otherGroup;
 	private Group annotationRibbonGroup;
-	private Group annotationGraphGroup;
 	
 	private DatabaseManager dbm = Launcher.getDatabaseManager();
 	private RibbonView ribbonView = new RibbonView(dbm);
@@ -104,9 +102,7 @@ public class RibbonController implements Initializable {
 				otherPane.setHvalue(barValue);
 				
 				annotationRibbonGroup.setScaleX(scale);
-				annotationGraphGroup.setScaleX(scale);
 				annotationRibbonPane.setHvalue(barValue);
-				annotationGraphPane.setHvalue(barValue);
 				prevScale = scale;
 				return;
 			} else if (event.isAltDown()) {
@@ -176,8 +172,6 @@ public class RibbonController implements Initializable {
 			otherPane.setHvalue(barValue);
 			annotationRibbonGroup.setScaleX(scale);
 			annotationRibbonPane.setPrefWidth(scrollPane.getPrefWidth());
-			annotationGraphGroup.setScaleX(scale);
-			annotationRibbonPane.setPrefWidth(scrollPane.getPrefWidth());
 
 		}
 	};
@@ -210,7 +204,6 @@ public class RibbonController implements Initializable {
 					Number oldValue, Number newValue) {
 				otherPane.setHvalue(newValue.doubleValue());
 				annotationRibbonPane.setHvalue(newValue.doubleValue());
-				annotationGraphPane.setHvalue(newValue.doubleValue());
 			}
 		});
 
@@ -277,16 +270,6 @@ public class RibbonController implements Initializable {
 	public void setAnnotationRibbonPane(ScrollPane scrollpane) {
 		annotationRibbonPane = scrollpane;
 	}
-	
-	public void setAnnotationGraphGroup(Group group) {
-		annotationGraphGroup = group;
-	}
-	
-	public void setAnnotationGraphPane(ScrollPane scrollpane) {
-		annotationGraphPane = scrollpane;
-	}
-
-
 
 	public RibbonView getRibbonView() {
 		return ribbonView;
