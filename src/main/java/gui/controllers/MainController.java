@@ -92,7 +92,7 @@ public class MainController implements Initializable {
 			        				.getSelectedGenomes();
 			        		ArrayList<Integer> genomeIds = 
 			        				Launcher.getDatabaseManager().getDbReader()
-			        				.findGenomeId(genomeNames);
+			        				.getGenomeIds(genomeNames);
 			        		ribbonTabController.getRibbonView().setGenomeIds(genomeIds);
 			        		graphTabController.getGraphView().setGenomeIds(genomeIds);
 			        		graphTabController.redraw();

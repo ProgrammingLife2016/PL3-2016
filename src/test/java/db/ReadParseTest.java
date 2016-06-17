@@ -54,16 +54,6 @@ public class ReadParseTest {
 	}
 	
 	/**
-	 * Test for counting all genomes in 1 segment.
-	 */
-	@Test
-	public void countGenomesInSegTest() {
-		assertEquals(4, dbm.getDbReader().countGenomesInSeg(1));
-		assertEquals(2, dbm.getDbReader().countGenomesInSeg(2));
-		assertEquals(2, dbm.getDbReader().countGenomesInSeg(8));
-	}
-	
-	/**
 	 * Test for counting all genomes through all segments.
 	 */
 	@Test
@@ -131,42 +121,6 @@ public class ReadParseTest {
 		assertEquals(300, (int)xcoords.get(2));
 		assertEquals(50, (int)xcoords.get(3));
 		assertEquals(150, (int)xcoords.get(4));
-		dbm.cleanDbDirectory();
-	}
-	
-	/**
-	 * Test for method returning a list with each ending segment of a certain link.
-	 */
-	@Test public void getAllToIdTest() {
-		ArrayList<Integer> toallids = dbm.getDbReader().getAllToId();
-		int[] expectedids = {2, 4, 4, 5, 6, 8, 7, 7, 8, 9, 9};
-		for (int i = 0; i < 2; i++) {
-			assertEquals(expectedids[i], (int)toallids.get(i));
-		}
-	}
-	
-	/**
-	 * Test for getting all counts of links through all genomes.
-	 */
-	@Test
-	public void getAllCounts() {
-		ArrayList<Integer> allcounts = dbm.getDbReader().getAllCounts();
-		assertEquals(2, (int)allcounts.get(0));
-		assertEquals(2, (int)allcounts.get(1));
-		assertEquals(1, (int)allcounts.get(2));
-		assertEquals(1, (int)allcounts.get(3));
-	}
-	
-	/**
-	 * Test for method returning a list with all incoming segments for a certain segment.
-	 */
-	@Test
-	public void getFromIDsTest() {
-		ArrayList<Integer> fromids = dbm.getDbReader().getFromIDs(7);
-		int[] expectedids = {4, 5};
-		for (int i = 0; i < 2; i++) {
-			assertEquals(expectedids[i], (int)fromids.get(i));
-		}
 		dbm.cleanDbDirectory();
 	}
 	

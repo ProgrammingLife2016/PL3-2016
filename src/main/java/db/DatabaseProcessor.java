@@ -68,7 +68,6 @@ public class DatabaseProcessor {
 					firstChildEdge = firstChildEdges.get(0);
 					secondChildEdge = secondChildEdges.get(0);
 				} catch (IndexOutOfBoundsException e) {
-					System.out.println("Skipping segment: " + segmentId);
 					break;
 				}
 				if (secondChildEdge == firstChildEdge) {
@@ -99,19 +98,18 @@ public class DatabaseProcessor {
 	 */
 	public void updateDblinkcount(int fromId, int toId, int count ) {
 		try {
-			//int currentCount = dbr.getLinkcount(fromId, toId);
 			this.db.executeUpdate("INSERT INTO LINKS VALUES "
 					+ "(" + fromId + " , " + toId + " , " + count + ")");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+	
 	/**
 	 * Method to determine how much genomes go through each link. 
 	 * You allocate space for all links, then you analyze each genome.
 	 * At the end, you update the data in the database.
 	 */
-	
 	public void calculateLinkCounts() {
 		ArrayList<Integer> from = dbr.getAllFromId();
 		

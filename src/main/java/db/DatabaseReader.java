@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author Björn Ho, Daniel van de Berg, Rob Kapel
- *
  * Class for executing queries to read data out of a database.
  */
 public class DatabaseReader {
@@ -22,33 +20,9 @@ public class DatabaseReader {
 	}
 	
 	/**
-	 * Returns the number of genomes that the given segment is part of, or -1 if
-	 * no segment with the given id exists.
-	 * 
-	 * @param segmentID
-	 *            Id of the segment.
-	 * @return the number of genomes that the given segment is part of, or -1 if
-	 *         no segment with the given id exists.
-	 */
-	public int countGenomesInSeg(int segmentId) {
-		String query = "SELECT COUNT(GENOMEID) FROM GENOMESEGMENTLINK "
-				+ "WHERE SEGMENTID = "  + segmentId;
-		try (ResultSet rs = this.db.executeQuery(query)) {
-			if (rs.next()) {
-				return rs.getInt(1);
-			}
-			return -1;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return -1;
-		}
-	}
-	
-	/**
 	 * Returns the number of genomes for each segment of the database
 	 * @return an ArrayList of the number of genomes for each segment of the database
-	 */
-	
+	 */	
 	public ArrayList<Integer> countAllGenomesInSeg() {
 		ArrayList<Integer> segments = new ArrayList<Integer>();
 		String query = "SELECT SEGMENTID, COUNT(GENOMEID)"
@@ -64,6 +38,23 @@ public class DatabaseReader {
 		}
 	}
 	
+	/**
+	 * Returns the genome id's that are contained in the given bubble. The
+	 * bubble is defined as its from id and to id and two of of the nodes that
+	 * are part of the bubble.
+	 * 
+	 * @param fromId
+	 *            The fromid of the bubble
+	 * @param toId
+	 *            The toid tof the bubble
+	 * @param branch1
+	 *            The first node of the nodes that are contained within the
+	 *            bubble.
+	 * @param branch2
+	 *            The second node of the nodes that are contained within the
+	 *            bubble.
+	 * @return A list of the genome id's that are contained in the given bubble.
+	 */
 	public ArrayList<Integer> getGenomesInBubble(int fromId, int toId, int branch1, int branch2) {
 		ArrayList<Integer> genomes = new ArrayList<Integer>();
 		String query = "SELECT GENOMEID FROM (SELECT GENOMEID, COUNT(*) AS C FROM LINKS WHERE "
@@ -89,7 +80,6 @@ public class DatabaseReader {
 	 * Returns the number of genomes for each segment of the database
 	 * @return an ArrayList of the number of genomes for each segment of the database
 	 */
-	
 	public ArrayList<String> getGenomesThroughSegment(int seg) {
 		ArrayList<Integer> segments = new ArrayList<Integer>();
 		String query = "SELECT GENOMEID "
@@ -105,13 +95,10 @@ public class DatabaseReader {
 		}
 	}
 	
-
-	
 	/**
 	 * Returns the number of genomes for each segment of the database
 	 * @return an ArrayList of the number of genomes for each segment of the database
-	 */
-	
+	 */	
 	private ArrayList<String> getGenomesThroughSegmentHelper(ArrayList<Integer> ints) {
 		ArrayList<String> segments = new ArrayList<String>();
 		for (int i : ints) {
@@ -128,8 +115,6 @@ public class DatabaseReader {
 		}
 		return segments;
 	}
-	
-	
 	
 	/**
 	 * Returns the number of genomes in the database, or -1 if an error occurs
@@ -149,7 +134,12 @@ public class DatabaseReader {
 		}
 	}
 	
-	public ArrayList<Integer> findGenomeId(ArrayList<String> names) {
+	/**
+	 * Returns all genome id's of the given genome names.
+	 * @param names Genome names to retreive the ids of.
+	 * @return A list containing genome id's of the given genome names.
+	 */
+	public ArrayList<Integer> getGenomeIds(ArrayList<String> names) {
 		ArrayList<Integer> genomeIds = new ArrayList<Integer>();
 		String query = "SELECT ID,NAME FROM GENOMES ";
 		try (ResultSet rs = this.db.executeQuery(query)) {
@@ -170,7 +160,6 @@ public class DatabaseReader {
 	 * Returns the amount of segments in the database
 	 * @return the amount of segments in the database
 	 */
-	
 	public int countSegments() {
 		String query = "SELECT COUNT(ID) FROM SEGMENTS";
 		try (ResultSet rs = this.db.executeQuery(query)) {
@@ -208,6 +197,12 @@ public class DatabaseReader {
 		}
 	}
 	
+	/**
+	 * Returns all id's of segmnents witch have only one DNA character in them.
+	 * 
+	 * @return A list of all id's of segmnents witch have only one DNA character
+	 *         in them.
+	 */
 	public Set<Integer> getSnipMaterial() {
 		Set<Integer> set = new LinkedHashSet<Integer>();
 		String query = "SELECT ID FROM SEGMENTS WHERE LENGTH(CONTENT) = 1";
@@ -222,7 +217,11 @@ public class DatabaseReader {
 		}
 	}
 	
-	
+	/**
+	 * Returns all bubble start and end id's of the given genome id's.
+	 * @param genomes The genome id's.
+	 * @return A list containing all bubble start and end id's of the given genome id's.
+	 */
 	public List<int[]> getBubbles(ArrayList<Integer> genomes) {
 
 		List<int[]> bubbleList = new ArrayList<>();
@@ -244,14 +243,6 @@ public class DatabaseReader {
 			return null;
 		}
 	}
-	
-	
-
-	
-	
-	
-	
-	
 	
 	/**
 	 * Returns all id's of the segments that have one or more outgoing links.
@@ -277,7 +268,6 @@ public class DatabaseReader {
 	 * Returns the first segment id of each genome in the database
 	 * @return the first segment id of each genome in the database
 	 */
-	
 	public ArrayList<Integer> getFirstOfAllGenomes() {
 		ArrayList<Integer> segmentList = new ArrayList<Integer>();
 
@@ -300,7 +290,6 @@ public class DatabaseReader {
 	 * Returns the starting location in the reference genome of each annotation
 	 * @return the starting location in the reference genome of each annotation
 	 */
-	
 	public ArrayList<Integer> getAllAnnotationStartLocations() {
 		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
 		try (ResultSet rs = this.db.executeQuery(query)) {
@@ -318,8 +307,7 @@ public class DatabaseReader {
 	/**
 	 * Returns the ending location in the reference genome of each annotation
 	 * @return the ending location in the reference genome of each annotation
-	 */
-	
+	 */	
 	public ArrayList<Integer> getAllAnnotationEndLocations() {
 		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
 		try (ResultSet rs = this.db.executeQuery(query)) {
@@ -338,7 +326,6 @@ public class DatabaseReader {
 	 * Returns the name of each annotation
 	 * @return the name of each annotation
 	 */
-	
 	public ArrayList<String> getAllAnnotationNames() {
 		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
 		try (ResultSet rs = this.db.executeQuery(query)) {
@@ -391,6 +378,10 @@ public class DatabaseReader {
 		return null;
 	}
 	
+	/**
+	 * Returns the uppermost y coordinate of all segments.
+	 * @return The uppermost y coordinate of all segments.
+	 */
 	public int getMaxYCoord() {
 		String query = "SELECT MAX(YCOORD) FROM SEGMENTS";
 		try (ResultSet rs = this.db.executeQuery(query)) {
@@ -402,72 +393,7 @@ public class DatabaseReader {
 		}
 		return 0;
 	}
-	
-	/**
-	 * Returns all id's of the segments that have one or more ingoing links.
-	 * 
-	 * @return All id's of the segments that have one or more ingoing links.
-	 */
-	public ArrayList<Integer> getAllToId() {
-		String query = "SELECT * FROM LINKS";
-		try (ResultSet rs = this.db.executeQuery(query)) {
-			ArrayList<Integer> toIdList = new ArrayList<Integer>();
-			while (rs.next()) {
-				toIdList.add(rs.getInt(2));
-			 }
-			return toIdList;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	/**
-	 * Returns the number of genomes through each link in your database.
-	 * 
-	 * @return the number of genomes through each link in your database.
-	 */
-	
-	public ArrayList<Integer> getAllCounts() {
-		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS GROUP BY FROMID, TOID";
-		ArrayList<Integer> toIdList = new ArrayList<Integer>();
 		
-		try (ResultSet rs = this.db.executeQuery(query)) {
-			while (rs.next()) {
-				toIdList.add(rs.getInt(3));
-			}
-			return toIdList;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return toIdList;
-	}
-
-	
-	/**
-	 * Returns all id's of the links entering the segment with the given id, or
-	 * null if no segment exists with the given id.
-	 * 
-	 * @param fromID
-	 *            Segment id.
-	 * @return All id's of the links entering the segment with the given id, or
-	 *         null if no segment exists with the given id.
-	 */
-	public ArrayList<Integer> getFromIDs(int toId) {
-		String query = "SELECT FROMID FROM LINKS WHERE TOID = " + toId;
-		try (ResultSet rs = this.db.executeQuery(query)) {
-			ArrayList<Integer> fromIdList = new ArrayList<Integer>();
-			while (rs.next()) {
-				fromIdList.add(rs.getInt(1));
-			 }
-			return fromIdList;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 	/**
 	 * Returns all links in the dataset. For each segment, an arraylist is
 	 * created in which they can store the segments they link to. All these
@@ -497,6 +423,11 @@ public class DatabaseReader {
 		return linkList;
 	}
 	
+	/**
+	 * Returns all links containing the given genomes.
+	 * @param genomes A list of genome id's.
+	 * @return All links containing the given genomes.
+	 */
 	public ArrayList<ArrayList<Integer>> getLinks(ArrayList<Integer> genomes) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
@@ -523,6 +454,11 @@ public class DatabaseReader {
 		return linkList;
 	}
 	
+	/**
+	 * Returns a Hashmap containing all links that contain a genome of the input list.
+	 * @param genomes A list of genome id's.
+	 * @return a Hashmap containing all links that contain a genome of the input list.
+	 */
 	public HashMap<Integer, ArrayList<Integer>> getGenomesPerLink(ArrayList<Integer> genomes) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT FROMID, TOID, GENOMEID FROM LINKS WHERE GENOMEID = "
@@ -556,7 +492,6 @@ public class DatabaseReader {
 	 * arraylists are then put into an arraylist of arraylists.
 	 * @return for each link how many genomes pass through.
 	 */
-	
 	public ArrayList<ArrayList<Integer>> getLinkWeights() {
 		String query = "SELECT FROMID, TOID, COUNT(*) FROM LINKS GROUP BY FROMID, TOID";
 		ArrayList<ArrayList<Integer>> linkList = new ArrayList<ArrayList<Integer>>();
@@ -576,6 +511,15 @@ public class DatabaseReader {
 		return linkList;
 	}
 	
+	/**
+	 * Returns the number of genomes that run through the links containing a
+	 * genome from the input list.
+	 * 
+	 * @param genomes
+	 *            A list of genome id's.
+	 * @return The number of genomes that run through the links containing a
+	 *         genome from the input list.
+	 */
 	public ArrayList<ArrayList<Integer>> getLinkWeights(ArrayList<Integer> genomes) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT FROMID, TOID, COUNT(*) FROM LINKS WHERE GENOMEID = "
@@ -643,6 +587,11 @@ public class DatabaseReader {
 		}
 	}
 	
+	/**
+	 * Returns the names of the given genomes.
+	 * @param genomes List of genome id's.
+	 * @return The names of the given genomes.
+	 */
 	public ArrayList<String> getGenomeNames(ArrayList<Integer> genomes) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT NAME FROM GENOMES WHERE ID = "
