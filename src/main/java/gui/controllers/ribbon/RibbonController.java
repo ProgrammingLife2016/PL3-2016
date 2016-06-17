@@ -109,15 +109,15 @@ public class RibbonController implements Initializable {
 				annotationGraphPane.setHvalue(barValue);
 				prevScale = scale;
 				return;
-			} else if (event.isShiftDown()) {
+			} else if (event.isAltDown()) {
 				event.consume();
-				double deltaY = event.getDeltaX();
+				double deltaY = event.getDeltaY();
 				double delta = 1.1;
 				double scale = innerGroup.getScaleY();
 				if (deltaY < 0) {
-					scale = scale / Math.pow(delta, -event.getDeltaX() / 20);
+					scale = scale / Math.pow(delta, -event.getDeltaY() / 20);
 				} else if (deltaY > 0) {
-					scale *= Math.pow(delta, event.getDeltaX() / 20);
+					scale *= Math.pow(delta, event.getDeltaY() / 20);
 				}
 				
 				double barValue = scrollPane.getVvalue();
