@@ -192,7 +192,7 @@ public class DatabaseReader {
 	 * @return a list containing all bubbles, or null if the database could not
 	 *         be read.
 	 */
-	public List<int[]> getBubbles() {
+	public List<int[]> getAllBubbles() {
 
 		List<int[]> bubbleList = new ArrayList<>();
 

@@ -1,7 +1,8 @@
 package gui;
 
-import gui.views.ribbon.RibbonView;
 import javafx.scene.Group;
+
+import gui.views.ribbon.RibbonView;
 
 public class GuiPreProcessor {
 	private RibbonView ribbonView = new RibbonView(Launcher.getDatabaseManager());

@@ -12,10 +12,6 @@ import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 
 import javafx.scene.Group;
 import javafx.scene.paint.Paint;
@@ -110,26 +106,23 @@ public class RibbonView {
 	 * @return	returns a set of integers of segments that are in a snip.
 	 */
 	public Set<Integer> calculateSnipSegments() {
-		List<int[]> bubblesList = dbm.getDbReader().getBubbles();
-		
+		List<int[]> bubblesList = dbm.getDbReader().getAllBubbles();
+
 		Set<Integer> set = dbm.getDbReader().getSnipMaterial();
 		Set<Integer> set2 = new HashSet<Integer>();
-		
+
 		for (int i = 0; i < bubblesList.size(); ++i) {
 			int startBubble = bubblesList.get(i)[0];
 			int endBubble = bubblesList.get(i)[1];
-			if (endBubble - startBubble > 2) {
-				if (isSnip(startBubble, endBubble, set)) {
-					int current = startBubble;
-					while (current != endBubble + 1) {
-						set2.add(current);
-						++current;
-					}
+			if (endBubble - startBubble > 2 && isSnip(startBubble, endBubble, set)) {
+				int current = startBubble;
+				while (current != endBubble + 1) {
+					set2.add(current);
+					++current;
 				}
-
 			}
 		}
-		
+
 		System.out.println("DONE SNIP SEGMENTS CALC");
 		return set2;
 	}
@@ -139,7 +132,7 @@ public class RibbonView {
 	 * @return	return a set of segment numbers that are in InDels.
 	 */
 	public Set<Integer> calculateInDelSegments() {
-		List<int[]> bubblesList = dbm.getDbReader().getBubbles();
+		List<int[]> bubblesList = dbm.getDbReader().getAllBubbles();
 		Set<Integer> set = new HashSet<Integer>();
 		
 		for (int i = 0; i < bubblesList.size(); ++i) {
@@ -333,7 +326,6 @@ public class RibbonView {
 		Group res = new Group();
 		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomeIds);
 		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomeIds);
-		ArrayList<ArrayList<Paint>> colours = calculateColours(links, genomeIds);
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
 		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles(genomeIds));
@@ -342,13 +334,11 @@ public class RibbonView {
 		
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
 			
-			if (fromId == links.size()/4) {
+			if (fromId == links.size() / 4) {
 				SplashController.progressNum.set(40);
-			}
-			else if(fromId == links.size()/4 * 2) {
+			} else if (fromId == links.size() / 4 * 2) {
 				SplashController.progressNum.set(50);
-			}
-			else if(fromId == links.size()/4 * 3) {
+			} else if (fromId == links.size() / 4 * 3) {
 				SplashController.progressNum.set(60);
 			}
 			List<Integer> edges = links.get(fromId - 1);
