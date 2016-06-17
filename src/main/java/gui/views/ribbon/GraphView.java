@@ -107,12 +107,18 @@ public class GraphView {
 				segmentIds.add(toId);
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(toId - 1), ycoords.get(toId - 1));
-				line.setStrokeWidth(counts.get(fromId - 1).get(j));
+				line.setStrokeWidth(calculateLineWidth(counts.get(fromId - 1).get(j)));
 		        res.getChildren().add(line);
 			}
 		}
 		System.out.println("Finished creating graph edges");
 		return res;
+	}
+	
+	private double calculateLineWidth(double width) {
+		if (width < 3) return 3;
+		else if (width > 30) return 30;
+		return width;
 	}
 	
 	/**

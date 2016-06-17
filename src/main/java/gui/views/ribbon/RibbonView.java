@@ -68,7 +68,7 @@ public class RibbonView {
 				int toId = links.get(fromId - 1).get(j);
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(toId - 1), ycoords.get(toId - 1));
-				line.setStrokeWidth(counts.get(fromId - 1).get(j));
+				line.setStrokeWidth(calculateLineWidth(counts.get(fromId - 1).get(j)));
 				line.setStroke(colours.get(fromId - 1).get(j));
 		        res.getChildren().add(line);
 			}
@@ -154,7 +154,7 @@ public class RibbonView {
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
 				double width = bubble[2];
-				line.setStrokeWidth(2 * width);
+				line.setStrokeWidth(calculateLineWidth(2 * width));
 				line.setStroke(colours.get(fromId - 1).get(0));
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
@@ -172,7 +172,7 @@ public class RibbonView {
 								ycoords.get(fromId - 1), 
 								xcoords.get(toId - 1), 
 								ycoords.get(toId - 1));
-						line.setStrokeWidth(2 * counts.get(fromId - 1).get(j));
+						line.setStrokeWidth(calculateLineWidth(2 * counts.get(fromId - 1).get(j)));
 						line.setStroke(colours.get(fromId - 1).get(j));
 						res.getChildren().add(line);
 					}
@@ -182,5 +182,11 @@ public class RibbonView {
 		System.out.println("Finished collapsed ribbons");
 		
 		return res;
+	}
+	
+	private double calculateLineWidth(double width) {
+		if (width < 3) return 3;
+		else if (width > 30) return 30;
+		return width;
 	}
 }
