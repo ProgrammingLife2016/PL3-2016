@@ -7,7 +7,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
@@ -172,6 +175,13 @@ public class GraphView {
 	    node.setFill(Color.DODGERBLUE);
 	    node.setStroke(Color.BLACK);
 	    node.setStrokeType(StrokeType.INSIDE);
+	    node.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+	        @Override
+	        public void handle(MouseEvent mouseEvent) {
+	            System.out.println("mouse click detected! on segment: " + segmentId);
+	            //System.out.println(dbm.getDbReader().getContent(segmentId));
+	        }
+	    });
 		return node;
 	}
 	
@@ -197,6 +207,13 @@ public class GraphView {
 		double width = dnatext.getLayoutBounds().getWidth();
 		dnatext.setLayoutX(xcoord - 0.5 * width);
 		dnatext.setLayoutY(ycoord + 5);
+		 dnatext.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+		        @Override
+		        public void handle(MouseEvent mouseEvent) {
+		            System.out.println("mouse click detected! on segment: " + segmentId);
+		            System.out.println(dbm.getDbReader().getContent(segmentId));
+		        }
+		    });
 		return dnatext;
 	}
 	

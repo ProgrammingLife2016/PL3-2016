@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
@@ -32,6 +33,7 @@ public class RibbonController implements Initializable {
 
 	@FXML private CheckBox checkboxSnp;
 	@FXML private CheckBox checkboxInsert;
+	@FXML private TextArea textArea;
 	
 	private Group innerGroup;
 	private Group outerGroup;
@@ -258,6 +260,7 @@ public class RibbonController implements Initializable {
 		System.out.println("MaxY in the graph controller = " + maxY);
 		innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(MIN_SCALE);
+		
 	}
 	
 
@@ -309,6 +312,11 @@ public class RibbonController implements Initializable {
 	public RibbonView getRibbonView() {
 		return ribbonView;
 	}
+	
+	public void setTextArea(String s) {
+		textArea.setText(s);
+	}
+	
 	
 
 }
