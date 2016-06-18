@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.TextArea;
@@ -26,6 +28,7 @@ import parsers.XlsxParser;
 public class GraphView {
 	
 	private DatabaseManager dbm;
+	private StringProperty selectedContent = new SimpleStringProperty("");
 	
 	/**
 	 * Location of metadata.xlsx
@@ -167,10 +170,10 @@ public class GraphView {
 	 * Returns a visualization of a graph segment
 	 */
 	public Ellipse createEllipse(int segmentId) {
-		String content = segmentdna.get(segmentId - 1);
+		int contentLength = segmentdna.get(segmentId - 1).length();
 		double xcoord = graphxcoords.get(segmentId - 1);
 		double ycoord = graphycoords.get(segmentId - 1);
-		double xradius = 30 + 2 * Math.log(content.length());
+		double xradius = 30 + 2 * Math.log(contentLength);
 		Ellipse node = new Ellipse(xcoord, ycoord, xradius, 30);
 	    node.setFill(Color.DODGERBLUE);
 	    node.setStroke(Color.BLACK);
@@ -180,6 +183,7 @@ public class GraphView {
 	        public void handle(MouseEvent mouseEvent) {
 	            System.out.println("mouse click detected! on segment: " + segmentId);
 	            //System.out.println(dbm.getDbReader().getContent(segmentId));
+	            selectedContent.set(dbm.getDbReader().getContent(segmentId));
 	        }
 	    });
 		return node;
@@ -212,9 +216,14 @@ public class GraphView {
 		        public void handle(MouseEvent mouseEvent) {
 		            System.out.println("mouse click detected! on segment: " + segmentId);
 		            System.out.println(dbm.getDbReader().getContent(segmentId));
+		            selectedContent.set(dbm.getDbReader().getContent(segmentId));
 		        }
 		    });
 		return dnatext;
+	}
+	
+	public StringProperty getSelectedContentProperty() {
+		return selectedContent;
 	}
 	
 

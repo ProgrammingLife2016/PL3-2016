@@ -3,6 +3,9 @@ package gui.controllers.ribbon;
 import java.net.URL;
 
 import java.util.ResourceBundle;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -57,7 +60,7 @@ public class RibbonController implements Initializable {
 	
 	private double prevScale = 1;
 	
-
+	private StringProperty selectedNodeContent = new SimpleStringProperty("");
 	
 	/**
 	 * Handles the scroll wheel event for the ribbon view.
@@ -313,10 +316,9 @@ public class RibbonController implements Initializable {
 		return ribbonView;
 	}
 	
-	public void setTextArea(String s) {
-		textArea.setText(s);
+	public void setSelectedContentProperty(StringProperty property) {
+		this.selectedNodeContent = property;
+		this.textArea.textProperty().bind(selectedNodeContent);
 	}
-	
-	
 
 }
