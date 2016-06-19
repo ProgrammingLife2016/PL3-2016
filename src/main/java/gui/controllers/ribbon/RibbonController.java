@@ -4,6 +4,8 @@ import java.net.URL;
 
 import java.util.ResourceBundle;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -15,7 +17,6 @@ import javafx.scene.Group;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 
@@ -54,9 +55,11 @@ public class RibbonController implements Initializable {
 	private Group indelGroup = preProcessor.getInDelGroup();
 
     private static final double MAX_SCALE = 1.0d;
-    private static final double MIN_SCALE = .003d;
     private static final double COLLAPSE = .2;
     private static final double GRAPH = .8;
+    
+    private DoubleProperty minScaleProperty = new SimpleDoubleProperty(.003d);
+    private DoubleProperty scaleOffSetProperty = new SimpleDoubleProperty(.0d);
 	
 	private double prevScale = 1;
 	
@@ -77,11 +80,12 @@ public class RibbonController implements Initializable {
 
 				if (deltaY < 0) {
 					scale /= Math.pow(delta, -event.getDeltaY() / 20);
-					scale = scale < MIN_SCALE ? MIN_SCALE : scale;
+					scale = scale < minScaleProperty.get() ? minScaleProperty.get() : scale;
 				} else if (deltaY > 0) {
 					scale *= Math.pow(delta, event.getDeltaY() / 20);
 					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
 				}
+				scaleOffSetProperty.set(scale - minScaleProperty.get());
 				if (prevScale > COLLAPSE && scale <= COLLAPSE) {
 					innerGroup.getChildren().clear();
 					Group temp = new Group(collapsedGroup);
@@ -111,7 +115,6 @@ public class RibbonController implements Initializable {
 				}
 				
 				double barValue = scrollPane.getHvalue();
-				innerGroup.setScaleX(scale);
 				scrollPane.setHvalue(barValue);
 				otherGroup.setScaleX(scale);
 				otherPane.setHvalue(barValue);
@@ -136,44 +139,6 @@ public class RibbonController implements Initializable {
 			}
 		}
 	};
-	
-	/**
-	 * Event handler for keyboard events with the ribbon view.
-	 */
-	private final EventHandler<KeyEvent> keyEventHandler = new EventHandler<KeyEvent>() {
-		
-		@Override
-		public void handle(KeyEvent event) {
-			String character = event.getCharacter();
-			
-			if (!event.isControlDown()) {
-				return;
-			}
-
-			double delta = 1.2;
-			double scale = innerGroup.getScaleY();
-
-			if (character.equals("+") || character.equals("=")) {
-				scale *= delta;
-
-				scale = scale > MAX_SCALE ? MAX_SCALE : scale;
-			} else if (character.equals("-")) {
-				scale /= delta;
-				scale = scale < MIN_SCALE ? MIN_SCALE : scale;
-			} else {
-				return;
-			}
-			
-			double barValue = scrollPane.getHvalue();
-			innerGroup.setScaleX(scale);
-			otherGroup.setScaleX(scale);
-			scrollPane.setHvalue(barValue);
-			otherPane.setHvalue(barValue);
-			annotationRibbonGroup.setScaleX(scale);
-			annotationRibbonPane.setPrefWidth(scrollPane.getPrefWidth());
-
-		}
-	};
     
 	
 	/**
@@ -186,7 +151,6 @@ public class RibbonController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		updateView();
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
-		scrollPane.addEventFilter(KeyEvent.ANY, keyEventHandler);
 		
 		// Resize the scrollpane along with the window.
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
@@ -225,9 +189,7 @@ public class RibbonController implements Initializable {
 							Group temp = new Group(normalGroup);
 							innerGroup.getChildren().addAll(temp.getChildren());
 						}
-					} 
-					
-					innerGroup.setScaleX(scale);
+					}
 					scrollPane.setHvalue(scroll);
 				}
 			);
@@ -252,16 +214,17 @@ public class RibbonController implements Initializable {
 							Group temp = new Group(normalGroup);
 							innerGroup.getChildren().addAll(temp.getChildren());
 						}
-					} 
-					
-					innerGroup.setScaleX(scale);
+					}
 					scrollPane.setHvalue(scroll);
 				}
 			);
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
+		minScaleProperty.bind(scrollPane.widthProperty()
+				.divide(outerGroup.boundsInLocalProperty().get().getWidth()));
+
 		innerGroup.scaleYProperty().bind(scrollPane.heightProperty().divide(maxY));
-		innerGroup.setScaleX(MIN_SCALE);
+		innerGroup.scaleXProperty().bind(minScaleProperty.add(scaleOffSetProperty));
 		
 	}
 	
@@ -282,9 +245,6 @@ public class RibbonController implements Initializable {
 		collapsedGroup = ribbonView.createCollapsedRibbons();
 		normalGroup = ribbonView.createNormalRibbons();
 		updateView();
-		double maxY = dbm.getDbReader().getMaxYCoord();
-		innerGroup.setScaleY(720.0 / maxY);
-		innerGroup.setScaleX(MIN_SCALE);
 	}
 	
 	public ScrollPane getScrollPane() {
