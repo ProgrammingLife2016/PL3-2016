@@ -119,7 +119,6 @@ public class RibbonController implements Initializable {
 				otherGroup.setScaleX(scale);
 				otherPane.setHvalue(barValue);
 				
-				annotationRibbonGroup.setScaleX(scale);
 				annotationRibbonPane.setHvalue(barValue);
 				prevScale = scale;
 				return;
@@ -265,6 +264,10 @@ public class RibbonController implements Initializable {
 	
 	public void setAnnotationRibbonGroup(Group group) {
 		annotationRibbonGroup = group;
+		annotationRibbonGroup.scaleXProperty()
+			.bind(innerGroup.scaleXProperty()
+					.multiply(innerGroup.boundsInLocalProperty().get().getWidth())
+					.divide(annotationRibbonGroup.boundsInLocalProperty().get().getWidth()));
 	}
 	
 	public void setAnnotationRibbonPane(ScrollPane scrollpane) {
