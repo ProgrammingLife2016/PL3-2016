@@ -33,7 +33,7 @@ public class Launcher extends Application {
 	public void start(Stage stage) throws Exception {
 		Launcher.setStage(stage,"DNA Lab");
 		
-		final String filename = "TB10";
+		final String filename = "TB328";
 		final String gfaPath = System.getProperty("user.dir") 
 				+ "/Data/" + filename + "/" + filename + ".gfa";
 		final String dbPath = System.getProperty("user.dir") 

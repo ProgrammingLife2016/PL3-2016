@@ -108,6 +108,38 @@ public class DatabaseReader {
 		}
 	}
 	
+	/**
+	 * Returns the names of genomes for each segment of the database
+	 * @return an ArrayList of the names of genomes for each segment of the database
+	 */
+	
+	public ArrayList<ArrayList<String>> getGenomesThroughEachSegment(ArrayList<Integer> genomeIds) {
+		ArrayList<ArrayList<Integer>> segments = new ArrayList<ArrayList<Integer>>();
+		int noOfSegments = this.countSegments();
+		for (int i = 0; i < noOfSegments; i++) {
+			segments.add(new ArrayList<Integer>());
+		}
+		String query = "SELECT SEGMENTID, GENOMEID "
+				+ "FROM GENOMESEGMENTLINK";
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				int segmentId = rs.getInt(1);
+				int genomeId = rs.getInt(2);
+				if(genomeIds.contains(genomeId)) {
+					segments.get(segmentId-1).add(genomeId);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		ArrayList<ArrayList<String>> segs = new ArrayList<ArrayList<String>>();
+		for (int i = 0; i < noOfSegments; i++) {
+			ArrayList<Integer> ids = segments.get(i);
+			segs.add(getGenomesThroughSegmentHelper(ids));
+		}
+		return segs;
+	}
 
 	
 	/**
