@@ -1,13 +1,18 @@
 package gui;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+
+import javax.imageio.ImageIO;
 
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import db.DatabaseManager;
@@ -32,6 +37,7 @@ public class Launcher extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		Launcher.setStage(stage,"DNA Lab");
+		stage.getIcons().add(new Image("file:icon.png"));
 		
 		final String filename = "TB10";
 		final String gfaPath = System.getProperty("user.dir") 
