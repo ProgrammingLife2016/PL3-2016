@@ -240,8 +240,8 @@ public class RibbonView {
 	 */
 	public Paint getLineColor(int ff, int tt) {
 		Paint color = Paint.valueOf("0xff0000ff");
-		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(ff);
-		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(tt);
+		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(ff, genomeIds);
+		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(tt, genomeIds);
 		if (from.size() > to.size()) {
 			for (int i = 0; i < to.size(); i++) {
 				String genome = to.get(i);
@@ -264,12 +264,13 @@ public class RibbonView {
 	
 	private ArrayList<ArrayList<Paint>> calculateColours(ArrayList<ArrayList<Integer>> linkIds, 
 			ArrayList<Integer> genomes) {
+		System.out.println("Starting color creation");
 		ArrayList<ArrayList<Paint>> colours = 
 				new ArrayList<ArrayList<Paint>>();
 		for (int i = 0; i < dbm.getDbReader().countSegments(); i++) {
 			colours.add(new ArrayList<Paint>());
 		}
-		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames(genomes);
+		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames();
 		
 		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink(genomes);
 		for (int i = 0; i < linkIds.size(); i++) {
@@ -280,12 +281,13 @@ public class RibbonView {
 				Paint colour = Paint.valueOf("0xff0000ff");
 				String genome = genomeNames.get(id - 1);
 				if (!genome.startsWith("M")) {
-					colour = getMajorityColor(dbm.getDbReader().getGenomeNames(genomeIds));
-
+					ArrayList<String> a = dbm.getDbReader().getGenomeNames(genomeIds);
+					colour = getMajorityColor(a);
 				} 
 				colours.get(i).add(colour);
 			}
 		}
+		System.out.println("Finished color creation");
 		return colours;
 	}
 	
@@ -318,6 +320,9 @@ public class RibbonView {
 				colors.add(NewickColourMatching
 						.getLineageColour(lineages.get(genome)));
 			} 
+			else {
+				colors.add(Paint.valueOf("0xff000000"));
+			}
 		}
 		return colors;
 	}
@@ -339,9 +344,9 @@ public class RibbonView {
 		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles(genomeIds));
 		
 		List<Integer> ignore = new LinkedList<>();
-		
+		System.out.println("Enter for loop");
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
-			
+			System.out.println("i = " + fromId);
 			if (fromId == links.size()/4) {
 				SplashController.progressNum.set(40);
 			}
@@ -354,11 +359,16 @@ public class RibbonView {
 			List<Integer> edges = links.get(fromId - 1);
 			
 			if (!bubbles.isEmpty() && fromId == bubbles.peek()[0]) {
+				System.out.println("a");
 				int[] bubble = bubbles.poll();
+				System.out.println("b");
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
+				System.out.println("c");
 				line.setStrokeWidth(calculateLineWidth(2 * bubble[2]));
+				System.out.println("d");
 				line.setStroke(getLineColor(fromId, bubble[1]));
+				System.out.println("e");
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
 			} else {
