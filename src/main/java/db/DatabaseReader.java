@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -627,6 +628,20 @@ public class DatabaseReader {
 			if (rs.next()) {
 				return rs.getString(1);
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public List<String> getAllContent() {
+		String query = "SELECT CONTENT FROM SEGMENTS";
+		List<String> res = new LinkedList<>();
+		try (ResultSet rs = this.db.executeQuery(query)) {
+			while (rs.next()) {
+				res.add(rs.getString(1));
+			}
+			return res;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

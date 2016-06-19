@@ -11,7 +11,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -68,10 +67,17 @@ public class GraphView {
 		graphxcoords = dbm.getDbReader().getAllXCoord();
 		graphycoords = dbm.getDbReader().getAllYCoord();
 		segmentdna = new ArrayList<String>();
-		
-		for (int i = 1; i <= dbm.getDbReader().countSegments(); i++) {
-			segmentdna.add(dbm.getDbReader().getContent(i));
+		dbm.getDbReader()
+			.getAllContent()
+			.stream()
+			.forEach(str -> segmentdna.add(shortenString(str,5)));
+	}
+	
+	private String shortenString(String in, int maxLength) {
+		if (in.length() > maxLength) {
+			return in.substring(0, maxLength) + "...";
 		}
+		return in;
 	}
 	
 	/**
@@ -128,8 +134,13 @@ public class GraphView {
 		Iterator<Integer> iterator = segmentIds.iterator();
 		while (iterator.hasNext()) {
 			int segmentId = iterator.next();
-			res.getChildren().add(createEllipse(segmentId));
-			res.getChildren().add(visualizeDnaContent(segmentId));
+			Group graphSegment = new Group();
+			Ellipse ellipse = createEllipse(segmentId);
+			graphSegment.getChildren().add(ellipse);
+			graphSegment.getChildren().add(visualizeDnaContent(segmentId));
+			graphSegment.addEventFilter(MouseEvent.MOUSE_CLICKED, 
+					new NodeSelectHandler(segmentId, selectedContent, dbm));
+			res.getChildren().add(graphSegment);
 		}
 		return res;
 	}
@@ -175,17 +186,9 @@ public class GraphView {
 		double ycoord = graphycoords.get(segmentId - 1);
 		double xradius = 30 + 2 * Math.log(contentLength);
 		Ellipse node = new Ellipse(xcoord, ycoord, xradius, 30);
-	    node.setFill(Color.DODGERBLUE);
-	    node.setStroke(Color.BLACK);
-	    node.setStrokeType(StrokeType.INSIDE);
-	    node.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-	        @Override
-	        public void handle(MouseEvent mouseEvent) {
-	            System.out.println("mouse click detected! on segment: " + segmentId);
-	            //System.out.println(dbm.getDbReader().getContent(segmentId));
-	            selectedContent.set(dbm.getDbReader().getContent(segmentId));
-	        }
-	    });
+		node.setFill(Color.DODGERBLUE);
+		node.setStroke(Color.BLACK);
+		node.setStrokeType(StrokeType.INSIDE);
 		return node;
 	}
 	
@@ -195,30 +198,15 @@ public class GraphView {
 	 */
 	private Text visualizeDnaContent(int segmentId) {
 		String content = segmentdna.get(segmentId - 1);
-		StringBuilder sb = new StringBuilder();
-		for (int j = 0; j < content.length() && j <= 4; j++) {
-			sb.append(content.substring(j, j + 1));
-		}
-		if ( content.length() > 5) {
-			sb.append("...");
-		}
 		Text dnatext = new Text();
 		dnatext.setTextAlignment(TextAlignment.CENTER);
-		dnatext.setText(sb.toString());
-		
+		dnatext.setText(content);
+
 		double xcoord = graphxcoords.get(segmentId - 1);
 		double ycoord = graphycoords.get(segmentId - 1);
 		double width = dnatext.getLayoutBounds().getWidth();
 		dnatext.setLayoutX(xcoord - 0.5 * width);
 		dnatext.setLayoutY(ycoord + 5);
-		 dnatext.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-		        @Override
-		        public void handle(MouseEvent mouseEvent) {
-		            System.out.println("mouse click detected! on segment: " + segmentId);
-		            System.out.println(dbm.getDbReader().getContent(segmentId));
-		            selectedContent.set(dbm.getDbReader().getContent(segmentId));
-		        }
-		    });
 		return dnatext;
 	}
 	
