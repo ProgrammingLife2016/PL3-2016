@@ -162,7 +162,7 @@ public class GraphController implements Initializable {
 		);
 		
 		double maxY = dbm.getDbReader().getMaxYCoord();
-		innerGroup.setScaleY(720.0 / maxY);
+		//innerGroup.setScaleY(720.0 / maxY);
 		innerGroup.setScaleX(0.4);
 	}
 	
@@ -186,7 +186,7 @@ public class GraphController implements Initializable {
 		innerGroup = new Group(graphView.getGraph());
 		updateView();
 		double maxY = dbm.getDbReader().getMaxYCoord();
-		innerGroup.setScaleY(1020.0 / maxY);
+		//innerGroup.setScaleY(1020.0 / maxY);
 		innerGroup.setScaleX(MIN_SCALE);
 	}
 	

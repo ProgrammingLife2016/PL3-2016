@@ -335,15 +335,15 @@ public class RibbonView {
 	public Group createCollapsedRibbons() {
 		System.out.println("Creating collapsed ribbons");
 		Group res = new Group();
+
 		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomeIds);
 		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomeIds);
 		ArrayList<ArrayList<String>> names = dbm.getDbReader().getGenomesThroughEachSegment(genomeIds);
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
 		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles(genomeIds));
-		
 		List<Integer> ignore = new LinkedList<>();
-		System.out.println("Enter for loop");
+
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
 			if (fromId == links.size()/4) {
 				SplashController.progressNum.set(40);
@@ -386,7 +386,6 @@ public class RibbonView {
 				}
 			}
 		}
-		System.out.println("Finished collapsed ribbons");
 		
 		return res;
 	}

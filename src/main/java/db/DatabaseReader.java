@@ -114,31 +114,32 @@ public class DatabaseReader {
 	 */
 	
 	public ArrayList<ArrayList<String>> getGenomesThroughEachSegment(ArrayList<Integer> genomeIds) {
-		ArrayList<ArrayList<Integer>> segments = new ArrayList<ArrayList<Integer>>();
+		ArrayList<ArrayList<String>> segments = new ArrayList<ArrayList<String>>();
 		int noOfSegments = this.countSegments();
 		for (int i = 0; i < noOfSegments; i++) {
-			segments.add(new ArrayList<Integer>());
+			segments.add(new ArrayList<String>());
 		}
-		String query = "SELECT SEGMENTID, GENOMEID "
-				+ "FROM GENOMESEGMENTLINK";
-		try (ResultSet rs = this.db.executeQuery(query)) {
+		if (genomeIds.size() == 0) {
+			return segments;
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT A1.SEGMENTID, GENOMES.NAME FROM GENOMES INNER JOIN (SELECT GENOMEID, SEGMENTID FROM GENOMESEGMENTLINK WHERE GENOMESEGMENTLINK.GENOMEID = ");
+		sb.append(genomeIds.get(0));
+		for(int i = 1; i < genomeIds.size(); i++) {
+			sb.append(" OR GENOMESEGMENTLINK.GENOMEID = " + genomeIds.get(i));
+		}
+		sb.append(") AS A1 ON A1.GENOMEID = GENOMES.ID");
+		try (ResultSet rs = this.db.executeQuery(sb.toString())) {
 			while (rs.next()) {
 				int segmentId = rs.getInt(1);
-				int genomeId = rs.getInt(2);
-				if(genomeIds.contains(genomeId)) {
-					segments.get(segmentId-1).add(genomeId);
-				}
+				String content = rs.getString(2);
+				segments.get(segmentId-1).add(content);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
-		ArrayList<ArrayList<String>> segs = new ArrayList<ArrayList<String>>();
-		for (int i = 0; i < noOfSegments; i++) {
-			ArrayList<Integer> ids = segments.get(i);
-			segs.add(getGenomesThroughSegmentHelper(ids));
-		}
-		return segs;
+		return segments;
 	}
 
 	
