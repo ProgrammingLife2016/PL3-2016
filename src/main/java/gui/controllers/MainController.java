@@ -170,7 +170,6 @@ public class MainController implements Initializable {
 	  */
 	 private void openExisting(String dbPath, String name) {
 		
-		Launcher.getDatabaseManager().closeDbConnection();
 		Launcher.setDatabaseManager(new DatabaseManager(dbPath));
 		updateRecent(dbPath, name);
 		ribbonTabController.updateView();
