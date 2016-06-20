@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import parsers.GfaParser;
+import parsers.GffParser;
 import db.DatabaseManager;
 import gui.controllers.SplashController;
 
@@ -47,7 +48,8 @@ public class ImportHandler {
 	public void startImport() {
 		final String dbPath = System.getProperty("user.dir") 
 				+ "/db/" + fileName;
-		
+		final String gffPath = System.getProperty("user.dir") 
+				+ "/Data/" + fileName + "/" + "decorationV5_20130412.gff";
 		/**
 		 * Loads up splash screen and display it.
 		 */
@@ -72,14 +74,30 @@ public class ImportHandler {
             public Void call() {
             	try {
             		Launcher.setDbManager(new DatabaseManager(dbPath));
-        			GfaParser parser = new GfaParser(Launcher.dbm);
+            		DatabaseManager dbm = Launcher.dbm;
+        			GfaParser parser = new GfaParser(dbm);
+        			GffParser gffparser = new GffParser(dbm);
+        			parser.parse(gfaPath);
+    				gffparser.parse(gffPath);
+        			GuiPreProcessor preProcessor = new GuiPreProcessor();
         			SplashController.progressNum.set(10);
         			SplashController.progressString.set("Start Parsing");
-        			parser.parse(gfaPath);
         			SplashController.progressString.set("Start Calculating");
-        			Launcher.dbm.getDbProcessor().calculateLinkCounts();
-        			SplashController.progressNum.set(60);
-        			Launcher.dbm.getDbProcessor().updateCoordinates();
+        			dbm.getDbProcessor().calculateLinkCounts();
+        			SplashController.progressNum.set(20);
+        			dbm.getDbProcessor().updateCoordinates();
+        			dbm.getDbProcessor().locateBubbles();	
+        			SplashController.progressNum.set(30);
+        			SplashController.progressString.set("Creating collapsed ribbons");
+        			preProcessor.createCollapsedRibbons();
+        			SplashController.progressString.set("Creating normal ribbons");
+        			preProcessor.createNormalRibbons();
+        			SplashController.progressNum.set(70);
+        			SplashController.progressString.set("Creating snips");
+        			preProcessor.createSnips();
+        			SplashController.progressNum.set(80);
+        			SplashController.progressString.set("Creating indels... Almost done");
+        			preProcessor.createInDels();
         			SplashController.progressNum.set(100);
             	} catch (Throwable error) {
             		error.printStackTrace();

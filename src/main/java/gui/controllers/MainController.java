@@ -1,6 +1,7 @@
 package gui.controllers;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,10 +9,14 @@ import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
@@ -19,8 +24,9 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-
+import javafx.stage.Stage;
 import db.DatabaseManager;
+import gui.GuiPreProcessor;
 import gui.ImportHandler;
 import gui.Launcher;
 import gui.controllers.phylogeny.PhylogenyController;
@@ -163,11 +169,44 @@ public class MainController implements Initializable {
 	  * @param name
 	  */
 	 private void openExisting(String dbPath, String name) {
-		Launcher.getDatabaseManager().closeDbConnection();
+		
 		Launcher.setDatabaseManager(new DatabaseManager(dbPath));
 		updateRecent(dbPath, name);
 		ribbonTabController.updateView();
 		graphTabController.updateView();
+		
+		Parent root;
+		Stage stage = Launcher.getStage();
+		try {
+			root = FXMLLoader.load(getClass().getClassLoader().getResource("splashScreen.fxml"));
+			Scene scene = new Scene(root);
+	        stage.setScene(scene);
+	        stage.centerOnScreen();
+	        stage.show();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        GuiPreProcessor preProcessor = new GuiPreProcessor();
+        Task<Void> task = new Task<Void>() {
+            @Override 
+            public Void call() {
+                SplashController.progressNum.set(30);
+    			SplashController.progressString.set("Creating collapsed ribbons");
+    			preProcessor.createCollapsedRibbons();
+    			SplashController.progressString.set("Creating normal ribbons");
+    			preProcessor.createNormalRibbons();
+    			SplashController.progressNum.set(70);
+    			SplashController.progressString.set("Creating snips");
+    			preProcessor.createSnips();
+    			SplashController.progressNum.set(80);
+    			SplashController.progressString.set("Creating indels... Almost done");
+    			preProcessor.createInDels();
+    			SplashController.progressNum.set(100);	
+				return null;
+            }
+            };
+            new Thread(task).start();     
 	 }
 	 
 	 /**
