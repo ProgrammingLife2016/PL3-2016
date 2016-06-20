@@ -78,16 +78,19 @@ public class DatabaseReader {
 
 	
 	/**
-	 * Returns the number of genomes for each segment of the database
-	 * @return an ArrayList of the number of genomes for each segment of the database
+	 * Returns the names of genomes for a segment of the database
+	 * @return an ArrayList of the names of genomes for a segment of the database
 	 */
-	public ArrayList<String> getGenomesThroughSegment(int seg) {
+	public ArrayList<String> getGenomesThroughSegment(int seg, ArrayList<Integer> genomeIds) {
 		ArrayList<Integer> segments = new ArrayList<Integer>();
 		String query = "SELECT GENOMEID "
 				+ "FROM GENOMESEGMENTLINK WHERE SEGMENTID = " + seg;
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
-				segments.add(rs.getInt(1));
+				int k = rs.getInt(1);
+				if(genomeIds.contains(k)) {
+					segments.add(rs.getInt(1));
+				}
 			}
 			return getGenomesThroughSegmentHelper(segments);
 		} catch (SQLException e) {
@@ -95,7 +98,40 @@ public class DatabaseReader {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * Returns the names of genomes for each segment of the database
+	 * @return an ArrayList of the names of genomes for each segment of the database
+	 */
+	public ArrayList<ArrayList<String>> getGenomesThroughEachSegment(ArrayList<Integer> genomeIds) {
+		ArrayList<ArrayList<String>> segments = new ArrayList<ArrayList<String>>();
+		int noOfSegments = this.countSegments();
+		for (int i = 0; i < noOfSegments; i++) {
+			segments.add(new ArrayList<String>());
+		}
+		if (genomeIds.size() == 0) {
+			return segments;
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT A1.SEGMENTID, GENOMES.NAME FROM GENOMES INNER JOIN (SELECT GENOMEID, SEGMENTID FROM GENOMESEGMENTLINK WHERE GENOMESEGMENTLINK.GENOMEID = ");
+		sb.append(genomeIds.get(0));
+		for(int i = 1; i < genomeIds.size(); i++) {
+			sb.append(" OR GENOMESEGMENTLINK.GENOMEID = " + genomeIds.get(i));
+		}
+		sb.append(") AS A1 ON A1.GENOMEID = GENOMES.ID");
+		try (ResultSet rs = this.db.executeQuery(sb.toString())) {
+			while (rs.next()) {
+				int segmentId = rs.getInt(1);
+				String content = rs.getString(2);
+				segments.get(segmentId-1).add(content);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return segments;
+	}
+
 	/**
 	 * Returns the number of genomes for each segment of the database
 	 * @return an ArrayList of the number of genomes for each segment of the database
@@ -579,7 +615,7 @@ public class DatabaseReader {
 		ArrayList<String> genomeNames = new ArrayList<String>();
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			while (rs.next()) {
-				genomeNames.add(rs.getString("NAME"));
+				genomeNames.add(rs.getString(1));
 			}
 			return genomeNames;
 		} catch (SQLException e) {

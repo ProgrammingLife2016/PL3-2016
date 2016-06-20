@@ -106,8 +106,7 @@ public class RibbonView {
 	 * @return	returns a set of integers of segments that are in a snip.
 	 */
 	public Set<Integer> calculateSnipSegments() {
-		List<int[]> bubblesList = dbm.getDbReader().getAllBubbles();
-
+		List<int[]> bubblesList = dbm.getDbReader().getBubbles(genomeIds);
 		Set<Integer> set = dbm.getDbReader().getSnipMaterial();
 		Set<Integer> set2 = new HashSet<Integer>();
 
@@ -132,7 +131,7 @@ public class RibbonView {
 	 * @return	return a set of segment numbers that are in InDels.
 	 */
 	public Set<Integer> calculateInDelSegments() {
-		List<int[]> bubblesList = dbm.getDbReader().getAllBubbles();
+		List<int[]> bubblesList = dbm.getDbReader().getBubbles(genomeIds);
 		Set<Integer> set = new HashSet<Integer>();
 		
 		for (int i = 0; i < bubblesList.size(); ++i) {
@@ -218,7 +217,6 @@ public class RibbonView {
 		        res.getChildren().add(line);
 			}
 		}
-		
 		System.out.println("Finished InDel");
 		return res;
 	}
@@ -231,10 +229,10 @@ public class RibbonView {
 	 * @param genomes
 	 * @return
 	 */
-	public Paint getLineColor(int ff, int tt) {
+	public Paint getLineColor(int ff, int tt, ArrayList<ArrayList<String>> names) {
 		Paint color = Paint.valueOf("0xff0000ff");
-		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(ff);
-		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(tt);
+		ArrayList<String> from = names.get(ff - 1);
+		ArrayList<String> to = names.get(tt - 1);
 		if (from.size() > to.size()) {
 			for (int i = 0; i < to.size(); i++) {
 				String genome = to.get(i);
@@ -257,12 +255,13 @@ public class RibbonView {
 	
 	private ArrayList<ArrayList<Paint>> calculateColours(ArrayList<ArrayList<Integer>> linkIds, 
 			ArrayList<Integer> genomes) {
+		System.out.println("Starting color creation");
 		ArrayList<ArrayList<Paint>> colours = 
 				new ArrayList<ArrayList<Paint>>();
 		for (int i = 0; i < dbm.getDbReader().countSegments(); i++) {
 			colours.add(new ArrayList<Paint>());
 		}
-		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames(genomes);
+		ArrayList<String> genomeNames = dbm.getDbReader().getGenomeNames();
 		
 		HashMap<Integer, ArrayList<Integer>> hash = dbm.getDbReader().getGenomesPerLink(genomes);
 		for (int i = 0; i < linkIds.size(); i++) {
@@ -273,12 +272,13 @@ public class RibbonView {
 				Paint colour = Paint.valueOf("0xff0000ff");
 				String genome = genomeNames.get(id - 1);
 				if (!genome.startsWith("M")) {
-					colour = getMajorityColor(dbm.getDbReader().getGenomeNames(genomeIds));
-
+					ArrayList<String> a = dbm.getDbReader().getGenomeNames(genomeIds);
+					colour = getMajorityColor(a);
 				} 
 				colours.get(i).add(colour);
 			}
 		}
+		System.out.println("Finished color creation");
 		return colours;
 	}
 	
@@ -311,6 +311,9 @@ public class RibbonView {
 				colors.add(NewickColourMatching
 						.getLineageColour(lineages.get(genome)));
 			} 
+			else {
+				colors.add(Paint.valueOf("0xff000000"));
+			}
 		}
 		return colors;
 	}
@@ -324,14 +327,15 @@ public class RibbonView {
 	public Group createCollapsedRibbons() {
 		System.out.println("Creating collapsed ribbons");
 		Group res = new Group();
+
 		ArrayList<ArrayList<Integer>> links = dbm.getDbReader().getLinks(genomeIds);
 		ArrayList<ArrayList<Integer>> counts = dbm.getDbReader().getLinkWeights(genomeIds);
+		ArrayList<ArrayList<String>> names = dbm.getDbReader().getGenomesThroughEachSegment(genomeIds);
 		ArrayList<Integer> xcoords = dbm.getDbReader().getAllXCoord();
 		ArrayList<Integer> ycoords = dbm.getDbReader().getAllYCoord();
 		Queue<int[]> bubbles = new LinkedList<>(dbm.getDbReader().getBubbles(genomeIds));
-		
 		List<Integer> ignore = new LinkedList<>();
-		
+
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
 			
 			if (fromId == links.size() / 4) {
@@ -348,7 +352,7 @@ public class RibbonView {
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
 				line.setStrokeWidth(calculateLineWidth(2 * bubble[2]));
-				line.setStroke(getLineColor(fromId, bubble[1]));
+				line.setStroke(getLineColor(fromId, bubble[1], names));
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
 			} else {
@@ -367,13 +371,12 @@ public class RibbonView {
 								ycoords.get(toId - 1));
 						line.setStrokeWidth(
 								calculateLineWidth(2 * counts.get(fromId - 1).get(j)));
-						line.setStroke(getLineColor(fromId, toId));
+						line.setStroke(getLineColor(fromId, toId, names));
 						res.getChildren().add(line);
 					}
 				}
 			}
 		}
-		System.out.println("Finished collapsed ribbons");
 		
 		return res;
 	}

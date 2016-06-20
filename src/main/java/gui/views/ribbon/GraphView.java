@@ -147,8 +147,8 @@ public class GraphView {
 	
 	public Paint getLineColor(int fromId, int toId) {
 		Paint color = Paint.valueOf("0xff0000ff");
-		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(fromId);
-		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(toId);
+		ArrayList<String> from = dbm.getDbReader().getGenomesThroughSegment(fromId, genomeIds);
+		ArrayList<String> to = dbm.getDbReader().getGenomesThroughSegment(toId, genomeIds);
 		if (from.size() > to.size()) {
 			for (int i = 0; i < to.size(); i++) {
 				String genome = to.get(i);
