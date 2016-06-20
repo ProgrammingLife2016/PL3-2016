@@ -4,6 +4,8 @@ import java.net.URL;
 
 import java.util.ResourceBundle;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -13,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
@@ -33,7 +36,8 @@ public class RibbonController implements Initializable {
 	private ScrollPane otherPane;
 
 	private ScrollPane annotationRibbonPane;
-
+	
+	@FXML private Label checkboxesActiveLabel;
 	@FXML private CheckBox checkboxSnp;
 	@FXML private CheckBox checkboxInsert;
 	@FXML private TextArea textArea;
@@ -61,6 +65,7 @@ public class RibbonController implements Initializable {
 	private double prevScale = 1;
 	
 	private StringProperty selectedNodeContent = new SimpleStringProperty("");
+	private BooleanProperty disableCheckBoxes = new SimpleBooleanProperty(false);
 	
 	/**
 	 * Handles the scroll wheel event for the ribbon view.
@@ -204,6 +209,23 @@ public class RibbonController implements Initializable {
 				annotationRibbonPane.setHvalue(newValue.doubleValue());
 			}
 		});
+		
+		innerGroup.scaleXProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, 
+					Number oldValue, Number newValue) {
+				double scale = newValue.doubleValue();
+				if (scale > COLLAPSE && scale <= GRAPH) {
+					disableCheckBoxes.set(false);
+				} else {
+					disableCheckBoxes.set(true);
+				}
+			}
+		});
+		
+		checkboxSnp.disableProperty().bind(disableCheckBoxes);
+		checkboxInsert.disableProperty().bind(disableCheckBoxes);
+		checkboxesActiveLabel.visibleProperty().bind(disableCheckBoxes);
 
 		checkboxInsert.selectedProperty().addListener(
 				(ChangeListener<Boolean>) (observable, oldValue, newValue) -> { 
