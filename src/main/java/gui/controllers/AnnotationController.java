@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -51,24 +50,6 @@ public class AnnotationController implements Initializable {
 		@Override
 		public void handle(ScrollEvent event) {
 			event.consume();
-			if (event.isControlDown()) {
-				double deltaY = event.getDeltaY();
-				double delta = 1.2;
-				double scale = innerGroup.getScaleX();
-
-				if (deltaY < 0) {
-					scale /= Math.pow(delta, -event.getDeltaY() / 20);
-					scale = scale < MIN_SCALE ? MIN_SCALE : scale;
-				} else if (deltaY > 0) {
-					scale *= Math.pow(delta, event.getDeltaY() / 20);
-					scale = scale > MAX_SCALE ? MAX_SCALE : scale;
-				}
-				
-				double barValue = scrollPane.getHvalue();
-				innerGroup.setScaleX(scale);
-				scrollPane.setHvalue(barValue);
-				return;
-			}
 
 			double deltaY = event.getDeltaY();
 			double deltaX = event.getDeltaX();
@@ -86,41 +67,7 @@ public class AnnotationController implements Initializable {
 			
 		}
 	};
-	
-	/**
-	 * Event handler for zooming in and out using the keyboard instead of the scroll wheel.
-	 */
-	private final EventHandler<KeyEvent> keyEventHandler = new EventHandler<KeyEvent>() {
-		
-		@Override
-		public void handle(KeyEvent event) {
-			String character = event.getCharacter();
-			if (!event.isControlDown()) {
-				return;
-			}
-			
-			double delta = 1.2;
-			double scale = innerGroup.getScaleY();
 
-			// Zoom in when ctrl and the "+" or "+/=" key is pressed.
-			if (character.equals("+") || character.equals("=")) {
-				scale *= delta;
-
-				// Cut off the scale if it is bigger than the maximum
-				// allowed scale
-				scale = scale > MAX_SCALE ? MAX_SCALE : scale;
-			} else if (character.equals("-")) {
-				scale /= delta;
-				// Cut off the scale if it is bigger than the minimum
-				// allowed scale
-				scale = scale < MIN_SCALE ? MIN_SCALE : scale;
-			} else {
-				return;
-			}
-			innerGroup.setScaleY(scale);
-			innerGroup.setScaleX(scale);
-		}
-	};
 
 	/**
 	 * Initialize fxml file.
@@ -128,7 +75,6 @@ public class AnnotationController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
-		scrollPane.addEventFilter(KeyEvent.KEY_TYPED, keyEventHandler);
 		loadData();
 		pane.boundsInParentProperty().addListener((observable, oldValue, newValue) -> {
 		    scrollPane.setPrefWidth(newValue.getWidth());
