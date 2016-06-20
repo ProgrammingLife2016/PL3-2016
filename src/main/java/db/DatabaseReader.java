@@ -328,7 +328,7 @@ public class DatabaseReader {
 	 * @return the starting location in the reference genome of each annotation
 	 */
 	public ArrayList<Integer> getAllAnnotationStartLocations() {
-		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
+		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\' ORDER BY START";
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			ArrayList<Integer> startList = new ArrayList<Integer>();
 			while (rs.next()) {
@@ -346,7 +346,7 @@ public class DatabaseReader {
 	 * @return the ending location in the reference genome of each annotation
 	 */	
 	public ArrayList<Integer> getAllAnnotationEndLocations() {
-		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
+		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\' ORDER BY START";
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			ArrayList<Integer> endList = new ArrayList<Integer>();
 			while (rs.next()) {
@@ -364,7 +364,7 @@ public class DatabaseReader {
 	 * @return the name of each annotation
 	 */
 	public ArrayList<String> getAllAnnotationNames() {
-		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\'";
+		String query = "SELECT * FROM ANNOTATION WHERE TYPE = \'CDS\' ORDER BY START";
 		try (ResultSet rs = this.db.executeQuery(query)) {
 			ArrayList<String> nameList = new ArrayList<String>();
 			while (rs.next()) {

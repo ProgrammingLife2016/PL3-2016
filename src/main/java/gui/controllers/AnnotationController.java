@@ -1,21 +1,22 @@
 package gui.controllers;
 
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-
 import db.DatabaseManager;
 import gui.Launcher;
 
@@ -33,9 +34,6 @@ public class AnnotationController implements Initializable {
 	
 	private Group innerGroup;
 	private Group outerGroup;
-	
-    private static final double MAX_SCALE = 3.0d;
-    private static final double MIN_SCALE = .0035d;
     
     private ArrayList<Integer> startLocations;
     private ArrayList<Integer> endLocations;
@@ -83,6 +81,7 @@ public class AnnotationController implements Initializable {
 		scrollPane.setHvalue(0);
 		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		innerGroup = getAnnotations();
+//		innerGroup.scaleYProperty().bind(scrollPane.heightProperty().divide(innerGroup.getBoundsInLocal().getHeight()));
 		outerGroup = new Group(innerGroup);
 		scrollPane.setContent(outerGroup);
 	}
@@ -93,22 +92,52 @@ public class AnnotationController implements Initializable {
 	 */
 	private Group getAnnotations() {
 		Group res = new Group();
-		res.getChildren().add(new Line(0,50,4411100,50));
+		
+		List<Integer> levelsTaken = new ArrayList<>();
 		for (int i = 0; i < startLocations.size(); i++) {
 			int startX = startLocations.get(i);
 			int endX = endLocations.get(i);
 			int width = endX - startX;
-			
-			Rectangle rect = new Rectangle(startX, 20, width , 60);
+			int level;
+			for (level = 0; level < levelsTaken.size(); level++) {
+				if (startX >= levelsTaken.get(level)) {
+					break;
+				}
+			}
+			try {
+				levelsTaken.set(level, endX);
+			} catch (IndexOutOfBoundsException e) {
+				levelsTaken.add(endX);
+			}
+			int heigth = 60;
+			int spacing = 10;
+			Rectangle rect = new Rectangle(startX, 20 + level * (heigth+spacing), width , heigth);
 		    rect.setFill(Color.rgb(244, 244, 244));
 		    rect.setStroke(Color.BLACK);
 			
-			Text text = new Text(startX, 95, names.get(i));
-			
+		    Tooltip tooltip = new Tooltip();
+		    tooltip.setText(names.get(i));
+		    hackTooltipStartTiming(tooltip);
+		    Tooltip.install(rect, tooltip);
 			res.getChildren().add(rect);
-			res.getChildren().add(text);
 		}
 		return res;
+	}
+	
+	public static void hackTooltipStartTiming(Tooltip tooltip) {
+	    try {
+	        Field fieldBehavior = tooltip.getClass().getDeclaredField("BEHAVIOR");
+	        fieldBehavior.setAccessible(true);
+	        Object objBehavior = fieldBehavior.get(tooltip);
+
+	        Field fieldTimer = objBehavior.getClass().getDeclaredField("activationTimer");
+	        fieldTimer.setAccessible(true);
+	        Timeline objTimer = (Timeline) fieldTimer.get(objBehavior);
+
+	        objTimer.getKeyFrames().clear();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 	/**
