@@ -66,6 +66,7 @@ public class RibbonController implements Initializable {
 	
 	private StringProperty selectedNodeContent = new SimpleStringProperty("");
 	private BooleanProperty disableCheckBoxes = new SimpleBooleanProperty(false);
+	private StringProperty checkboxLabelText = new SimpleStringProperty("Zoom in to enable selections");
 	
 	/**
 	 * Handles the scroll wheel event for the ribbon view.
@@ -219,6 +220,11 @@ public class RibbonController implements Initializable {
 					disableCheckBoxes.set(false);
 				} else {
 					disableCheckBoxes.set(true);
+					if (scale > GRAPH) {
+						checkboxLabelText.set("Zoom out to enable selections");
+					} else {
+						checkboxLabelText.set("Zoom in to enable selections");
+					}
 				}
 			}
 		});
@@ -226,6 +232,7 @@ public class RibbonController implements Initializable {
 		checkboxSnp.disableProperty().bind(disableCheckBoxes);
 		checkboxInsert.disableProperty().bind(disableCheckBoxes);
 		checkboxesActiveLabel.visibleProperty().bind(disableCheckBoxes);
+		checkboxesActiveLabel.textProperty().bind(checkboxLabelText);
 
 		checkboxInsert.selectedProperty().addListener(
 				(ChangeListener<Boolean>) (observable, oldValue, newValue) -> { 
