@@ -30,9 +30,11 @@ public class RibbonView {
 	private DatabaseManager dbm;
 	private HashMap<String, String> lineages = updateLineages();
 	private ArrayList<Integer> genomeIds = createList();
+	private int numGenomes;
 	
 	public RibbonView(DatabaseManager dbm) {
 		this.dbm = dbm;
+		numGenomes = dbm.getDbReader().countGenomes();
 	}
 	
 	private HashMap<String, String> updateLineages() {
@@ -351,7 +353,11 @@ public class RibbonView {
 				int[] bubble = bubbles.poll();
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
-				line.setStrokeWidth(calculateLineWidth(2 * bubble[2]));
+				if (numGenomes > 50) {
+					line.setStrokeWidth(calculateLineWidthCollapsed(2 * bubble[2]));
+				} else {
+					line.setStrokeWidth(calculateLineWidth(2 * bubble[2]));
+				}
 				line.setStroke(getLineColor(fromId, bubble[1], names));
 		        res.getChildren().add(line);
 		        ignore.addAll(edges);
@@ -369,8 +375,13 @@ public class RibbonView {
 								ycoords.get(fromId - 1), 
 								xcoords.get(toId - 1), 
 								ycoords.get(toId - 1));
-						line.setStrokeWidth(
-								calculateLineWidth(2 * counts.get(fromId - 1).get(j)));
+						if (numGenomes > 50) {
+							line.setStrokeWidth(
+									calculateLineWidthCollapsed(2 * counts.get(fromId - 1).get(j)));
+						} else {
+							line.setStrokeWidth(
+									calculateLineWidth(2 * counts.get(fromId - 1).get(j)));
+						}
 						line.setStroke(getLineColor(fromId, toId, names));
 						res.getChildren().add(line);
 					}
@@ -388,7 +399,23 @@ public class RibbonView {
 	 */
 	private double calculateLineWidth(double width) {
 		double minimum = 3;
-		double maximum = 20;
+		double maximum = 50;
+		if (width < minimum) {
+			return minimum;
+		} else if (width > maximum) {
+			return maximum;
+		}
+		return width;
+	}
+	
+	/**
+	 * calculates if the width of the line is acceptable for the collapsed view.
+	 * @param width
+	 * @return
+	 */
+	private double calculateLineWidthCollapsed(double width) {
+		double minimum = 50;
+		double maximum = 100;
 		if (width < minimum) {
 			return minimum;
 		} else if (width > maximum) {

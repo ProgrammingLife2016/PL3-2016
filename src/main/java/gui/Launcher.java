@@ -35,7 +35,7 @@ public class Launcher extends Application {
 		Launcher.setStage(stage,"DNA Lab");
 		stage.getIcons().add(new Image("file:icon.png"));
 		
-		final String filename = "TB328";
+		final String filename = "TB10";
 		final String gfaPath = System.getProperty("user.dir") 
 				+ "/Data/" + filename + "/" + filename + ".gfa";
 		final String dbPath = System.getProperty("user.dir") 
