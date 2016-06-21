@@ -125,7 +125,7 @@ public class RibbonController implements Initializable {
 				otherGroup.setScaleX(scale);
 				otherPane.setHvalue(barValue);
 				
-				annotationRibbonPane.setHvalue(barValue);
+//				annotationRibbonPane.setHvalue(barValue);
 				prevScale = scale;
 				return;
 			}
@@ -165,14 +165,6 @@ public class RibbonController implements Initializable {
 		
 		scrollPane.setHvalue(0);
 		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, 
-					Number oldValue, Number newValue) {
-				otherPane.setHvalue(newValue.doubleValue());
-				annotationRibbonPane.setHvalue(newValue.doubleValue());
-			}
-		});
 		
 		innerGroup.scaleXProperty().addListener(new ChangeListener<Number>() {
 			@Override
@@ -308,6 +300,7 @@ public class RibbonController implements Initializable {
 	
 	public void setAnnotationRibbonPane(ScrollPane scrollpane) {
 		annotationRibbonPane = scrollpane;
+		scrollPane.hvalueProperty().bindBidirectional(annotationRibbonPane.hvalueProperty());
 	}
 
 	public RibbonView getRibbonView() {
