@@ -21,6 +21,8 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -72,6 +74,10 @@ public class MainController implements Initializable {
 	 */
 	@FXML private Menu recentMenu;
 	@FXML private Menu existingMenu;
+	
+	@FXML private GridPane aboutPane;
+	@FXML private GridPane controlsPane;
+	@FXML private GridPane graphHelpPane;
 
 	/**
 	 * Adds the recent and existing items into the toolbar menus.
@@ -230,6 +236,48 @@ public class MainController implements Initializable {
 			ExistingHandler existHandler = new ExistingHandler();
 			existingMenu.getItems().clear();
 			addItems(existHandler.buildExistingMap(), existingMenu);
+	 }
+	 
+	 /**
+	  * show the hidden pane
+	  */
+	 public void openControls() {
+		 controlsPane.setOpacity(1);
+		 controlsPane.setDisable(false);
+	 }
+	 
+	 /**
+	  * close controls pane
+	  */
+	 public void closeControls() {
+		 controlsPane.setOpacity(0);
+		 controlsPane.setDisable(true);
+	 }
+	 
+	 /**
+	  * shows the hidden pane
+	  */
+	 public void openAbout() {
+		 aboutPane.setOpacity(1);
+		 aboutPane.setDisable(false);
+	 }
+	 /**
+	  * closing about pane
+	  * @param value mouse click
+	  */
+	 public void closeAbout(MouseEvent value) {
+		 aboutPane.setOpacity(0);
+		 aboutPane.setDisable(true);
+	 }
+	 
+	 public void openGraphHelp() {
+		 graphHelpPane.setOpacity(1);
+		 graphHelpPane.setDisable(false);
+	 }
+	 
+	 public void closeGraphHelp() {
+		 graphHelpPane.setOpacity(0);
+		 graphHelpPane.setDisable(true);
 	 }
 	 
 	 /**
