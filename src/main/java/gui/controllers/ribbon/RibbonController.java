@@ -119,7 +119,7 @@ public class RibbonController implements Initializable {
 					innerGroup.getChildren().addAll(temp.getChildren());
 					scrollPane.setHvalue(oldBarValue);
 				}
-				
+				scrollPane.setHvalue(oldBarValue);
 				double barValue = scrollPane.getHvalue();
 				scrollPane.setHvalue(barValue);
 				otherGroup.setScaleX(scale);
