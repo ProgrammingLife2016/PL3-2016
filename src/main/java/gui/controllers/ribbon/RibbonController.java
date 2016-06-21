@@ -246,14 +246,19 @@ public class RibbonController implements Initializable {
 					scrollPane.setHvalue(scroll);
 				}
 			);
+		addBindings();
+	}
+	
+	private void addBindings() {
+		minScaleProperty.unbind();
+		innerGroup.scaleYProperty().unbind();
+		innerGroup.scaleXProperty().unbind();
 		
-		double maxY = dbm.getDbReader().getMaxYCoord();
 		minScaleProperty.bind(scrollPane.widthProperty()
-				.divide(outerGroup.boundsInLocalProperty().get().getWidth()));
-
-		innerGroup.scaleYProperty().bind(scrollPane.heightProperty().divide(maxY));
+				.divide(innerGroup.boundsInLocalProperty().get().getWidth()));
+		double groupHeight = innerGroup.getBoundsInLocal().getHeight();
+		innerGroup.scaleYProperty().bind(scrollPane.heightProperty().divide(groupHeight));
 		innerGroup.scaleXProperty().bind(minScaleProperty.add(scaleOffSetProperty));
-		
 	}
 	
 
@@ -267,6 +272,8 @@ public class RibbonController implements Initializable {
 		innerGroup = new Group(collapsedGroup);
 		outerGroup = new Group(innerGroup);
 		scrollPane.setContent(outerGroup);
+		
+		addBindings();
 	}
 
 	public void redraw() {
