@@ -49,7 +49,7 @@ public class RibbonView {
 	
 	public ArrayList<Integer> createList() {
 		ArrayList<Integer> list = new ArrayList<Integer>();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i <= 330; i++) {
 			list.add(i);
 		}
 		return list;
@@ -76,8 +76,11 @@ public class RibbonView {
 				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
 						xcoords.get(toId - 1), ycoords.get(toId - 1));
 				line.setStrokeWidth(calculateLineWidth(counts.get(fromId - 1).get(j)));
-
-				line.setStroke(colours.get(fromId - 1).get(j));
+				Paint colour = colours.get(fromId - 1).get(j);
+				if(!colour.isOpaque()) {
+					colour = Paint.valueOf("0x000000ff");
+				}
+				line.setStroke(colour);
 		        res.getChildren().add(line);
 			}
 		}
@@ -314,7 +317,7 @@ public class RibbonView {
 						.getLineageColour(lineages.get(genome)));
 			} 
 			else {
-				colors.add(Paint.valueOf("0xff000000"));
+				colors.add(Paint.valueOf("0x000000ff"));
 			}
 		}
 		return colors;
