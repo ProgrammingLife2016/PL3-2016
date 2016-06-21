@@ -26,6 +26,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import models.phylogeny.NewickTree;
+import parsers.NewickTreeParser;
 import javafx.stage.Stage;
 import db.DatabaseManager;
 import gui.GuiPreProcessor;
@@ -195,23 +197,33 @@ public class MainController implements Initializable {
 		}
         GuiPreProcessor preProcessor = new GuiPreProcessor();
         Launcher.setPreprocessor(preProcessor);
+    	final String nwkPath = System.getProperty("user.dir") 
+				+ "/Data/" + name + "/" + "340tree.rooted.TKK.nwk";
+    	
         Task<Void> task = new Task<Void>() {
             @Override 
             public Void call() {
-                SplashController.progressNum.set(30);
-    			SplashController.progressString.set("Creating collapsed ribbons");
-    			preProcessor.createCollapsedRibbons();
-    			SplashController.progressString.set("Creating normal ribbons");
-    			preProcessor.createNormalRibbons();
-    			SplashController.progressNum.set(70);
-    			SplashController.progressString.set("Creating snips");
-    			preProcessor.createSnips();
-    			SplashController.progressNum.set(80);
-    			SplashController.progressString.set("Creating indels... Almost done");
-    			preProcessor.createInDels();
-    			SplashController.progressNum.set(100);	
-				return null;
+				try {
+					NewickTree tree = NewickTreeParser.parse(new File(nwkPath));
+					Launcher.setNewickTree(tree);
+	                SplashController.progressNum.set(30);
+	    			SplashController.progressString.set("Creating collapsed ribbons");
+	    			preProcessor.createCollapsedRibbons();
+	    			SplashController.progressString.set("Creating normal ribbons");
+	    			preProcessor.createNormalRibbons();
+	    			SplashController.progressNum.set(70);
+	    			SplashController.progressString.set("Creating snips");
+	    			preProcessor.createSnips();
+	    			SplashController.progressNum.set(80);
+	    			SplashController.progressString.set("Creating indels... Almost done");
+	    			preProcessor.createInDels();
+	    			SplashController.progressNum.set(100);	
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
+				return null;
             }
             };
             new Thread(task).start();     

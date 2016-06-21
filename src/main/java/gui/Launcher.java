@@ -131,7 +131,7 @@ public class Launcher extends Application {
 		Launcher.dbm = databaseManager;
 	}
 
-	private static void setNewickTree(NewickTree tree) {
+	public static void setNewickTree(NewickTree tree) {
 		Launcher.nwkTree = tree;
 	}
 
