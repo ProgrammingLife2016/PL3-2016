@@ -77,6 +77,7 @@ public class MainController implements Initializable {
 	
 	@FXML private GridPane aboutPane;
 	@FXML private GridPane controlsPane;
+	@FXML private GridPane graphHelpPane;
 
 	/**
 	 * Adds the recent and existing items into the toolbar menus.
@@ -267,6 +268,16 @@ public class MainController implements Initializable {
 	 public void closeAbout(MouseEvent value) {
 		 aboutPane.setOpacity(0);
 		 aboutPane.setDisable(true);
+	 }
+	 
+	 public void openGraphHelp() {
+		 graphHelpPane.setOpacity(1);
+		 graphHelpPane.setDisable(false);
+	 }
+	 
+	 public void closeGraphHelp() {
+		 graphHelpPane.setOpacity(0);
+		 graphHelpPane.setDisable(true);
 	 }
 	 
 	 /**

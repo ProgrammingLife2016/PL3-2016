@@ -28,7 +28,8 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openControls" text="Controls" />
+              <MenuItem mnemonicParsing="false" onAction="#openGraphHelp" text="Graph" />
+              <MenuItem mnemonicParsing="false" onAction="#openControls" text="Controls" />
               <MenuItem mnemonicParsing="false" onAction="#openAbout" text="About" />
             </items>
           </Menu>
@@ -107,7 +108,18 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <TextArea editable="false" onMouseClicked="#closeControls" text="- Mouse controls -&#10;+ Use the scrollwheel while holding Ctrl to zoom in and out of the graph.&#10;+ Use the scrollwheel while holding Shift to scroll vertically within the graph.&#10;+ Holding the left mouse button while dragging it inside the graph, will move the graph horizontally.&#10;&#10;- File controls (file menu, upper toolbar) -&#10;+ New .gfa files can be imported.&#10;+ Existing/recent database files can be opened.&#10;&#10;- Phylogeny tab controls -&#10;+ select/deselect strains by clicking on the nodes, when switching back to the graph, the selection will be shown.&#10;&#10;- Ribbon level graph controls -&#10;+ The option Show/Hide SNPs will show or hide SNPs from the ribbon graph. When enabled, SNPs will be highlighted in its original lineage colouring. Anything else will be grey (not SNPs).&#10;+  The option Show/Hide Insertions will show or hide InDels from the ribbon graph. When enabled, InDels will be highlighted in its original lineage colouring. Anything else will be grey (not InDels).&#10;&#10;- Lowest level graph controls -&#10;+ Click on a segment, and its content will be displayed on the bottom." wrapText="true" />
+                  <TextArea editable="false" onMouseClicked="#closeControls" text="- Mouse controls -&#10;+ Use the scrollwheel while holding Ctrl to zoom in and out of the graph.&#10;+ Holding the left mouse button while dragging it inside the graph, will move the graph horizontally.&#10;&#10;- File controls (file menu, upper toolbar) -&#10;+ New .gfa files can be imported.&#10;+ Existing/recent database files can be opened.&#10;&#10;- Phylogeny tab controls -&#10;+ select/deselect strains by clicking on the nodes, when switching back to the graph, the selection will be shown.&#10;&#10;- Lowest level graph controls -&#10;+ Click on a segment, and its content will be displayed on the bottom." wrapText="true" />
+               </children>
+            </GridPane>
+            <GridPane fx:id="graphHelpPane" alignment="CENTER" disable="true" opacity="0.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <TextArea editable="false" onMouseClicked="#closeGraphHelp" text="- Graph colours -&#10;+ The colours in the graph are corresponding to the lineages of the genomes.&#10;+ The option Show/Hide SNPs highlights SNPs with its lineage colouring and non SNPs grey.&#10;+ The option Show/Hide Insertions (InDels) highlights InDels with its lineage colouring and non InDels grey.&#10;&#10;- Graph thickness and distance between segments -&#10;+ The thickness of an edge in the graph represents the amount of genomes that follow this specific path; a greater thickness of an edge leading up to a set of nucleotides means that more genomes share this set of nucleotides.&#10;+ The distance between edges in the graph represents the amount of genomes that follow this specific path; a greater distance means that a small set of genomes share the same set of nucleotides." wrapText="true" />
                </children>
             </GridPane>
          </children>
