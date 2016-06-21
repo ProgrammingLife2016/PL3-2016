@@ -175,11 +175,11 @@ public class MainController implements Initializable {
 	  * @param name
 	  */
 	 private void openExisting(String dbPath, String name) {
-		
+		System.out.println("opening existing");
 		Launcher.setDatabaseManager(new DatabaseManager(dbPath));
 		updateRecent(dbPath, name);
-		ribbonTabController.updateView();
-		graphTabController.updateView();
+//		ribbonTabController.updateView();
+//		graphTabController.updateView();
 		
 		Parent root;
 		Stage stage = Launcher.getStage();
@@ -194,6 +194,7 @@ public class MainController implements Initializable {
 			e.printStackTrace();
 		}
         GuiPreProcessor preProcessor = new GuiPreProcessor();
+        Launcher.setPreprocessor(preProcessor);
         Task<Void> task = new Task<Void>() {
             @Override 
             public Void call() {
@@ -210,6 +211,7 @@ public class MainController implements Initializable {
     			preProcessor.createInDels();
     			SplashController.progressNum.set(100);	
 				return null;
+				
             }
             };
             new Thread(task).start();     

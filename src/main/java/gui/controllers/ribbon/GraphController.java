@@ -36,8 +36,8 @@ public class GraphController implements Initializable {
 	@FXML private CheckBox checkboxSnp;
 	@FXML private CheckBox checkboxInsert;
 	
-	private DatabaseManager dbm = Launcher.getDatabaseManager();
-	private GraphView graphView = new GraphView(dbm);
+	private DatabaseManager dbm;
+	private GraphView graphView;
 	
 	private Group innerGroup;
 	private Group outerGroup;
@@ -131,6 +131,8 @@ public class GraphController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		dbm = Launcher.getDatabaseManager();
+		graphView = new GraphView(dbm);
 		graphView.loadSegmentData();
 		updateView();	
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);

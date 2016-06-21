@@ -79,7 +79,8 @@ public class ImportHandler {
         			GffParser gffparser = new GffParser(dbm);
         			parser.parse(gfaPath);
     				gffparser.parse(gffPath);
-        			GuiPreProcessor preProcessor = new GuiPreProcessor();
+    				GuiPreProcessor preProcessor = new GuiPreProcessor();
+    			    Launcher.setPreprocessor(preProcessor);
         			SplashController.progressNum.set(10);
         			SplashController.progressString.set("Start Parsing");
         			SplashController.progressString.set("Start Calculating");
