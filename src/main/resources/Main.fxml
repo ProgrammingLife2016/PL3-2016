@@ -28,7 +28,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" onAction ="#openAbout" text="About" />
+              <MenuItem mnemonicParsing="false" onAction="#openAbout" text="About" />
             </items>
           </Menu>
         </menus>
@@ -87,7 +87,7 @@
           </Tab>
         </tabs>
       </TabPane>
-            <GridPane fx:id="aboutPane" alignment="CENTER">
+            <GridPane fx:id="aboutPane" alignment="CENTER" disable="true" opacity="0.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
