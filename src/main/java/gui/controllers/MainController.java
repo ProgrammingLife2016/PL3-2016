@@ -240,10 +240,17 @@ public class MainController implements Initializable {
 			addItems(existHandler.buildExistingMap(), existingMenu);
 	 }
 	 
+	 private void closeAllInfo() {
+		 closeControls();
+		 closeAbout();
+		 closeGraphHelp();
+	 }
+	 
 	 /**
 	  * show the hidden pane
 	  */
 	 public void openControls() {
+		 closeAllInfo();
 		 controlsPane.setOpacity(1);
 		 controlsPane.setDisable(false);
 	 }
@@ -260,19 +267,22 @@ public class MainController implements Initializable {
 	  * shows the hidden pane
 	  */
 	 public void openAbout() {
+		 closeAllInfo();
 		 aboutPane.setOpacity(1);
 		 aboutPane.setDisable(false);
 	 }
+	 
 	 /**
 	  * closing about pane
 	  * @param value mouse click
 	  */
-	 public void closeAbout(MouseEvent value) {
+	 public void closeAbout() {
 		 aboutPane.setOpacity(0);
 		 aboutPane.setDisable(true);
 	 }
 	 
 	 public void openGraphHelp() {
+		 closeAllInfo();
 		 graphHelpPane.setOpacity(1);
 		 graphHelpPane.setDisable(false);
 	 }
