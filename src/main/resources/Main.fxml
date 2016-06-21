@@ -5,12 +5,14 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="verticalBox" alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainController">
+<VBox fx:id="verticalBox" alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.71" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainController">
    <children>
          <MenuBar>
         <menus>
@@ -26,62 +28,77 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" onAction ="#openAbout" text="About" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
-<TabPane fx:id="tabPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
-  <tabs>
-    <Tab text="Main View">
-               <content>
-                  <GridPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" scaleShape="false">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="1080.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="100.0" prefHeight="900.0" vgrow="ALWAYS" />
-                      <RowConstraints minHeight="100.0" prefHeight="200.0" vgrow="ALWAYS" />
-                    </rowConstraints>
-                    <children>
-                    	<fx:include fx:id="ribbonTab" source="RibbonLevel.fxml" />
-                    	<fx:include fx:id="annotations" source="AnnotationLevel.fxml" GridPane.rowIndex="1" />
-                    </children>
-                  </GridPane>
-               </content>
-    </Tab>
-    <Tab text="Phylogenetic Tree">
-		    	<content>
-				  <GridPane alignment="CENTER" fx:id="phyloGridPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" scaleShape="false" >
-			        <columnConstraints>
-			          <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="1080.0" />
-			        </columnConstraints>
-			        <rowConstraints>
-			          <RowConstraints minHeight="100.0" prefHeight="900.0" vgrow="ALWAYS" />
-			        </rowConstraints>
-			        <children>
-			        	<fx:include fx:id="phyloTab" source="PhylogenyView.fxml" />
-			        </children>
-			      </GridPane>
-		      </content>
-    </Tab>
-    <Tab text="">
-               <content>
-                  <GridPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" scaleShape="false">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="1080.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="100.0" prefHeight="900.0" vgrow="ALWAYS" />
-                      <RowConstraints minHeight="100.0" prefHeight="200.0" vgrow="ALWAYS" />
-                    </rowConstraints>
-                    <children>
-                    	<fx:include fx:id="graphTab" source="GraphLevel.fxml" />
-                    </children>
-                  </GridPane>
-               </content>
-    </Tab>
-  </tabs>
-</TabPane>
+      <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <children>
+      <TabPane fx:id="tabPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Main View">
+                     <content>
+                        <GridPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" scaleShape="false">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="1080.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="100.0" prefHeight="900.0" vgrow="ALWAYS" />
+                            <RowConstraints minHeight="100.0" prefHeight="200.0" vgrow="ALWAYS" />
+                          </rowConstraints>
+                          <children>
+                          	<fx:include fx:id="ribbonTab" source="RibbonLevel.fxml" />
+                          	<fx:include fx:id="annotations" source="AnnotationLevel.fxml" GridPane.rowIndex="1" />
+                          </children>
+                        </GridPane>
+                     </content>
+          </Tab>
+          <Tab text="Phylogenetic Tree">
+      		    	<content>
+      				  <GridPane fx:id="phyloGridPane" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" scaleShape="false">
+      			        <columnConstraints>
+      			          <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="1080.0" />
+      			        </columnConstraints>
+      			        <rowConstraints>
+      			          <RowConstraints minHeight="100.0" prefHeight="900.0" vgrow="ALWAYS" />
+      			        </rowConstraints>
+      			        <children>
+      			        	<fx:include fx:id="phyloTab" source="PhylogenyView.fxml" />
+      			        </children>
+      			      </GridPane>
+      		      </content>
+          </Tab>
+          <Tab text="">
+                     <content>
+                        <GridPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" scaleShape="false">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="1080.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="100.0" prefHeight="900.0" vgrow="ALWAYS" />
+                            <RowConstraints minHeight="100.0" prefHeight="200.0" vgrow="ALWAYS" />
+                          </rowConstraints>
+                          <children>
+                          	<fx:include fx:id="graphTab" source="GraphLevel.fxml" />
+                          </children>
+                        </GridPane>
+                     </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+            <GridPane fx:id="aboutPane" alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <TextArea editable="false" onMouseClicked="#closeAbout" text="DNA Lab is a tool that can dynamically visualize DNA sequences and their mutations. &#10;It uses .gfa files as its format for DNA sequences. &#10;The newicktree format (.nwk) is used to store the phylogenetic tree of the genomes. &#10;&#10;This application was developed as part of the Programming Life context project at the Delft University of Technology." wrapText="true" />
+               </children>
+            </GridPane>
+         </children>
+      </StackPane>
    </children>
 </VBox>

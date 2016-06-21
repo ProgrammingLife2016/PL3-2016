@@ -21,6 +21,8 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -72,6 +74,8 @@ public class MainController implements Initializable {
 	 */
 	@FXML private Menu recentMenu;
 	@FXML private Menu existingMenu;
+	
+	@FXML private GridPane aboutPane;
 
 	/**
 	 * Adds the recent and existing items into the toolbar menus.
@@ -230,6 +234,22 @@ public class MainController implements Initializable {
 			ExistingHandler existHandler = new ExistingHandler();
 			existingMenu.getItems().clear();
 			addItems(existHandler.buildExistingMap(), existingMenu);
+	 }
+	 
+	 /**
+	  * shows the hidden pane
+	  */
+	 public void openAbout() {
+		 aboutPane.setOpacity(1);
+		 aboutPane.setDisable(false);
+	 }
+	 /**
+	  * closing about pane
+	  * @param value mouse click
+	  */
+	 public void closeAbout(MouseEvent value) {
+		 aboutPane.setOpacity(0);
+		 aboutPane.setDisable(true);
 	 }
 	 
 	 /**
