@@ -76,6 +76,7 @@ public class MainController implements Initializable {
 	@FXML private Menu existingMenu;
 	
 	@FXML private GridPane aboutPane;
+	@FXML private GridPane controlsPane;
 
 	/**
 	 * Adds the recent and existing items into the toolbar menus.
@@ -234,6 +235,22 @@ public class MainController implements Initializable {
 			ExistingHandler existHandler = new ExistingHandler();
 			existingMenu.getItems().clear();
 			addItems(existHandler.buildExistingMap(), existingMenu);
+	 }
+	 
+	 /**
+	  * show the hidden pane
+	  */
+	 public void openControls() {
+		 controlsPane.setOpacity(1);
+		 controlsPane.setDisable(false);
+	 }
+	 
+	 /**
+	  * close controls pane
+	  */
+	 public void closeControls() {
+		 controlsPane.setOpacity(0);
+		 controlsPane.setDisable(true);
 	 }
 	 
 	 /**
