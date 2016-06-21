@@ -73,15 +73,33 @@ public class RibbonView {
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
 			for (int j = 0; j < links.get(fromId - 1).size(); j++) {
 				int toId = links.get(fromId - 1).get(j);
-				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
-						xcoords.get(toId - 1), ycoords.get(toId - 1));
-				line.setStrokeWidth(calculateLineWidth(counts.get(fromId - 1).get(j)));
+				int fromX = xcoords.get(fromId - 1);
+				int toX = xcoords.get(toId - 1);
+				int fromY = ycoords.get(fromId - 1);
+				int toY = ycoords.get(toId - 1);
 				Paint colour = colours.get(fromId - 1).get(j);
-				if(!colour.isOpaque()) {
-					colour = Paint.valueOf("0x000000ff");
+				double width = calculateLineWidth(counts.get(fromId - 1).get(j));
+				
+				if(toX - fromX > 5000) {
+					Line line1 = new Line(fromX, fromY , toX - 3, fromY);
+					line1.setStroke(colour);
+					line1.setStrokeWidth(width);
+					res.getChildren().add(line1);
+					
+					Line line2 = new Line(toX - 3, fromY, toX, toY);
+					line2.setStroke(colour);
+					line2.setStrokeWidth(width);
+					res.getChildren().add(line2);
 				}
-				line.setStroke(colour);
-		        res.getChildren().add(line);
+				else {
+					Line line = new Line(fromX, fromY, 
+							toX, toY);
+					line.setStrokeWidth(width);
+					line.setStroke(colour);
+					res.getChildren().add(line);
+				}
+
+		        
 			}
 		}
 		System.out.println("Finished normal ribbons");
@@ -175,15 +193,36 @@ public class RibbonView {
 		for (int fromId = 1; fromId <= links.size(); fromId++) {
 			for (int j = 0; j < links.get(fromId - 1).size(); j++) {
 				int toId = links.get(fromId - 1).get(j);
-				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
-						xcoords.get(toId - 1), ycoords.get(toId - 1));
-				line.setStrokeWidth(calculateLineWidth(counts.get(fromId - 1).get(j)));
+				int fromX = xcoords.get(fromId - 1);
+				int toX = xcoords.get(toId - 1);
+				int fromY = ycoords.get(fromId - 1);
+				int toY = ycoords.get(toId - 1);
+				Paint colour;
 				if (snipSet.contains(fromId) && snipSet.contains(toId)) {
-					line.setStroke(colours.get(fromId - 1).get(j));
+					colour = colours.get(fromId - 1).get(j);
 				} else {
-					line.setStroke(NewickColourMatching.getDeactivatedColour());
+					colour = NewickColourMatching.getDeactivatedColour();
 				}
-		        res.getChildren().add(line);
+				double width = calculateLineWidth(counts.get(fromId - 1).get(j));
+				
+				if(toX - fromX > 5000) {
+					Line line1 = new Line(fromX, fromY , toX - 3, fromY);
+					line1.setStroke(colour);
+					line1.setStrokeWidth(width);
+					res.getChildren().add(line1);
+					
+					Line line2 = new Line(toX - 3, fromY, toX, toY);
+					line2.setStroke(colour);
+					line2.setStrokeWidth(width);
+					res.getChildren().add(line2);
+				}
+				else {
+					Line line = new Line(fromX, fromY, 
+							toX, toY);
+					line.setStrokeWidth(width);
+					line.setStroke(colour);
+					res.getChildren().add(line);
+				}
 			}
 		}
 		
@@ -235,7 +274,7 @@ public class RibbonView {
 	 * @return
 	 */
 	public Paint getLineColor(int ff, int tt, ArrayList<ArrayList<String>> names) {
-		Paint color = Paint.valueOf("0xff0000ff");
+		Paint color = Paint.valueOf("0x000000ff");
 		ArrayList<String> from = names.get(ff - 1);
 		ArrayList<String> to = names.get(tt - 1);
 		if (from.size() > to.size()) {
@@ -354,15 +393,38 @@ public class RibbonView {
 			
 			if (!bubbles.isEmpty() && fromId == bubbles.peek()[0]) {
 				int[] bubble = bubbles.poll();
-				Line line = new Line(xcoords.get(fromId - 1), ycoords.get(fromId - 1), 
-						xcoords.get(bubble[1] - 1), ycoords.get(bubble[1] - 1));
+				int toId = bubble[1];
+				int fromX = xcoords.get(fromId - 1);
+				int toX = xcoords.get(toId - 1);
+				int fromY = ycoords.get(fromId - 1);
+				int toY = ycoords.get(toId - 1);
+				Paint colour = getLineColor(fromId, toId, names);
+				double width;
+				
 				if (numGenomes > 50) {
-					line.setStrokeWidth(calculateLineWidthCollapsed(2 * bubble[2]));
+					width = calculateLineWidthCollapsed(2 * bubble[2]);
 				} else {
-					line.setStrokeWidth(calculateLineWidth(2 * bubble[2]));
+					width = calculateLineWidth(2 * bubble[2]);
 				}
-				line.setStroke(getLineColor(fromId, bubble[1], names));
-		        res.getChildren().add(line);
+				
+				if(toX - fromX > 5000) {
+					Line line1 = new Line(fromX, fromY , toX - 3, fromY);
+					line1.setStroke(colour);
+					line1.setStrokeWidth(width);
+					res.getChildren().add(line1);
+					
+					Line line2 = new Line(toX - 3, fromY, toX, toY);
+					line2.setStroke(colour);
+					line2.setStrokeWidth(width);
+					res.getChildren().add(line2);
+				}
+				else {
+					Line line = new Line(fromX, fromY, 
+							toX, toY);
+					line.setStrokeWidth(width);
+					line.setStroke(colour);
+					res.getChildren().add(line);
+				}
 		        ignore.addAll(edges);
 			} else {
 				if (ignore.contains(fromId)) {
@@ -374,19 +436,37 @@ public class RibbonView {
 					}
 
 					for (int j = 0; j < links.get(fromId - 1).size(); j++) {
-						Line line = new Line(xcoords.get(fromId - 1), 
-								ycoords.get(fromId - 1), 
-								xcoords.get(toId - 1), 
-								ycoords.get(toId - 1));
+						
+						int fromX = xcoords.get(fromId - 1);
+						int toX = xcoords.get(toId - 1);
+						int fromY = ycoords.get(fromId - 1);
+						int toY = ycoords.get(toId - 1);
+						Paint colour = getLineColor(fromId, toId, names);
+						double width;
 						if (numGenomes > 50) {
-							line.setStrokeWidth(
-									calculateLineWidthCollapsed(2 * counts.get(fromId - 1).get(j)));
+							width = calculateLineWidthCollapsed(2 * counts.get(fromId - 1).get(j));
 						} else {
-							line.setStrokeWidth(
-									calculateLineWidth(2 * counts.get(fromId - 1).get(j)));
+							width = calculateLineWidth(2 * counts.get(fromId - 1).get(j));
 						}
-						line.setStroke(getLineColor(fromId, toId, names));
-						res.getChildren().add(line);
+						
+						if(toX - fromX > 5000) {
+							Line line1 = new Line(fromX, fromY , toX - 3, fromY);
+							line1.setStroke(colour);
+							line1.setStrokeWidth(width);
+							res.getChildren().add(line1);
+							
+							Line line2 = new Line(toX - 3, fromY, toX, toY);
+							line2.setStroke(colour);
+							line2.setStrokeWidth(width);
+							res.getChildren().add(line2);
+						}
+						else {
+							Line line = new Line(fromX, fromY, 
+									toX, toY);
+							line.setStrokeWidth(width);
+							line.setStroke(colour);
+							res.getChildren().add(line);
+						}
 					}
 				}
 			}
