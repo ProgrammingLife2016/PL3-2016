@@ -129,12 +129,16 @@ public class GraphView {
 	 * Returns a group containing all GraphSegments on the segment coordinates.
 	 */
 	private Group getGraphSegments() {
+		double maxY = dbm.getDbReader().getMaxYCoord();
+		double ellipseHeigth = 30*maxY/1050;
+		System.out.println("MAX Y: " + maxY);
+		
 		Group res = new Group();
 		Iterator<Integer> iterator = segmentIds.iterator();
 		while (iterator.hasNext()) {
 			int segmentId = iterator.next();
 			Group graphSegment = new Group();
-			Ellipse ellipse = createEllipse(segmentId);
+			Ellipse ellipse = createEllipse(segmentId,ellipseHeigth);
 			graphSegment.getChildren().add(ellipse);
 			graphSegment.getChildren().add(visualizeDnaContent(segmentId));
 			graphSegment.addEventFilter(MouseEvent.MOUSE_CLICKED, 
@@ -179,12 +183,12 @@ public class GraphView {
 	/**
 	 * Returns a visualization of a graph segment
 	 */
-	public Ellipse createEllipse(int segmentId) {
+	public Ellipse createEllipse(int segmentId, double ellipseHeigth) {
 		int contentLength = segmentdna.get(segmentId - 1).length();
 		double xcoord = graphxcoords.get(segmentId - 1);
 		double ycoord = graphycoords.get(segmentId - 1);
 		double xradius = 30 + 2 * Math.log(contentLength);
-		Ellipse node = new Ellipse(xcoord, ycoord, xradius, 30);
+		Ellipse node = new Ellipse(xcoord, ycoord, xradius, ellipseHeigth);
 		node.setFill(Color.DODGERBLUE);
 		node.setStroke(Color.BLACK);
 		node.setStrokeType(StrokeType.INSIDE);
