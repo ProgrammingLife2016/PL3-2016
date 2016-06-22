@@ -26,6 +26,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import models.phylogeny.NewickTree;
+import parsers.NewickTreeParser;
 import javafx.stage.Stage;
 import db.DatabaseManager;
 import gui.GuiPreProcessor;
@@ -175,11 +177,11 @@ public class MainController implements Initializable {
 	  * @param name
 	  */
 	 private void openExisting(String dbPath, String name) {
-		
+		System.out.println("opening existing");
 		Launcher.setDatabaseManager(new DatabaseManager(dbPath));
 		updateRecent(dbPath, name);
-		ribbonTabController.updateView();
-		graphTabController.updateView();
+//		ribbonTabController.updateView();
+//		graphTabController.updateView();
 		
 		Parent root;
 		Stage stage = Launcher.getStage();
@@ -194,21 +196,33 @@ public class MainController implements Initializable {
 			e.printStackTrace();
 		}
         GuiPreProcessor preProcessor = new GuiPreProcessor();
+        Launcher.setPreprocessor(preProcessor);
+    	final String nwkPath = System.getProperty("user.dir") 
+				+ "/Data/" + name + "/" + "340tree.rooted.TKK.nwk";
+    	
         Task<Void> task = new Task<Void>() {
             @Override 
             public Void call() {
-                SplashController.progressNum.set(30);
-    			SplashController.progressString.set("Creating collapsed ribbons");
-    			preProcessor.createCollapsedRibbons();
-    			SplashController.progressString.set("Creating normal ribbons");
-    			preProcessor.createNormalRibbons();
-    			SplashController.progressNum.set(70);
-    			SplashController.progressString.set("Creating snips");
-    			preProcessor.createSnips();
-    			SplashController.progressNum.set(80);
-    			SplashController.progressString.set("Creating indels... Almost done");
-    			preProcessor.createInDels();
-    			SplashController.progressNum.set(100);	
+				try {
+					NewickTree tree = NewickTreeParser.parse(new File(nwkPath));
+					Launcher.setNewickTree(tree);
+	                SplashController.progressNum.set(30);
+	    			SplashController.progressString.set("Creating collapsed ribbons");
+	    			preProcessor.createCollapsedRibbons();
+	    			SplashController.progressString.set("Creating normal ribbons");
+	    			preProcessor.createNormalRibbons();
+	    			SplashController.progressNum.set(70);
+	    			SplashController.progressString.set("Creating snips");
+	    			preProcessor.createSnips();
+	    			SplashController.progressNum.set(80);
+	    			SplashController.progressString.set("Creating indels... Almost done");
+	    			preProcessor.createInDels();
+	    			SplashController.progressNum.set(100);	
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				return null;
             }
             };
@@ -238,10 +252,17 @@ public class MainController implements Initializable {
 			addItems(existHandler.buildExistingMap(), existingMenu);
 	 }
 	 
+	 private void closeAllInfo() {
+		 closeControls();
+		 closeAbout();
+		 closeGraphHelp();
+	 }
+	 
 	 /**
 	  * show the hidden pane
 	  */
 	 public void openControls() {
+		 closeAllInfo();
 		 controlsPane.setOpacity(1);
 		 controlsPane.setDisable(false);
 	 }
@@ -258,19 +279,22 @@ public class MainController implements Initializable {
 	  * shows the hidden pane
 	  */
 	 public void openAbout() {
+		 closeAllInfo();
 		 aboutPane.setOpacity(1);
 		 aboutPane.setDisable(false);
 	 }
+	 
 	 /**
 	  * closing about pane
 	  * @param value mouse click
 	  */
-	 public void closeAbout(MouseEvent value) {
+	 public void closeAbout() {
 		 aboutPane.setOpacity(0);
 		 aboutPane.setDisable(true);
 	 }
 	 
 	 public void openGraphHelp() {
+		 closeAllInfo();
 		 graphHelpPane.setOpacity(1);
 		 graphHelpPane.setDisable(false);
 	 }

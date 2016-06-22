@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.File;
 import java.io.IOException;
 
 import javafx.concurrent.Task;
@@ -7,9 +8,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import models.phylogeny.NewickTree;
 import parsers.GfaParser;
 import parsers.GffParser;
+import parsers.NewickTreeParser;
 import db.DatabaseManager;
 import gui.controllers.SplashController;
 
@@ -50,6 +52,8 @@ public class ImportHandler {
 				+ "/db/" + fileName;
 		final String gffPath = System.getProperty("user.dir") 
 				+ "/Data/" + fileName + "/" + "decorationV5_20130412.gff";
+		final String nwkPath = System.getProperty("user.dir") 
+				+ "/Data/" + fileName + "/" + "340tree.rooted.TKK.nwk";
 		/**
 		 * Loads up splash screen and display it.
 		 */
@@ -79,7 +83,10 @@ public class ImportHandler {
         			GffParser gffparser = new GffParser(dbm);
         			parser.parse(gfaPath);
     				gffparser.parse(gffPath);
-        			GuiPreProcessor preProcessor = new GuiPreProcessor();
+    				NewickTree tree = NewickTreeParser.parse(new File(nwkPath));
+    				Launcher.setNewickTree(tree);
+    				GuiPreProcessor preProcessor = new GuiPreProcessor();
+    			    Launcher.setPreprocessor(preProcessor);
         			SplashController.progressNum.set(10);
         			SplashController.progressString.set("Start Parsing");
         			SplashController.progressString.set("Start Calculating");

@@ -48,15 +48,15 @@ public class RibbonController implements Initializable {
 	private Group otherGroup;
 	private Group annotationRibbonGroup;
 	
-	private DatabaseManager dbm = Launcher.getDatabaseManager();
-	private RibbonView ribbonView = new RibbonView(dbm);
+	private DatabaseManager dbm;
+	private RibbonView ribbonView;
 	
-	private GuiPreProcessor preProcessor = Launcher.getPreprocessor();
+	private GuiPreProcessor preProcessor;
 	
-	private Group collapsedGroup = preProcessor.getCollapsedGroup();
-	private Group normalGroup = preProcessor.getNormalGroup();
-	private Group snpGroup = preProcessor.getSnpGroup();
-	private Group indelGroup = preProcessor.getInDelGroup();
+	private Group collapsedGroup;
+	private Group normalGroup;
+	private Group snpGroup;
+	private Group indelGroup;
 
     private static final double MAX_SCALE = 1.0d;
     private static final double COLLAPSE = .2;
@@ -154,6 +154,13 @@ public class RibbonController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		dbm = Launcher.getDatabaseManager();
+		ribbonView = new RibbonView(dbm);
+		preProcessor = Launcher.getPreprocessor();
+		collapsedGroup = preProcessor.getCollapsedGroup();
+		normalGroup = preProcessor.getNormalGroup();
+		snpGroup = preProcessor.getSnpGroup();
+		indelGroup = preProcessor.getInDelGroup();
 		updateView();
 		scrollPane.addEventFilter(ScrollEvent.ANY, scrollEventHandler);
 		

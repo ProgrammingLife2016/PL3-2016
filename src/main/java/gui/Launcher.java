@@ -131,13 +131,17 @@ public class Launcher extends Application {
 		Launcher.dbm = databaseManager;
 	}
 
-	private static void setNewickTree(NewickTree tree) {
+	public static void setNewickTree(NewickTree tree) {
 		Launcher.nwkTree = tree;
 	}
 
 	private static void setStage(Stage stage, String title) {
 		Launcher.stage = stage;
 		Launcher.stage.setTitle(title);
+	}
+	
+	public static void setPreprocessor(GuiPreProcessor gpp) {
+		preProcessor = gpp;
 	}
 	
 	public static NewickTree getNewickTree() {
