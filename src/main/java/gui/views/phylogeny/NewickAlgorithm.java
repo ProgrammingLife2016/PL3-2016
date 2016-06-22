@@ -18,6 +18,11 @@ public class NewickAlgorithm {
 	private HashMap<String, String> lineages;
 	
 	/**
+	 * Hashmap containing all metadata for the specimens.
+	 */
+	private HashMap<String, ArrayList<String>> metadata;
+	
+	/**
 	 * Location of metadata.xlsx
 	 */
 	private static String xlsxpath = System.getProperty("user.dir") + File.separator + "Data"
@@ -39,7 +44,9 @@ public class NewickAlgorithm {
 	public void parseLineages() {
 		XlsxParser xlsxparser = new XlsxParser();
 		xlsxparser.parse(xlsxpath);
+		xlsxparser.parseMetaData(xlsxpath);
 		lineages = xlsxparser.getLineages();
+		metadata = xlsxparser.getMetaData();
 	}
 	
 	/**
@@ -76,7 +83,8 @@ public class NewickAlgorithm {
 			NewickNode childNode = null;
 			if (child.isLeaf()) {
 				String lineage = lineages.get(child.getName());
-				childNode = new NewickNode(child.getName(), lineage);
+				ArrayList<String> metainfo = metadata.get(child.getName());
+				childNode = new NewickNode(child.getName(), lineage, metainfo);
 				childNode.setIsLeaf(true);	
 			} else {
 				childNode = getDrawableTree(child);

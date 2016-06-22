@@ -32,11 +32,11 @@ public class XlsxParser {
 	
 	private String[] columnnames = {
 			"Specimen ID: ", "Age: ", "Sex: ", "HIV Status: ", "Cohort: ", "Date of Collection: ", "Study Geographic District: ",
-			"Specimen Type: ", "Microscopy Smear Status: ", "IGNORE", "DNA isolation: single colony or non-single colony",
+			"Specimen Type: ", "Microscopy Smear Status: ", "IGNORE", "DNA isolation: ",
 			"Phenotypic DST Pattern: ", "Capreomycin (10ug/mL): ", "Ethambutol (7.5ug/mL): ", "Ethionamide (10ug/mL): ", "Isoniazid (0.2ug/mL or 1ug/mL): ",
 			"Kanamycin (6ug/mL): ", "IGNORE", "Pyrazinamide (Nicotinamide 500.0ug/mL or PZA-MGIT): ", "Ofloxacin (2ug/mL): ", "Ofloxacin (2ug/mL): ",
-			"Rifampin (1ug/mL): ", "Streptomycin (2ug/mL): ", "Digital Spoligotype: ", "Lineage", "Genotypic DST pattern", "IGNORE",
-			"Tugela Ferry vs. non-Tugela Ferry XDR"
+			"Rifampin (1ug/mL): ", "Streptomycin (2ug/mL): ", "Digital Spoligotype: ", "Lineage: ", "Genotypic DST pattern: ", "IGNORE",
+			"Tugela Ferry vs. non-Tugela Ferry XDR: "
 	};
 
 	/**
@@ -109,7 +109,7 @@ public class XlsxParser {
 						}
 						++i;
 					}
-					System.out.println(metadatainfo.toString());
+					System.out.println(metadatainfo.toString() + "\n");
 					metadata.put(id, metadatainfo);
 				}
 			}

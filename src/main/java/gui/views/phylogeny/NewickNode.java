@@ -10,7 +10,13 @@ import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.control.Tooltip;
+import javafx.util.Duration;
 
+import java.lang.reflect.Field;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import gui.eventhandlers.phylogeny.NewickNodeMouseEventHandler;
 
 /**
@@ -34,6 +40,8 @@ public class NewickNode extends Group {
 	 * Lineage of the specimen.
 	 */
 	private String lineage = "";
+	
+	private ArrayList<String> metainfo;
 	
 	private boolean isLeaf = false;
 	private boolean isSelected = true;
@@ -70,12 +78,14 @@ public class NewickNode extends Group {
 	 * @param lineage
 	 * 			  Lineage of the specimen.
 	 */
-	public NewickNode(String name, String lineage) {
+	public NewickNode(String name, String lineage, ArrayList<String> metainfolist) {
 		this();
 		this.lineage = lineage;
 		this.nodeName = name;
+		this.setMetainfo(metainfolist);
 		this.setColoured();
 		this.addLabel(name);
+		this.setToolTips();
 	}
 	
 	/**
@@ -135,6 +145,11 @@ public class NewickNode extends Group {
 		setupLabelLayout();
 		this.getChildren().add(label);
 	}
+	
+//	public void setLeafFunctionality() {
+//		node.addEventFilter(MouseEvent.MOUSE_CLICKED, new NewickNodeMouseEventHandler(this));
+//		label.addEventFilter(MouseEvent.MOUSE_CLICKED, new NewickNodeMouseEventHandler(this));
+//	}
 	
 	/**
 	 * Handles label layout aspects.
@@ -286,4 +301,50 @@ public class NewickNode extends Group {
 		}
 		return names;
 	}
+	
+	private void setToolTips() {
+		Tooltip tooltip = new Tooltip();
+		String tooltext = metainfo.get(0);
+		for (int i = 1; i < metainfo.size(); ++i) {
+			tooltext += "\n";
+			tooltext += metainfo.get(i);
+		}
+		
+		tooltip.setText(tooltext);
+		
+		hackTooltipStartTiming(tooltip);
+		Tooltip.install(node, tooltip);
+		Tooltip.install(label, tooltip);
+	}
+	
+	private void hackTooltipStartTiming(Tooltip tooltip) {
+	    try {
+	        Field fieldBehavior = tooltip.getClass().getDeclaredField("BEHAVIOR");
+	        fieldBehavior.setAccessible(true);
+	        Object objBehavior = fieldBehavior.get(tooltip);
+
+	        Field fieldTimer = objBehavior.getClass().getDeclaredField("activationTimer");
+	        fieldTimer.setAccessible(true);
+	        Timeline objTimer = (Timeline) fieldTimer.get(objBehavior);
+	        objTimer.getKeyFrames().clear();
+	        
+	        Field fieldTimer2 = objBehavior.getClass().getDeclaredField("hideTimer");
+	        fieldTimer2.setAccessible(true);
+	        Timeline objTimer2 = (Timeline) fieldTimer2.get(objBehavior);
+	        objTimer2.getKeyFrames().clear();
+	        objTimer2.getKeyFrames().add(new KeyFrame(new Duration(120000)));
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	public ArrayList<String> getMetainfo() {
+		return metainfo;
+	}
+
+	public void setMetainfo(ArrayList<String> metainfo) {
+		this.metainfo = metainfo;
+	}
+	
 }

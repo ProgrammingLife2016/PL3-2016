@@ -2,6 +2,7 @@ package gui.eventhandlers.phylogeny;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.MouseButton;
 
 import gui.views.phylogeny.NewickNode;
 
@@ -28,8 +29,13 @@ public class NewickNodeMouseEventHandler implements EventHandler<MouseEvent> {
 	 */
 	@Override
 	public void handle(MouseEvent event) {
-		toggleActive();
-		NewickNode.setChanged(true);
+		if (event.getButton() == MouseButton.SECONDARY && newickNode.isLeaf()) {
+
+		} else {
+			toggleActive();
+			NewickNode.setChanged(true);
+		}
+
 	}
 	
 	/**
