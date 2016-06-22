@@ -1,19 +1,21 @@
-# DNALab (PL3-2016) 
+# DNA Lab (PL3-2016) 
 
 [![Build Status](https://travis-ci.org/ProgrammingLife2016/PL3-2016.svg?branch=master)](https://travis-ci.org/ProgrammingLife2016/PL3-2016)
 [![Coverage Status](https://coveralls.io/repos/github/ProgrammingLife2016/PL3-2016/badge.svg?branch=master)](https://coveralls.io/github/ProgrammingLife2016/PL3-2016?branch=master)
 
-## About DNALab
+## About DNA Lab
 
-DNALab is a tool that can dynamically visualize DNA sequences and their mutations. More specifically, it is able to visualize multiple kinds of mutations in different strains of DNA. The visualization is provided as a graph which uses semantic zoom to only view the useful information for the current zoom level.
+DNA Lab is a tool that can dynamically visualize DNA sequences and their mutations. More specifically, it is able to visualize multiple kinds of mutations in different strains of DNA. The visualization is provided as a graph which uses semantic zoom to only view the useful information for the current zoom level.
+
+Note: this project will no longer be updated as the final release has peen published and marks the end of the context project.
 
 ### Must haves
 At the end of the development, DNALab will at least meet the following requirements:
 - [x] The application must enable the user to interactively explore a sequence graph representing genome architecture of multiple strains.
 - [x] The application must provide semantic zooming to enable useful visual interpretation at various zoom levels from whole-genome to individual mutations.
 - [x] The application must be able to put the graph in the context of the evolutionary relationship between bacteria (phylogeny).
-- [ ] The application must have visual encodings for different classes of mutations and the ability to filter on mutation class.
-- [ ] The application must be able to identify mutations and determine the type of variant (insertion/deletion/SNP) uniformly across the samples.
+- [x] The application must have visual encodings for different classes of mutations and the ability to filter on mutation class.
+- [x] The application must be able to identify mutations and determine the type of variant (insertion/deletion/SNP) uniformly across the samples.
 - [x] The application must put bubbles (mutations) in the graph in the context of well-known reference genomes with their gene annotations and integrate with other reference databases.
 
 ## About our group
